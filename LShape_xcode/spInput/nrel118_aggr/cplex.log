@@ -1,0 +1,91 @@
+
+Log started (V12.6.1.0) Mon Jul 17 16:38:38 2017
+
+
+Problem 'nrel118_aggr.lp' read.
+Read time = 0.01 sec. (0.43 ticks)
+Parallel mode: deterministic, using up to 8 threads for concurrent optimization.
+Tried aggregator 1 time.
+LP Presolve eliminated 408 rows and 84 columns.
+Aggregator did 288 substitutions.
+Reduced LP has 3564 rows, 3114 columns, and 10668 nonzeros.
+Presolve time = 0.00 sec. (2.69 ticks)
+Initializing dual steep norms . . .
+
+Iteration log . . .
+Iteration:     1   Dual objective     =         15431.869556
+Perturbation started.
+Iteration:   101   Dual objective     =         15431.869556
+Iteration:   336   Dual objective     =         79668.247606
+Iteration:   556   Dual objective     =         87213.098315
+Iteration:   703   Dual objective     =         87213.111622
+Iteration:   854   Dual objective     =         87860.140751
+Iteration:   989   Dual objective     =         88236.279957
+Iteration:  1111   Dual objective     =         88952.902935
+Iteration:  1213   Dual objective     =         89783.957862
+Iteration:  1331   Dual objective     =         90494.007451
+Iteration:  1468   Dual objective     =         91651.823052
+Iteration:  1578   Dual objective     =         91774.135808
+Iteration:  1702   Dual objective     =         91774.158024
+Iteration:  1859   Dual objective     =         91774.193374
+Iteration:  1996   Dual objective     =         91774.232596
+Iteration:  2117   Dual objective     =         91774.278351
+Iteration:  2206   Dual objective     =         94764.393332
+Iteration:  2287   Dual objective     =         95525.256683
+Iteration:  2364   Dual objective     =         95731.309663
+Iteration:  2442   Dual objective     =         96363.134871
+Iteration:  2504   Dual objective     =         96626.571782
+Removing perturbation.
+Reinitializing dual norms . . .
+
+Dual simplex solved model.
+
+
+Dual simplex - Infeasible:  Objective =  2.3196298737e+05
+Solution time =    0.14 sec.  Iterations = 2580 (0)
+Infeasible variable = slack RU(55)
+Deterministic time = 140.90 ticks  (1009.21 ticks/sec)
+
+
+Problem 'nrel118_aggr.lp' read.
+Read time = 0.01 sec. (0.43 ticks)
+Parallel mode: deterministic, using up to 8 threads for concurrent optimization.
+Tried aggregator 1 time.
+LP Presolve eliminated 408 rows and 84 columns.
+Aggregator did 288 substitutions.
+Reduced LP has 3564 rows, 3114 columns, and 10668 nonzeros.
+Presolve time = 0.00 sec. (2.69 ticks)
+Initializing dual steep norms . . .
+
+Iteration log . . .
+Iteration:     1   Dual objective     =         15431.869556
+Perturbation started.
+Iteration:   101   Dual objective     =         15431.869556
+Iteration:   350   Dual objective     =         48271.214730
+Iteration:   568   Dual objective     =         87213.183427
+Iteration:   727   Dual objective     =         87213.200774
+Iteration:   866   Dual objective     =         87213.205723
+Iteration:  1012   Dual objective     =         87213.215488
+Iteration:  1118   Dual objective     =         87726.368733
+Iteration:  1224   Dual objective     =         88779.973794
+Iteration:  1316   Dual objective     =         89025.237058
+Iteration:  1444   Dual objective     =         91014.799357
+Iteration:  1592   Dual objective     =         91774.067464
+Iteration:  1737   Dual objective     =         91774.218404
+Iteration:  1872   Dual objective     =         91774.284012
+Iteration:  2023   Dual objective     =         91774.403655
+Iteration:  2142   Dual objective     =         91774.459811
+Iteration:  2256   Dual objective     =         91774.518599
+Iteration:  2368   Dual objective     =         91888.456522
+Iteration:  2452   Dual objective     =         91977.837333
+Iteration:  2541   Dual objective     =         92025.892245
+Removing perturbation.
+Reinitializing dual norms . . .
+
+Dual simplex solved model.
+
+
+Dual simplex - Optimal:  Objective =  9.2036980421e+04
+Solution time =    0.12 sec.  Iterations = 2582 (0)
+Deterministic time = 135.25 ticks  (1140.48 ticks/sec)
+

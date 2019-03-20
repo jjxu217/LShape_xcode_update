@@ -1,0 +1,5 @@
+TIME   ssn_rc1
+PERIODS
+             capAdd[0]            budget	Stage00
+            flow[0][0]         demand[0]	Stage01
+ENDATA

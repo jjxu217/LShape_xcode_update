@@ -1,0 +1,54 @@
+
+Log for 'nrel118_aggr.lp' Clone_2 (V12.6.1.0) Mon Jul 17 16:38:44 2017
+
+Tried aggregator 1 time.
+No LP presolve or aggregator reductions.
+Presolve time = 0.00 sec. (1.50 ticks)
+
+Iteration log . . .
+Iteration:     1    Scaled infeas =        451138.874792
+Iteration:    81    Scaled infeas =        242157.181246
+Iteration:   432    Scaled infeas =         95806.618093
+Iteration:   710    Scaled infeas =         48540.327910
+Switched to devex.
+Iteration:   941    Scaled infeas =         30242.586974
+Iteration:  1249    Scaled infeas =         17320.256071
+Iteration:  1471    Scaled infeas =          9457.445537
+Iteration:  1668    Scaled infeas =          5118.108528
+Iteration:  1877    Scaled infeas =          1257.363051
+Iteration:  2026    Scaled infeas =           715.657602
+Iteration:  2171    Scaled infeas =           225.955535
+Iteration:  2343    Scaled infeas =           100.157607
+Iteration:  2506    Scaled infeas =             2.612792
+Iteration:  2646    Scaled infeas =             1.987273
+Iteration:  2798    Scaled infeas =             1.104542
+Iteration:  2933    Scaled infeas =             0.398588
+
+Dual simplex solved model.
+
+
+Log for 'nrel118_aggr.lp' Clone_2 (V12.6.1.0) Mon Jul 17 16:40:05 2017
+
+Tried aggregator 1 time.
+No LP presolve or aggregator reductions.
+Presolve time = 0.00 sec. (1.50 ticks)
+
+Iteration log . . .
+Iteration:     1    Scaled infeas =        869099.158294
+Iteration:    82    Scaled infeas =        473393.290320
+Iteration:   407    Scaled infeas =        169772.653336
+Iteration:   698    Scaled infeas =         83173.796207
+Switched to devex.
+Iteration:   933    Scaled infeas =         39471.943845
+Iteration:  1217    Scaled infeas =         23979.056736
+Iteration:  1451    Scaled infeas =         11835.180311
+Iteration:  1669    Scaled infeas =          5427.224933
+Iteration:  1839    Scaled infeas =          2635.816529
+Iteration:  2007    Scaled infeas =          1073.570139
+Iteration:  2134    Scaled infeas =           691.715055
+Iteration:  2284    Scaled infeas =           174.422785
+Iteration:  2436    Scaled infeas =             6.220195
+Iteration:  2591    Scaled infeas =             3.904959
+
+Dual simplex solved model.
+

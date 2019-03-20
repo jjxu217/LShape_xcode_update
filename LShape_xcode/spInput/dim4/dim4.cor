@@ -1,0 +1,28 @@
+NAME          dim4
+ROWS
+ N  obj     
+ L  c1      
+ E  c2      
+ E  c3      
+COLUMNS
+    x         obj         -0.75
+    x         c1          1
+    x         c2          -0.5
+    x         c3          -0.25
+    y1        obj         -1
+    y1        c2          -1
+    y1        c3          -1
+    y2        obj         3
+    y2        c2          1
+    y2        c3          1
+    y3        obj         1
+    y3        c2          -1
+    y3        c3          1
+    y4        obj         1
+    y4        c2          1
+    y4        c3          -1
+RHS
+    RHS       c1          5
+    RHS       c2          -0.5
+    RHS       c3          0.5
+ENDATA

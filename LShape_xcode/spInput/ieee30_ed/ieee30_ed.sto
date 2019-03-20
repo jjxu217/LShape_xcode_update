@@ -1,0 +1,17 @@
+STOCH         ieee30_ed
+INDEP         DISCRETE
+    RHS       Usedwind[2,1]      20			0.00620967
+    RHS       Usedwind[2,1]      30                     0.06059754
+    RHS       Usedwind[2,1]      40                     0.24173034
+    RHS       Usedwind[2,1]      50                     0.38292492
+    RHS       Usedwind[2,1]      60                     0.24173034
+    RHS       Usedwind[2,1]      70                     0.06059754
+    RHS       Usedwind[2,1]      80                     0.00620967
+    RHS       Usedwind[2,2]      20			0.00620967
+    RHS       Usedwind[2,2]      30                     0.06059754
+    RHS       Usedwind[2,2]      40                     0.24173034
+    RHS       Usedwind[2,2]      50                     0.38292492
+    RHS       Usedwind[2,2]      60                     0.24173034
+    RHS       Usedwind[2,2]      70                     0.06059754
+    RHS       Usedwind[2,2]      80                     0.00620967
+ENDATA

@@ -1,0 +1,5 @@
+TIME	retail
+PERIODS       LP
+    s1  	obj                  TIME1
+    a1  	s2c1                 TIME2
+ENDATA

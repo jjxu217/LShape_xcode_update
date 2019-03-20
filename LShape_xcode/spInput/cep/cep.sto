@@ -1,0 +1,21 @@
+STOCH         cep
+INDEP         DISCRETE
+    RHS       DEMP1      0                        0.166667
+    RHS       DEMP1      600                      0.166667
+    RHS       DEMP1      1200                     0.166667
+    RHS       DEMP1      1800                     0.166667
+    RHS       DEMP1      2400                     0.166666
+    RHS       DEMP1      3000                     0.166666
+    RHS       DEMP2      0                        0.166667
+    RHS       DEMP2      600                      0.166667
+    RHS       DEMP2      1200                     0.166667
+    RHS       DEMP2      1800                     0.166667
+    RHS       DEMP2      2400                     0.166666
+    RHS       DEMP2      3000                     0.166666
+    RHS       DEMP3      0                        0.166667
+    RHS       DEMP3      600                      0.166667
+    RHS       DEMP3      1200                     0.166667
+    RHS       DEMP3      1800                     0.166667
+    RHS       DEMP3      2400                     0.166666
+    RHS       DEMP3      3000                     0.166666
+ENDATA

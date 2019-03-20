@@ -1,0 +1,5 @@
+TIME          dim2
+PERIODS       
+    x        obj                    TIME1
+    y1       c2                     TIME2
+ENDATA

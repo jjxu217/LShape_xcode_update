@@ -1,0 +1,280 @@
+* ENCODING=ISO-8859-1
+NAME          transship
+ROWS
+ N  obj         
+ E  initInv(0)  
+ E  initInv(1)  
+ E  initInv(2)  
+ E  initInv(3)  
+ E  initInv(4)  
+ E  initInv(5)  
+ E  initInv(6)  
+ E  retailDem(0)
+ E  retailDem(1)
+ E  retailDem(2)
+ E  retailDem(3)
+ E  retailDem(4)
+ E  retailDem(5)
+ E  retailDem(6)
+ E  finalInv(0) 
+ E  finalInv(1) 
+ E  finalInv(2) 
+ E  finalInv(3) 
+ E  finalInv(4) 
+ E  finalInv(5) 
+ E  finalInv(6) 
+ E  repVal(0)   
+ E  repVal(1)   
+ E  repVal(2)   
+ E  repVal(3)   
+ E  repVal(4)   
+ E  repVal(5)   
+ E  repVal(6)   
+ E  dummy(0)    
+ E  dummy(1)    
+ E  dummy(2)    
+ E  dummy(3)    
+ E  dummy(4)    
+ E  dummy(5)    
+ E  dummy(6)    
+COLUMNS
+    orderUp(0)    initInv(0)                         -1
+    orderUp(0)    finalInv(0)                        -1
+    orderUp(1)    initInv(1)                         -1
+    orderUp(1)    finalInv(1)                        -1
+    orderUp(2)    initInv(2)                         -1
+    orderUp(2)    finalInv(2)                        -1
+    orderUp(3)    initInv(3)                         -1
+    orderUp(3)    finalInv(3)                        -1
+    orderUp(4)    initInv(4)                         -1
+    orderUp(4)    finalInv(4)                        -1
+    orderUp(5)    initInv(5)                         -1
+    orderUp(5)    finalInv(5)                        -1
+    orderUp(6)    initInv(6)                         -1
+    orderUp(6)    finalInv(6)                        -1
+    begEnd(0)     obj                                 1
+    begEnd(0)     initInv(0)                          1
+    begEnd(0)     finalInv(0)                         1
+    begEnd(1)     obj                              1.05
+    begEnd(1)     initInv(1)                          1
+    begEnd(1)     finalInv(1)                         1
+    begEnd(2)     obj                               1.1
+    begEnd(2)     initInv(2)                          1
+    begEnd(2)     finalInv(2)                         1
+    begEnd(3)     obj                              1.15
+    begEnd(3)     initInv(3)                          1
+    begEnd(3)     finalInv(3)                         1
+    begEnd(4)     obj                               1.2
+    begEnd(4)     initInv(4)                          1
+    begEnd(4)     finalInv(4)                         1
+    begEnd(5)     obj                              1.25
+    begEnd(5)     initInv(5)                          1
+    begEnd(5)     finalInv(5)                         1
+    begEnd(6)     obj                               1.3
+    begEnd(6)     initInv(6)                          1
+    begEnd(6)     finalInv(6)                         1
+    repDem(0)     obj                                 4
+    repDem(0)     retailDem(0)                        1
+    repDem(0)     repVal(0)                           1
+    repDem(1)     obj                               4.2
+    repDem(1)     retailDem(1)                        1
+    repDem(1)     repVal(1)                           1
+    repDem(2)     obj                               4.4
+    repDem(2)     retailDem(2)                        1
+    repDem(2)     repVal(2)                           1
+    repDem(3)     obj                               4.6
+    repDem(3)     retailDem(3)                        1
+    repDem(3)     repVal(3)                           1
+    repDem(4)     obj                               4.8
+    repDem(4)     retailDem(4)                        1
+    repDem(4)     repVal(4)                           1
+    repDem(5)     obj                                 5
+    repDem(5)     retailDem(5)                        1
+    repDem(5)     repVal(5)                           1
+    repDem(6)     obj                               5.2
+    repDem(6)     retailDem(6)                        1
+    repDem(6)     repVal(6)                           1
+    repEnd(0)     finalInv(0)                         1
+    repEnd(0)     repVal(0)                           1
+    repEnd(1)     finalInv(1)                         1
+    repEnd(1)     repVal(1)                           1
+    repEnd(2)     finalInv(2)                         1
+    repEnd(2)     repVal(2)                           1
+    repEnd(3)     finalInv(3)                         1
+    repEnd(3)     repVal(3)                           1
+    repEnd(4)     finalInv(4)                         1
+    repEnd(4)     repVal(4)                           1
+    repEnd(5)     finalInv(5)                         1
+    repEnd(5)     repVal(5)                           1
+    repEnd(6)     finalInv(6)                         1
+    repEnd(6)     repVal(6)                           1
+    demVar(0)     retailDem(0)                       -1
+    demVar(0)     repVal(0)                          -1
+    demVar(0)     dummy(0)                            1
+    demVar(1)     retailDem(1)                       -1
+    demVar(1)     repVal(1)                          -1
+    demVar(1)     dummy(1)                            1
+    demVar(2)     retailDem(2)                       -1
+    demVar(2)     repVal(2)                          -1
+    demVar(2)     dummy(2)                            1
+    demVar(3)     retailDem(3)                       -1
+    demVar(3)     repVal(3)                          -1
+    demVar(3)     dummy(3)                            1
+    demVar(4)     retailDem(4)                       -1
+    demVar(4)     repVal(4)                          -1
+    demVar(4)     dummy(4)                            1
+    demVar(5)     retailDem(5)                       -1
+    demVar(5)     repVal(5)                          -1
+    demVar(5)     dummy(5)                            1
+    demVar(6)     retailDem(6)                       -1
+    demVar(6)     repVal(6)                          -1
+    demVar(6)     dummy(6)                            1
+    begDem(0)(0)  obj                                 2
+    begDem(0)(0)  initInv(0)                          1
+    begDem(0)(0)  retailDem(0)                        1
+    begDem(0)(1)  obj                                 2
+    begDem(0)(1)  initInv(0)                          1
+    begDem(0)(1)  retailDem(1)                        1
+    begDem(0)(2)  obj                                 2
+    begDem(0)(2)  initInv(0)                          1
+    begDem(0)(2)  retailDem(2)                        1
+    begDem(0)(3)  obj                                 2
+    begDem(0)(3)  initInv(0)                          1
+    begDem(0)(3)  retailDem(3)                        1
+    begDem(0)(4)  obj                                 2
+    begDem(0)(4)  initInv(0)                          1
+    begDem(0)(4)  retailDem(4)                        1
+    begDem(0)(5)  obj                                 2
+    begDem(0)(5)  initInv(0)                          1
+    begDem(0)(5)  retailDem(5)                        1
+    begDem(0)(6)  obj                                 2
+    begDem(0)(6)  initInv(0)                          1
+    begDem(0)(6)  retailDem(6)                        1
+    begDem(1)(0)  obj                                 2
+    begDem(1)(0)  initInv(1)                          1
+    begDem(1)(0)  retailDem(0)                        1
+    begDem(1)(1)  obj                                 2
+    begDem(1)(1)  initInv(1)                          1
+    begDem(1)(1)  retailDem(1)                        1
+    begDem(1)(2)  obj                                 2
+    begDem(1)(2)  initInv(1)                          1
+    begDem(1)(2)  retailDem(2)                        1
+    begDem(1)(3)  obj                                 2
+    begDem(1)(3)  initInv(1)                          1
+    begDem(1)(3)  retailDem(3)                        1
+    begDem(1)(4)  obj                                 2
+    begDem(1)(4)  initInv(1)                          1
+    begDem(1)(4)  retailDem(4)                        1
+    begDem(1)(5)  obj                                 2
+    begDem(1)(5)  initInv(1)                          1
+    begDem(1)(5)  retailDem(5)                        1
+    begDem(1)(6)  obj                                 2
+    begDem(1)(6)  initInv(1)                          1
+    begDem(1)(6)  retailDem(6)                        1
+    begDem(2)(0)  obj                                 2
+    begDem(2)(0)  initInv(2)                          1
+    begDem(2)(0)  retailDem(0)                        1
+    begDem(2)(1)  obj                                 2
+    begDem(2)(1)  initInv(2)                          1
+    begDem(2)(1)  retailDem(1)                        1
+    begDem(2)(2)  obj                                 2
+    begDem(2)(2)  initInv(2)                          1
+    begDem(2)(2)  retailDem(2)                        1
+    begDem(2)(3)  obj                                 2
+    begDem(2)(3)  initInv(2)                          1
+    begDem(2)(3)  retailDem(3)                        1
+    begDem(2)(4)  obj                                 2
+    begDem(2)(4)  initInv(2)                          1
+    begDem(2)(4)  retailDem(4)                        1
+    begDem(2)(5)  obj                                 2
+    begDem(2)(5)  initInv(2)                          1
+    begDem(2)(5)  retailDem(5)                        1
+    begDem(2)(6)  obj                                 2
+    begDem(2)(6)  initInv(2)                          1
+    begDem(2)(6)  retailDem(6)                        1
+    begDem(3)(0)  obj                                 2
+    begDem(3)(0)  initInv(3)                          1
+    begDem(3)(0)  retailDem(0)                        1
+    begDem(3)(1)  obj                                 2
+    begDem(3)(1)  initInv(3)                          1
+    begDem(3)(1)  retailDem(1)                        1
+    begDem(3)(2)  obj                                 2
+    begDem(3)(2)  initInv(3)                          1
+    begDem(3)(2)  retailDem(2)                        1
+    begDem(3)(3)  obj                                 2
+    begDem(3)(3)  initInv(3)                          1
+    begDem(3)(3)  retailDem(3)                        1
+    begDem(3)(4)  obj                                 2
+    begDem(3)(4)  initInv(3)                          1
+    begDem(3)(4)  retailDem(4)                        1
+    begDem(3)(5)  obj                                 2
+    begDem(3)(5)  initInv(3)                          1
+    begDem(3)(5)  retailDem(5)                        1
+    begDem(3)(6)  obj                                 2
+    begDem(3)(6)  initInv(3)                          1
+    begDem(3)(6)  retailDem(6)                        1
+    begDem(4)(0)  obj                                 2
+    begDem(4)(0)  initInv(4)                          1
+    begDem(4)(0)  retailDem(0)                        1
+    begDem(4)(1)  obj                                 2
+    begDem(4)(1)  initInv(4)                          1
+    begDem(4)(1)  retailDem(1)                        1
+    begDem(4)(2)  obj                                 2
+    begDem(4)(2)  initInv(4)                          1
+    begDem(4)(2)  retailDem(2)                        1
+    begDem(4)(3)  obj                                 2
+    begDem(4)(3)  initInv(4)                          1
+    begDem(4)(3)  retailDem(3)                        1
+    begDem(4)(4)  obj                                 2
+    begDem(4)(4)  initInv(4)                          1
+    begDem(4)(4)  retailDem(4)                        1
+    begDem(4)(5)  obj                                 2
+    begDem(4)(5)  initInv(4)                          1
+    begDem(4)(5)  retailDem(5)                        1
+    begDem(4)(6)  obj                                 2
+    begDem(4)(6)  initInv(4)                          1
+    begDem(4)(6)  retailDem(6)                        1
+    begDem(5)(0)  obj                                 2
+    begDem(5)(0)  initInv(5)                          1
+    begDem(5)(0)  retailDem(0)                        1
+    begDem(5)(1)  obj                                 2
+    begDem(5)(1)  initInv(5)                          1
+    begDem(5)(1)  retailDem(1)                        1
+    begDem(5)(2)  obj                                 2
+    begDem(5)(2)  initInv(5)                          1
+    begDem(5)(2)  retailDem(2)                        1
+    begDem(5)(3)  obj                                 2
+    begDem(5)(3)  initInv(5)                          1
+    begDem(5)(3)  retailDem(3)                        1
+    begDem(5)(4)  obj                                 2
+    begDem(5)(4)  initInv(5)                          1
+    begDem(5)(4)  retailDem(4)                        1
+    begDem(5)(5)  obj                                 2
+    begDem(5)(5)  initInv(5)                          1
+    begDem(5)(5)  retailDem(5)                        1
+    begDem(5)(6)  obj                                 2
+    begDem(5)(6)  initInv(5)                          1
+    begDem(5)(6)  retailDem(6)                        1
+    begDem(6)(0)  obj                                 2
+    begDem(6)(0)  initInv(6)                          1
+    begDem(6)(0)  retailDem(0)                        1
+    begDem(6)(1)  obj                                 2
+    begDem(6)(1)  initInv(6)                          1
+    begDem(6)(1)  retailDem(1)                        1
+    begDem(6)(2)  obj                                 2
+    begDem(6)(2)  initInv(6)                          1
+    begDem(6)(2)  retailDem(2)                        1
+    begDem(6)(3)  obj                                 2
+    begDem(6)(3)  initInv(6)                          1
+    begDem(6)(3)  retailDem(3)                        1
+    begDem(6)(4)  obj                                 2
+    begDem(6)(4)  initInv(6)                          1
+    begDem(6)(4)  retailDem(4)                        1
+    begDem(6)(5)  obj                                 2
+    begDem(6)(5)  initInv(6)                          1
+    begDem(6)(5)  retailDem(5)                        1
+    begDem(6)(6)  obj                                 2
+    begDem(6)(6)  initInv(6)                          1
+    begDem(6)(6)  retailDem(6)                        1
+RHS
+ENDATA

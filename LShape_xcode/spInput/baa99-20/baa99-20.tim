@@ -1,0 +1,5 @@
+TIME
+PERIODS       LP
+    x1  	obj                  TIME1
+    W1A  	s1                 TIME2
+ENDATA

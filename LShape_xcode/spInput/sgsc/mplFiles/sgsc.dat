@@ -1,0 +1,118 @@
+# Set Definition
+set K := P1 P2 DC1 DC2 DC3;
+set K_P := P1 P2;
+set K_DC := DC1 DC2 DC3;
+set R := R1 R2 R3 R4 R5 R6;
+set J := Pr1;
+set M := Truck;
+set T := 1 2 3;
+
+set P2DC_LINKS :=
+   (P1, P2) (P1, DC1) (P1, DC2)
+   (P2, P1) (P2, DC3)
+   (DC1, P1) (DC2, P1) (DC2, DC3) (DC3, P2) (DC3, DC2) ;
+
+set DC2R_LINKS :=
+   (DC1, R1) (DC1, R2) (DC1, R3)
+   (DC2, R4) (DC2, R5)
+   (DC3, R6) ;
+
+set P2R_LINKS :=
+   (P1, R1);
+
+# n indicates the total number of time periods 1..n
+param n := 3;
+
+# demand of product j in customer r at time period t
+param d :=
+   [*, Pr1, 1] R1 100 R2 100 R3 100 R4 100 R5 100 R6 100
+   [*, Pr1, 2] R1 110 R2 110 R3 100 R4 110 R5 100 R6 110
+   [*, Pr1, 3] R1 100 R2 105 R3 110 R4 100 R5 110 R6 100 ;
+
+# initial inventory level of product j at facility k
+param I0 :=
+   [* , Pr1] P1 50 P2 50 DC1 150 DC2 100 DC3 50 ;
+
+# freight rate of product j from facility k1 to k2 with mode m at time period t
+param gammaK :=
+   [P1, *, Pr1, Truck, 1] P2 1.0 DC1 1.0 DC2 1.0
+   [P2, *, Pr1, Truck, 1] P1 1.0 DC3 1.0
+   [DC1, *, Pr1, Truck, 1] P1 1.0
+   [DC2, *, Pr1, Truck, 1] P1 1.0 DC3 1.0
+   [DC3, *, Pr1, Truck, 1] P2 1.0 DC2 1.0
+   [P1, *, Pr1, Truck, 2] P2 1.0 DC1 1.0 DC2 1.0
+   [P2, *, Pr1, Truck, 2] P1 1.0 DC3 1.0
+   [DC1, *, Pr1, Truck, 2] P1 1.0
+   [DC2, *, Pr1, Truck, 2] P1 1.0 DC3 1.0
+   [DC3, *, Pr1, Truck, 2] P2 1.0 DC2 1.0
+   [P1, *, Pr1, Truck, 3] P2 1.0 DC1 1.0 DC2 1.0
+   [P2, *, Pr1, Truck, 3] P1 1.0 DC3 1.0
+   [DC1, *, Pr1, Truck, 3] P1 1.0
+   [DC2, *, Pr1, Truck, 3] P1 1.0 DC3 1.0
+   [DC3, *, Pr1, Truck, 3] P2 1.0 DC2 1.0 ;
+
+# freight rate of product j from facility k to customer r with mode m at time period t
+param gammaR :=
+   [P1,  *, Pr1, Truck, 1] R1 2.0
+   [DC1, *, Pr1, Truck, 1] R1 1.5 R2 1.5 R3 1.5
+   [DC2, *, Pr1, Truck, 1] R4 1.5 R5 1.5
+   [DC3, *, Pr1, Truck, 1] R6 1.5
+   [P1,  *, Pr1, Truck, 2] R1 2.0
+   [DC1, *, Pr1, Truck, 2] R1 1.5 R2 1.5 R3 1.5
+   [DC2, *, Pr1, Truck, 2] R4 1.5 R5 1.5
+   [DC3, *, Pr1, Truck, 2] R6 1.5
+   [P1,  *, Pr1, Truck, 3] R1 2.0
+   [DC1, *, Pr1, Truck, 3] R1 1.5 R2 1.5 R3 1.5
+   [DC2, *, Pr1, Truck, 3] R4 1.5 R5 1.5
+   [DC3, *, Pr1, Truck, 3] R6 1.5 ;
+
+# unit inventory cost of product j in facility k at time period t
+param h :=
+   [*, Pr1, 1] P1 0.5 P2 0.5
+   [*, Pr1, 1] DC1 0.5 DC2 0.5 DC3 0.5
+   [*, Pr1, 2] P1 0.5 P2 0.5
+   [*, Pr1, 2] DC1 0.5 DC2 0.5 DC3 0.5
+   [*, Pr1, 3] P1 0.5 P2 0.5
+   [*, Pr1, 3] DC1 0.5 DC2 0.5 DC3 0.5 ;
+
+# unit throughput cost of product j in facility k at time period t
+param delta :=
+   [*, Pr1, 1] P1 0.5 P2 0.5
+   [*, Pr1, 1] DC1 0.5 DC2 0.5 DC3 0.5
+   [*, Pr1, 2] P1 0.5 P2 0.5
+   [*, Pr1, 2] DC1 0.5 DC2 0.5 DC3 0.5
+   [*, Pr1, 3] P1 0.5 P2 0.5
+   [*, Pr1, 3] DC1 0.5 DC2 0.5 DC3 0.5 ;
+
+# unit penalty cost of product j for lost unmeet demand in customer r at time period t
+param eta :=
+   [*, Pr1, 1] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0
+   [*, Pr1, 2] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0
+   [*, Pr1, 3] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 ;
+
+# capacity of plant k for product j, k in K_P
+param Q :=
+   [*, Pr1] P1 1000 P2 800 ;
+
+# minimum inventory of product j at facility k at time period t
+param Im :=
+   [* , Pr1, 1] P1 20 P2 10 DC1 150 DC2 100 DC3 50
+   [* , Pr1, 2] P1 20 P2 10 DC1 150 DC2 100 DC3 50
+   [* , Pr1, 3] P1 20 P2 10 DC1 150 DC2 100 DC3 50 ;
+
+# shipping time of product j from facility k1 to facility k2 with mode m
+param lambdaK :=
+   [P1, *, Pr1, Truck] P2 1 DC1 1 DC2 1
+   [P2, *, Pr1, Truck] P1 1 DC3 1
+   [DC1, *, Pr1, Truck] P1 1
+   [DC2, *, Pr1, Truck] P1 1 DC3 1
+   [DC3, *, Pr1, Truck] P2 1 DC2 1 ;
+
+# shipping time of product j from facility k to customer r with mode m
+param lambdaR :=
+   [P1,  *, Pr1, Truck] R1 1
+   [DC1, *, Pr1, Truck] R1 1 R2 1 R3 1
+   [DC2, *, Pr1, Truck] R4 1 R5 1
+   [DC3, *, Pr1, Truck] R6 1;
+
+end;

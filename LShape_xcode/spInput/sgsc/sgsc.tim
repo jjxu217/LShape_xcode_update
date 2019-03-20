@@ -1,0 +1,5 @@
+TIME          sgsc
+PERIODS       
+    F[P1,P2,Pr1,Truck,1]    totalCost                  TIME1
+    F[P1,P2,Pr1,Truck,2]    massBalanceP2[Pr1,P1,2]    TIME2
+ENDATA

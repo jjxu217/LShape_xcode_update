@@ -1,0 +1,5 @@
+TIME		ieee30_ed
+PERIODS
+	p1[1]		rampUp1Initial12[1]		TIME1
+	p[2,1]     	powerflow14[1,2]		TIME2
+ENDATA

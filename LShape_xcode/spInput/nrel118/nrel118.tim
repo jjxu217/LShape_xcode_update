@@ -1,0 +1,4 @@
+TIME          nrel118
+PERIODS	      2
+    g0(1)      RU(1)                  TIME1
+    g1(2,1)      RU0(1)                  TIME2

@@ -1,0 +1,682 @@
+# Set Definition
+set K := P1 P2 P3 P4 P5 DC1 DC2 DC3 DC4 DC5 DC6 DC7 DC8 DC9 DC10 DC11 DC12 DC13;
+set K_P := P1 P2 P3 P4 P5;
+set K_DC := DC1 DC2 DC3 DC4 DC5 DC6 DC7 DC8 DC9 DC10 DC11 DC12 DC13;
+set R := R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27 R28 R29 R30 R31 R32 R33 R34 R35 R36 R37 R38 R39 R40 R41 R42 R43 R44 R45 R46;
+set J := Pr1 Pr2;
+set M := Truck Plane;
+set T := 1 2 3;
+
+set P2DC_LINKS :=
+   (P1, P2) (P1, DC1) (P1, DC2) (P1, DC3) (P1, DC4) (P1, DC5)
+   (P2, P1) (P2, P3) (P2, DC3) (P2, DC4) (P2, DC5)
+   (P3, P2) (P3, DC6) (P3, DC7) (P3, DC8) (P3, DC9) (P3, DC10)
+   (P4, P5) (P4, DC9) (P4, DC10) (P4, DC11) (P4, DC12) (P4, DC13)
+   (P5, P4) (P5, DC9) (P5, DC10) (P5, DC11) (P5, DC12) (P5, DC13) (P5, DC1) (P5, DC2)
+   (DC1, DC2)
+   (DC2, DC1)
+   (DC3, DC4)
+   (DC4, DC3) (DC4, DC5)
+   (DC5, DC4)
+   (DC6, DC7)
+   (DC7, DC6) (DC7, DC8)
+   (DC8, DC7)
+   (DC9, DC10)
+   (DC10, DC9) (DC10, DC11)
+   (DC12, DC11) (DC12, DC13)
+   (DC11, DC10) (DC11, DC12)
+   (DC13, DC12) ;
+
+set DC2R_LINKS :=
+   (DC1, R1) (DC1, R2) (DC1, R3) (DC1, R44) (DC1, R45) (DC1, R46)
+   (DC2, R4) (DC2, R5) (DC2, R6) (DC2, R7) (DC2, R8) (DC2, R9) (DC2, R10) (DC2, R11) (DC2, R12)
+   (DC3, R9) (DC3, R10) (DC3, R11) (DC3, R12) (DC3, R4) (DC3, R5) (DC3, R6) (DC3, R7) (DC3, R8)
+   (DC4, R13) (DC4, R14) (DC4, R15)
+   (DC5, R16) (DC5, R17) (DC5, R18) (DC5, R19) (DC5, R20)
+   (DC6, R21) (DC6, R22) (DC6, R23)
+   (DC7, R24) (DC7, R25) (DC7, R26)
+   (DC8, R27) (DC8, R28) (DC8, R29) (DC8, R30) (DC8, R31) (DC8, R32)
+   (DC9, R30) (DC9, R31) (DC9, R32) (DC9, R27) (DC9, R28) (DC9, R29)
+   (DC10, R33) (DC10, R34) (DC10, R35) (DC10, R36)
+   (DC11, R37) (DC11, R38) (DC11, R39) (DC11, R40)
+   (DC12, R41) (DC12, R42) (DC12, R43)
+   (DC13, R44) (DC13, R45) (DC13, R46) (DC13, R1) (DC13, R2) (DC13, R3) ;
+
+set P2R_LINKS := ;
+# n indicates the total number of time periods 1..n
+param n := 3;
+
+# demand of product j in customer r at time period t
+param d :=
+   [*, Pr1, 1] R1 100 R2 100 R3 100 R4 100 R5 100 R6 100 R7 100 R8 100 R9 100 R10 100 
+   [*, Pr1, 2] R1 110 R2 110 R3 100 R4 110 R5 100 R6 110 R7 100 R8 100 R9 100 R10 100
+   [*, Pr1, 3] R1 100 R2 105 R3 110 R4 100 R5 110 R6 100 R7 100 R8 100 R9 100 R10 100
+   [*, Pr2, 1] R1 100 R2 100 R3 100 R4 100 R5 100 R6 100 R7 100 R8 100 R9 100 R10 100
+   [*, Pr2, 2] R1 110 R2 110 R3 100 R4 110 R5 100 R6 110 R7 100 R8 100 R9 100 R10 100
+   [*, Pr2, 3] R1 100 R2 105 R3 110 R4 100 R5 110 R6 100 R7 100 R8 100 R9 100 R10 100
+   [*, Pr1, 1] R11 100 R12 100 R13 100 R14 100 R15 100 R16 100 R17 100 R18 100 R19 100 R20 100 
+   [*, Pr1, 2] R11 110 R12 110 R13 100 R14 110 R15 100 R16 110 R17 100 R18 100 R19 100 R20 100
+   [*, Pr1, 3] R11 100 R12 105 R13 110 R14 100 R15 110 R16 100 R17 100 R18 100 R19 100 R20 100
+   [*, Pr2, 1] R11 100 R12 100 R13 100 R14 100 R15 100 R16 100 R17 100 R18 100 R19 100 R20 100
+   [*, Pr2, 2] R11 110 R12 110 R13 100 R14 110 R15 100 R16 110 R17 100 R18 100 R19 100 R20 100
+   [*, Pr2, 3] R11 100 R12 105 R13 110 R14 100 R15 110 R16 100 R17 100 R18 100 R19 100 R20 100
+   [*, Pr1, 1] R21 100 R22 100 R23 100 R24 100 R25 100 R26 100 R27 100 R28 100 R29 100 R30 100 
+   [*, Pr1, 2] R21 110 R22 110 R23 100 R24 110 R25 100 R26 110 R27 100 R28 100 R29 100 R30 100
+   [*, Pr1, 3] R21 100 R22 105 R23 110 R24 100 R25 110 R26 100 R27 100 R28 100 R29 100 R30 100
+   [*, Pr2, 1] R21 100 R22 100 R23 100 R24 100 R25 100 R26 100 R27 100 R28 100 R29 100 R30 100
+   [*, Pr2, 2] R21 110 R22 110 R23 100 R24 110 R25 100 R26 110 R27 100 R28 100 R29 100 R30 100
+   [*, Pr2, 3] R21 100 R22 105 R23 110 R24 100 R25 110 R26 100 R27 100 R28 100 R29 100 R30 100
+   [*, Pr1, 1] R31 100 R32 100 R33 100 R34 100 R35 100 R36 100 R37 100 R38 100 R39 100 R40 100
+   [*, Pr1, 2] R31 110 R32 110 R33 100 R34 110 R35 100 R36 110 R37 100 R38 100 R39 100 R40 100
+   [*, Pr1, 3] R31 100 R32 105 R33 110 R34 100 R35 110 R36 100 R37 100 R38 100 R39 100 R40 100
+   [*, Pr2, 1] R31 100 R32 100 R33 100 R34 100 R35 100 R36 100 R37 100 R38 100 R39 100 R40 100
+   [*, Pr2, 2] R31 110 R32 110 R33 100 R34 110 R35 100 R36 110 R37 100 R38 100 R39 100 R40 100
+   [*, Pr2, 3] R31 100 R32 105 R33 110 R34 100 R35 110 R36 100 R37 100 R38 100 R39 100 R40 100
+   [*, Pr1, 1] R41 100 R42 100 R43 100 R44 100 R45 100 R46 100 
+   [*, Pr1, 2] R41 110 R42 110 R43 100 R44 110 R45 100 R46 110 
+   [*, Pr1, 3] R41 100 R42 105 R43 110 R44 100 R45 110 R46 100 
+   [*, Pr2, 1] R41 100 R42 100 R43 100 R44 100 R45 100 R46 100 
+   [*, Pr2, 2] R41 110 R42 110 R43 100 R44 110 R45 100 R46 110 
+   [*, Pr2, 3] R41 100 R42 105 R43 110 R44 100 R45 110 R46 100 ;
+
+# initial inventory level of product j at facility k
+param I0 :=
+   [* , Pr1] P1 50 P2 50 P3 150 P4 100 P5 50
+   [* , Pr1] DC1 50 DC2 50 DC3 150 DC4 100 DC5 50 DC6 100
+   [* , Pr1] DC7 50 DC8 50 DC9 150 DC10 100 DC11 50 DC12 100 DC13 50
+   [* , Pr2] P1 50 P2 50 P3 150 P4 100 P5 50
+   [* , Pr2] DC1 50 DC2 50 DC3 150 DC4 100 DC5 50 DC6 100
+   [* , Pr2] DC7 50 DC8 50 DC9 150 DC10 100 DC11 50 DC12 100 DC13 50 ;
+
+# gammaK: freight rate of product j from facility k1 to k2 with mode m at time period t
+param gammaK :=
+   [*, *, Pr1, Truck, 1] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr1, Truck, 1] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr1, Truck, 1] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr1, Truck, 1] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr1, Truck, 1] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr1, Truck, 1] DC1 DC2 1.0 
+   [*, *, Pr1, Truck, 1] DC2 DC1 1.0 
+   [*, *, Pr1, Truck, 1] DC3 DC4 1.0 
+   [*, *, Pr1, Truck, 1] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr1, Truck, 1] DC5 DC4 1.0 
+   [*, *, Pr1, Truck, 1] DC6 DC7 1.0 
+   [*, *, Pr1, Truck, 1] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr1, Truck, 1] DC8 DC7 1.0 
+   [*, *, Pr1, Truck, 1] DC9 DC10 1.0 
+   [*, *, Pr1, Truck, 1] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr1, Truck, 1] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr1, Truck, 1] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr1, Truck, 1] DC13 DC12 1.0 
+   [*, *, Pr2, Truck, 1] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr2, Truck, 1] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr2, Truck, 1] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr2, Truck, 1] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr2, Truck, 1] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr2, Truck, 1] DC1 DC2 1.0 
+   [*, *, Pr2, Truck, 1] DC2 DC1 1.0 
+   [*, *, Pr2, Truck, 1] DC3 DC4 1.0 
+   [*, *, Pr2, Truck, 1] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr2, Truck, 1] DC5 DC4 1.0 
+   [*, *, Pr2, Truck, 1] DC6 DC7 1.0 
+   [*, *, Pr2, Truck, 1] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr2, Truck, 1] DC8 DC7 1.0 
+   [*, *, Pr2, Truck, 1] DC9 DC10 1.0 
+   [*, *, Pr2, Truck, 1] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr2, Truck, 1] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr2, Truck, 1] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr2, Truck, 1] DC13 DC12 1.0 
+   [*, *, Pr1, Truck, 2] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr1, Truck, 2] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr1, Truck, 2] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr1, Truck, 2] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr1, Truck, 2] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr1, Truck, 2] DC1 DC2 1.0 
+   [*, *, Pr1, Truck, 2] DC2 DC1 1.0 
+   [*, *, Pr1, Truck, 2] DC3 DC4 1.0 
+   [*, *, Pr1, Truck, 2] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr1, Truck, 2] DC5 DC4 1.0 
+   [*, *, Pr1, Truck, 2] DC6 DC7 1.0 
+   [*, *, Pr1, Truck, 2] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr1, Truck, 2] DC8 DC7 1.0 
+   [*, *, Pr1, Truck, 2] DC9 DC10 1.0 
+   [*, *, Pr1, Truck, 2] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr1, Truck, 2] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr1, Truck, 2] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr1, Truck, 2] DC13 DC12 1.0 
+   [*, *, Pr2, Truck, 2] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr2, Truck, 2] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr2, Truck, 2] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr2, Truck, 2] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr2, Truck, 2] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr2, Truck, 2] DC1 DC2 1.0 
+   [*, *, Pr2, Truck, 2] DC2 DC1 1.0 
+   [*, *, Pr2, Truck, 2] DC3 DC4 1.0 
+   [*, *, Pr2, Truck, 2] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr2, Truck, 2] DC5 DC4 1.0 
+   [*, *, Pr2, Truck, 2] DC6 DC7 1.0 
+   [*, *, Pr2, Truck, 2] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr2, Truck, 2] DC8 DC7 1.0 
+   [*, *, Pr2, Truck, 2] DC9 DC10 1.0 
+   [*, *, Pr2, Truck, 2] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr2, Truck, 2] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr2, Truck, 2] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr2, Truck, 2] DC13 DC12 1.0 
+   [*, *, Pr1, Truck, 3] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr1, Truck, 3] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr1, Truck, 3] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr1, Truck, 3] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr1, Truck, 3] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr1, Truck, 3] DC1 DC2 1.0 
+   [*, *, Pr1, Truck, 3] DC2 DC1 1.0 
+   [*, *, Pr1, Truck, 3] DC3 DC4 1.0 
+   [*, *, Pr1, Truck, 3] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr1, Truck, 3] DC5 DC4 1.0 
+   [*, *, Pr1, Truck, 3] DC6 DC7 1.0 
+   [*, *, Pr1, Truck, 3] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr1, Truck, 3] DC8 DC7 1.0 
+   [*, *, Pr1, Truck, 3] DC9 DC10 1.0 
+   [*, *, Pr1, Truck, 3] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr1, Truck, 3] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr1, Truck, 3] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr1, Truck, 3] DC13 DC12 1.0 
+   [*, *, Pr2, Truck, 3] P1 P2 1.0 P1 DC1 1.0 P1 DC2 1.0 P1 DC3 1.0 P1 DC4 1.0 P1 DC5 1.0
+   [*, *, Pr2, Truck, 3] P2 P1 1.0 P2 P3 1.0 P2 DC3 1.0 P2 DC4 1.0 P2 DC5 1.0
+   [*, *, Pr2, Truck, 3] P3 P2 1.0 P3 DC6 1.0 P3 DC7 1.0 P3 DC8 1.0 P3 DC9 1.0 P3 DC10 1.0
+   [*, *, Pr2, Truck, 3] P4 P5 1.0 P4 DC9 1.0 P4 DC10 1.0 P4 DC11 1.0 P4 DC12 1.0 P4 DC13 1.0
+   [*, *, Pr2, Truck, 3] P5 P4 1.0 P5 DC9 1.0 P5 DC10 1.0 P5 DC11 1.0 P5 DC12 1.0 P5 DC13 1.0 P5 DC1 1.0 P5 DC2 1.0
+   [*, *, Pr2, Truck, 3] DC1 DC2 1.0 
+   [*, *, Pr2, Truck, 3] DC2 DC1 1.0 
+   [*, *, Pr2, Truck, 3] DC3 DC4 1.0 
+   [*, *, Pr2, Truck, 3] DC4 DC3 1.0  DC4 DC5 1.0 
+   [*, *, Pr2, Truck, 3] DC5 DC4 1.0 
+   [*, *, Pr2, Truck, 3] DC6 DC7 1.0 
+   [*, *, Pr2, Truck, 3] DC7 DC6 1.0  DC7 DC8 1.0 
+   [*, *, Pr2, Truck, 3] DC8 DC7 1.0 
+   [*, *, Pr2, Truck, 3] DC9 DC10 1.0 
+   [*, *, Pr2, Truck, 3] DC10 DC9 1.0  DC10 DC11 1.0 
+   [*, *, Pr2, Truck, 3] DC11 DC10 1.0  DC11 DC12 1.0 
+   [*, *, Pr2, Truck, 3] DC12 DC11 1.0  DC12 DC13 1.0 
+   [*, *, Pr2, Truck, 3] DC13 DC12 1.0 
+   [*, *, Pr1, Plane, 1] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr1, Plane, 1] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr1, Plane, 1] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr1, Plane, 1] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr1, Plane, 1] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr1, Plane, 1] DC1 DC2 1.5 
+   [*, *, Pr1, Plane, 1] DC2 DC1 1.5 
+   [*, *, Pr1, Plane, 1] DC3 DC4 1.5 
+   [*, *, Pr1, Plane, 1] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr1, Plane, 1] DC5 DC4 1.5 
+   [*, *, Pr1, Plane, 1] DC6 DC7 1.5 
+   [*, *, Pr1, Plane, 1] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr1, Plane, 1] DC8 DC7 1.5 
+   [*, *, Pr1, Plane, 1] DC9 DC10 1.5 
+   [*, *, Pr1, Plane, 1] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr1, Plane, 1] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr1, Plane, 1] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr1, Plane, 1] DC13 DC12 1.5 
+   [*, *, Pr2, Plane, 1] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr2, Plane, 1] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr2, Plane, 1] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr2, Plane, 1] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr2, Plane, 1] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr2, Plane, 1] DC1 DC2 1.5 
+   [*, *, Pr2, Plane, 1] DC2 DC1 1.5 
+   [*, *, Pr2, Plane, 1] DC3 DC4 1.5 
+   [*, *, Pr2, Plane, 1] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr2, Plane, 1] DC5 DC4 1.5 
+   [*, *, Pr2, Plane, 1] DC6 DC7 1.5 
+   [*, *, Pr2, Plane, 1] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr2, Plane, 1] DC8 DC7 1.5 
+   [*, *, Pr2, Plane, 1] DC9 DC10 1.5 
+   [*, *, Pr2, Plane, 1] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr2, Plane, 1] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr2, Plane, 1] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr2, Plane, 1] DC13 DC12 1.5 
+   [*, *, Pr1, Plane, 2] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr1, Plane, 2] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr1, Plane, 2] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr1, Plane, 2] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr1, Plane, 2] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr1, Plane, 2] DC1 DC2 1.5 
+   [*, *, Pr1, Plane, 2] DC2 DC1 1.5 
+   [*, *, Pr1, Plane, 2] DC3 DC4 1.5 
+   [*, *, Pr1, Plane, 2] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr1, Plane, 2] DC5 DC4 1.5 
+   [*, *, Pr1, Plane, 2] DC6 DC7 1.5 
+   [*, *, Pr1, Plane, 2] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr1, Plane, 2] DC8 DC7 1.5 
+   [*, *, Pr1, Plane, 2] DC9 DC10 1.5 
+   [*, *, Pr1, Plane, 2] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr1, Plane, 2] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr1, Plane, 2] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr1, Plane, 2] DC13 DC12 1.5 
+   [*, *, Pr2, Plane, 2] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr2, Plane, 2] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr2, Plane, 2] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr2, Plane, 2] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr2, Plane, 2] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr2, Plane, 2] DC1 DC2 1.5 
+   [*, *, Pr2, Plane, 2] DC2 DC1 1.5 
+   [*, *, Pr2, Plane, 2] DC3 DC4 1.5 
+   [*, *, Pr2, Plane, 2] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr2, Plane, 2] DC5 DC4 1.5 
+   [*, *, Pr2, Plane, 2] DC6 DC7 1.5 
+   [*, *, Pr2, Plane, 2] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr2, Plane, 2] DC8 DC7 1.5 
+   [*, *, Pr2, Plane, 2] DC9 DC10 1.5 
+   [*, *, Pr2, Plane, 2] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr2, Plane, 2] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr2, Plane, 2] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr2, Plane, 2] DC13 DC12 1.5 
+   [*, *, Pr1, Plane, 3] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr1, Plane, 3] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr1, Plane, 3] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr1, Plane, 3] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr1, Plane, 3] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr1, Plane, 3] DC1 DC2 1.5 
+   [*, *, Pr1, Plane, 3] DC2 DC1 1.5 
+   [*, *, Pr1, Plane, 3] DC3 DC4 1.5 
+   [*, *, Pr1, Plane, 3] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr1, Plane, 3] DC5 DC4 1.5 
+   [*, *, Pr1, Plane, 3] DC6 DC7 1.5 
+   [*, *, Pr1, Plane, 3] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr1, Plane, 3] DC8 DC7 1.5 
+   [*, *, Pr1, Plane, 3] DC9 DC10 1.5 
+   [*, *, Pr1, Plane, 3] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr1, Plane, 3] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr1, Plane, 3] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr1, Plane, 3] DC13 DC12 1.5 
+   [*, *, Pr2, Plane, 3] P1 P2 1.5 P1 DC1 1.5 P1 DC2 1.5 P1 DC3 1.5 P1 DC4 1.5 P1 DC5 1.5
+   [*, *, Pr2, Plane, 3] P2 P1 1.5 P2 P3 1.5 P2 DC3 1.5 P2 DC4 1.5 P2 DC5 1.5
+   [*, *, Pr2, Plane, 3] P3 P2 1.5 P3 DC6 1.5 P3 DC7 1.5 P3 DC8 1.5 P3 DC9 1.5 P3 DC10 1.5
+   [*, *, Pr2, Plane, 3] P4 P5 1.5 P4 DC9 1.5 P4 DC10 1.5 P4 DC11 1.5 P4 DC12 1.5 P4 DC13 1.5
+   [*, *, Pr2, Plane, 3] P5 P4 1.5 P5 DC9 1.5 P5 DC10 1.5 P5 DC11 1.5 P5 DC12 1.5 P5 DC13 1.5 P5 DC1 1.5 P5 DC2 1.5
+   [*, *, Pr2, Plane, 3] DC1 DC2 1.5 
+   [*, *, Pr2, Plane, 3] DC2 DC1 1.5 
+   [*, *, Pr2, Plane, 3] DC3 DC4 1.5 
+   [*, *, Pr2, Plane, 3] DC4 DC3 1.5  DC4 DC5 1.5 
+   [*, *, Pr2, Plane, 3] DC5 DC4 1.5 
+   [*, *, Pr2, Plane, 3] DC6 DC7 1.5 
+   [*, *, Pr2, Plane, 3] DC7 DC6 1.5  DC7 DC8 1.5 
+   [*, *, Pr2, Plane, 3] DC8 DC7 1.5 
+   [*, *, Pr2, Plane, 3] DC9 DC10 1.5 
+   [*, *, Pr2, Plane, 3] DC10 DC9 1.5  DC10 DC11 1.5 
+   [*, *, Pr2, Plane, 3] DC11 DC10 1.5  DC11 DC12 1.5 
+   [*, *, Pr2, Plane, 3] DC12 DC11 1.5  DC12 DC13 1.5 
+   [*, *, Pr2, Plane, 3] DC13 DC12 1.5 ;
+
+# gammaR: freight rate of product j from facility k to customer r with mode m at time period t
+param gammaR :=
+   [*, *, Pr1, Truck, 1] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr1, Truck, 1] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr1, Truck, 1] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr1, Truck, 1] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr1, Truck, 1] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr1, Truck, 1] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr1, Truck, 1] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr1, Truck, 1] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr1, Truck, 1] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr1, Truck, 1] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr1, Truck, 1] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr1, Truck, 1] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr1, Truck, 1] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr2, Truck, 1] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr2, Truck, 1] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr2, Truck, 1] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr2, Truck, 1] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr2, Truck, 1] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr2, Truck, 1] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr2, Truck, 1] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr2, Truck, 1] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr2, Truck, 1] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr2, Truck, 1] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr2, Truck, 1] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr2, Truck, 1] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr2, Truck, 1] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr1, Truck, 2] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr1, Truck, 2] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr1, Truck, 2] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr1, Truck, 2] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr1, Truck, 2] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr1, Truck, 2] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr1, Truck, 2] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr1, Truck, 2] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr1, Truck, 2] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr1, Truck, 2] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr1, Truck, 2] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr1, Truck, 2] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr1, Truck, 2] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr2, Truck, 2] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr2, Truck, 2] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr2, Truck, 2] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr2, Truck, 2] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr2, Truck, 2] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr2, Truck, 2] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr2, Truck, 2] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr2, Truck, 2] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr2, Truck, 2] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr2, Truck, 2] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr2, Truck, 2] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr2, Truck, 2] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr2, Truck, 2] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr1, Truck, 3] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr1, Truck, 3] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr1, Truck, 3] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr1, Truck, 3] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr1, Truck, 3] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr1, Truck, 3] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr1, Truck, 3] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr1, Truck, 3] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr1, Truck, 3] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr1, Truck, 3] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr1, Truck, 3] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr1, Truck, 3] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr1, Truck, 3] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr2, Truck, 3] DC1 R1  1.2 DC1 R2  1.2 DC1 R3  1.2 DC1 R44  1.2 DC1 R45  1.2 DC1 R46  1.2
+   [*, *, Pr2, Truck, 3] DC2 R4  1.2 DC2 R5  1.2 DC2 R6  1.2 DC2 R7  1.2 DC2 R8  1.2 DC2 R9  1.2 DC2 R10  1.2 DC2 R11  1.2 DC2 R12  1.2
+   [*, *, Pr2, Truck, 3] DC3 R9  1.2 DC3 R10  1.2 DC3 R11  1.2 DC3 R12  1.2 DC3 R4  1.2 DC3 R5  1.2 DC3 R6  1.2 DC3 R7  1.2 DC3 R8  1.2
+   [*, *, Pr2, Truck, 3] DC4 R13  1.2 DC4 R14  1.2 DC4 R15  1.2
+   [*, *, Pr2, Truck, 3] DC5 R16  1.2 DC5 R17  1.2 DC5 R18  1.2 DC5 R19  1.2 DC5 R20  1.2
+   [*, *, Pr2, Truck, 3] DC6 R21  1.2 DC6 R22  1.2 DC6 R23  1.2
+   [*, *, Pr2, Truck, 3] DC7 R24  1.2 DC7 R25  1.2 DC7 R26  1.2
+   [*, *, Pr2, Truck, 3] DC8 R27  1.2 DC8 R28  1.2 DC8 R29  1.2 DC8 R30  1.2 DC8 R31  1.2 DC8 R32  1.2
+   [*, *, Pr2, Truck, 3] DC9 R30  1.2 DC9 R31  1.2 DC9 R32  1.2 DC9 R27  1.2 DC9 R28  1.2 DC9 R29  1.2
+   [*, *, Pr2, Truck, 3] DC10 R33  1.2 DC10 R34  1.2 DC10 R35  1.2 DC10 R36  1.2
+   [*, *, Pr2, Truck, 3] DC11 R37  1.2 DC11 R38  1.2 DC11 R39  1.2 DC11 R40  1.2
+   [*, *, Pr2, Truck, 3] DC12 R41  1.2 DC12 R42  1.2 DC12 R43  1.2
+   [*, *, Pr2, Truck, 3] DC13 R44  1.2 DC13 R45  1.2 DC13 R46  1.2 DC13 R1  1.2 DC13 R2  1.2 DC13 R3  1.2
+   [*, *, Pr1, Plane, 1] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr1, Plane, 1] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr1, Plane, 1] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr1, Plane, 1] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr1, Plane, 1] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr1, Plane, 1] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr1, Plane, 1] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr1, Plane, 1] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr1, Plane, 1] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr1, Plane, 1] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr1, Plane, 1] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr1, Plane, 1] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr1, Plane, 1] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8
+   [*, *, Pr2, Plane, 1] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr2, Plane, 1] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr2, Plane, 1] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr2, Plane, 1] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr2, Plane, 1] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr2, Plane, 1] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr2, Plane, 1] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr2, Plane, 1] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr2, Plane, 1] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr2, Plane, 1] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr2, Plane, 1] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr2, Plane, 1] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr2, Plane, 1] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8
+   [*, *, Pr1, Plane, 2] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr1, Plane, 2] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr1, Plane, 2] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr1, Plane, 2] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr1, Plane, 2] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr1, Plane, 2] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr1, Plane, 2] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr1, Plane, 2] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr1, Plane, 2] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr1, Plane, 2] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr1, Plane, 2] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr1, Plane, 2] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr1, Plane, 2] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8
+   [*, *, Pr2, Plane, 2] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr2, Plane, 2] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr2, Plane, 2] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr2, Plane, 2] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr2, Plane, 2] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr2, Plane, 2] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr2, Plane, 2] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr2, Plane, 2] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr2, Plane, 2] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr2, Plane, 2] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr2, Plane, 2] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr2, Plane, 2] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr2, Plane, 2] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8
+   [*, *, Pr1, Plane, 3] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr1, Plane, 3] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr1, Plane, 3] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr1, Plane, 3] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr1, Plane, 3] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr1, Plane, 3] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr1, Plane, 3] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr1, Plane, 3] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr1, Plane, 3] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr1, Plane, 3] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr1, Plane, 3] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr1, Plane, 3] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr1, Plane, 3] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8
+   [*, *, Pr2, Plane, 3] DC1 R1  1.8 DC1 R2  1.8 DC1 R3  1.8 DC1 R44  1.8 DC1 R45  1.8 DC1 R46  1.8
+   [*, *, Pr2, Plane, 3] DC2 R4  1.8 DC2 R5  1.8 DC2 R6  1.8 DC2 R7  1.8 DC2 R8  1.8 DC2 R9  1.8 DC2 R10  1.8 DC2 R11  1.8 DC2 R12  1.8
+   [*, *, Pr2, Plane, 3] DC3 R9  1.8 DC3 R10  1.8 DC3 R11  1.8 DC3 R12  1.8 DC3 R4  1.8 DC3 R5  1.8 DC3 R6  1.8 DC3 R7  1.8 DC3 R8  1.8
+   [*, *, Pr2, Plane, 3] DC4 R13  1.8 DC4 R14  1.8 DC4 R15  1.8
+   [*, *, Pr2, Plane, 3] DC5 R16  1.8 DC5 R17  1.8 DC5 R18  1.8 DC5 R19  1.8 DC5 R20  1.8
+   [*, *, Pr2, Plane, 3] DC6 R21  1.8 DC6 R22  1.8 DC6 R23  1.8
+   [*, *, Pr2, Plane, 3] DC7 R24  1.8 DC7 R25  1.8 DC7 R26  1.8
+   [*, *, Pr2, Plane, 3] DC8 R27  1.8 DC8 R28  1.8 DC8 R29  1.8 DC8 R30  1.8 DC8 R31  1.8 DC8 R32  1.8
+   [*, *, Pr2, Plane, 3] DC9 R30  1.8 DC9 R31  1.8 DC9 R32  1.8 DC9 R27  1.8 DC9 R28  1.8 DC9 R29  1.8
+   [*, *, Pr2, Plane, 3] DC10 R33  1.8 DC10 R34  1.8 DC10 R35  1.8 DC10 R36  1.8
+   [*, *, Pr2, Plane, 3] DC11 R37  1.8 DC11 R38  1.8 DC11 R39  1.8 DC11 R40  1.8
+   [*, *, Pr2, Plane, 3] DC12 R41  1.8 DC12 R42  1.8 DC12 R43  1.8
+   [*, *, Pr2, Plane, 3] DC13 R44  1.8 DC13 R45  1.8 DC13 R46  1.8 DC13 R1  1.8 DC13 R2  1.8 DC13 R3  1.8 ;
+   
+# h: unit inventory cost of product j in facility k at time period t
+# delta: unit throughput cost of product j in facility k at time period t
+# Im: minimum inventory of product j at facility k at time period t
+param h :=
+   [*, Pr1, 1] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr1, 1] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2 
+   [*, Pr1, 2] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr1, 2] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2 
+   [*, Pr1, 3] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr1, 3] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2 
+   [*, Pr2, 1] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr2, 1] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2 
+   [*, Pr2, 2] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr2, 2] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2 
+   [*, Pr2, 3] P1 0.2  P2 0.2  P3 0.2  P4 0.2  P5 0.2 
+   [*, Pr2, 3] DC1 0.2  DC2 0.2  DC3 0.2  DC4 0.2  DC5 0.2  DC6 0.2  DC7 0.2  DC8 0.2  DC9 0.2  DC10 0.2  DC11 0.2  DC12 0.2  DC13 0.2  ;
+
+param delta :=
+   [*, Pr1, 1] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr1, 1] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5 
+   [*, Pr1, 2] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr1, 2] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5 
+   [*, Pr1, 3] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr1, 3] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5 
+   [*, Pr2, 1] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr2, 1] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5 
+   [*, Pr2, 2] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr2, 2] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5 
+   [*, Pr2, 3] P1 0.5  P2 0.5  P3 0.5  P4 0.5  P5 0.5 
+   [*, Pr2, 3] DC1 0.5  DC2 0.5  DC3 0.5  DC4 0.5  DC5 0.5  DC6 0.5  DC7 0.5  DC8 0.5  DC9 0.5  DC10 0.5  DC11 0.5  DC12 0.5  DC13 0.5  ;
+
+param Im :=
+   [*, Pr1, 1] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr1, 1] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20
+   [*, Pr1, 2] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr1, 2] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20
+   [*, Pr1, 3] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr1, 3] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20
+   [*, Pr2, 1] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr2, 1] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20
+   [*, Pr2, 2] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr2, 2] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20
+   [*, Pr2, 3] P1 20 P2 20 P3 20 P4 20 P5 20
+   [*, Pr2, 3] DC1 20 DC2 20 DC3 20 DC4 20 DC5 20 DC6 20 DC7 20 DC8 20 DC9 20 DC10 20 DC11 20 DC12 20 DC13 20 ;
+
+# unit penalty cost of product j for lost unmeet demand in customer r at time period t
+param eta :=
+   [*, Pr1, 1] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr1, 1] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr1, 1] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr1, 1] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr1, 1] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0
+   [*, Pr1, 2] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr1, 2] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr1, 2] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr1, 2] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr1, 2] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0
+   [*, Pr1, 3] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr1, 3] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr1, 3] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr1, 3] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr1, 3] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0
+   [*, Pr2, 1] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr2, 1] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr2, 1] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr2, 1] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr2, 1] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0
+   [*, Pr2, 2] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr2, 2] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr2, 2] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr2, 2] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr2, 2] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0
+   [*, Pr2, 3] R1 500.0 R2 500.0 R3 500.0 R4 500.0 R5 500.0 R6 500.0 R7 500.0 R8 500.0 R9 500.0 R10 500.0
+   [*, Pr2, 3] R11 500.0 R12 500.0 R13 500.0 R14 500.0 R15 500.0 R16 500.0 R17 500.0 R18 500.0 R19 500.0 R20 500.0
+   [*, Pr2, 3] R21 500.0 R22 500.0 R23 500.0 R24 500.0 R25 500.0 R26 500.0 R27 500.0 R28 500.0 R29 500.0 R30 500.0
+   [*, Pr2, 3] R31 500.0 R32 500.0 R33 500.0 R34 500.0 R35 500.0 R36 500.0 R37 500.0 R38 500.0 R39 500.0 R40 500.0
+   [*, Pr2, 3] R41 500.0 R42 500.0 R43 500.0 R44 500.0 R45 500.0 R46 500.0 ;
+
+# capacity of plant k for product j, k in K_P
+param Q :=
+   [*, Pr1] P1 1000 P2 800 P3 1200 P4 800 P5 1000
+   [*, Pr2] P1 1000 P2 800 P3 1200 P4 800 P5 1000 ;
+
+# shipping time of product j from facility k1 to facility k2 with mode m
+param lambdaK :=
+   [*, *, Pr1, Truck] P1 P2 2.0 P1 DC1 2.0 P1 DC2 2.0 P1 DC3 2.0 P1 DC4 2.0 P1 DC5 2.0
+   [*, *, Pr1, Truck] P2 P1 2.0 P2 P3 2.0 P2 DC3 2.0 P2 DC4 2.0 P2 DC5 2.0
+   [*, *, Pr1, Truck] P3 P2 2.0 P3 DC6 2.0 P3 DC7 2.0 P3 DC8 2.0 P3 DC9 2.0 P3 DC10 2.0
+   [*, *, Pr1, Truck] P4 P5 2.0 P4 DC9 2.0 P4 DC10 2.0 P4 DC11 2.0 P4 DC12 2.0 P4 DC13 2.0
+   [*, *, Pr1, Truck] P5 P4 2.0 P5 DC9 2.0 P5 DC10 2.0 P5 DC11 2.0 P5 DC12 2.0 P5 DC13 2.0 P5 DC1 2.0 P5 DC2 2.0
+   [*, *, Pr1, Truck] DC1 DC2 2.0 
+   [*, *, Pr1, Truck] DC2 DC1 2.0 
+   [*, *, Pr1, Truck] DC3 DC4 2.0 
+   [*, *, Pr1, Truck] DC4 DC3 2.0 DC4 DC5 2.0 
+   [*, *, Pr1, Truck] DC5 DC4 2.0 
+   [*, *, Pr1, Truck] DC6 DC7 2.0 
+   [*, *, Pr1, Truck] DC7 DC6 2.0 DC7 DC8 2.0 
+   [*, *, Pr1, Truck] DC8 DC7 2.0 
+   [*, *, Pr1, Truck] DC9 DC10 2.0 
+   [*, *, Pr1, Truck] DC10 DC9 2.0 DC10 DC11 2.0 
+   [*, *, Pr1, Truck] DC11 DC10 2.0 DC11 DC12 2.0 
+   [*, *, Pr1, Truck] DC12 DC11 2.0 DC12 DC13 2.0 
+   [*, *, Pr1, Truck] DC13 DC12 2.0 
+   [*, *, Pr1, Plane] P1 P2 1 P1 DC1 1 P1 DC2 1 P1 DC3 1 P1 DC4 1 P1 DC5 1
+   [*, *, Pr1, Plane] P2 P1 1 P2 P3 1 P2 DC3 1 P2 DC4 1 P2 DC5 1
+   [*, *, Pr1, Plane] P3 P2 1 P3 DC6 1 P3 DC7 1 P3 DC8 1 P3 DC9 1 P3 DC10 1
+   [*, *, Pr1, Plane] P4 P5 1 P4 DC9 1 P4 DC10 1 P4 DC11 1 P4 DC12 1 P4 DC13 1
+   [*, *, Pr1, Plane] P5 P4 1 P5 DC9 1 P5 DC10 1 P5 DC11 1 P5 DC12 1 P5 DC13 1 P5 DC1 1 P5 DC2 1
+   [*, *, Pr1, Plane] DC1 DC2 1 
+   [*, *, Pr1, Plane] DC2 DC1 1 
+   [*, *, Pr1, Plane] DC3 DC4 1 
+   [*, *, Pr1, Plane] DC4 DC3 1 DC4 DC5 1 
+   [*, *, Pr1, Plane] DC5 DC4 1 
+   [*, *, Pr1, Plane] DC6 DC7 1 
+   [*, *, Pr1, Plane] DC7 DC6 1 DC7 DC8 1 
+   [*, *, Pr1, Plane] DC8 DC7 1 
+   [*, *, Pr1, Plane] DC9 DC10 1 
+   [*, *, Pr1, Plane] DC10 DC9 1 DC10 DC11 1 
+   [*, *, Pr1, Plane] DC11 DC10 1 DC11 DC12 1 
+   [*, *, Pr1, Plane] DC12 DC11 1 DC12 DC13 1 
+   [*, *, Pr1, Plane] DC13 DC12 1
+   [*, *, Pr2, Truck] P1 P2 2.0 P1 DC1 2.0 P1 DC2 2.0 P1 DC3 2.0 P1 DC4 2.0 P1 DC5 2.0
+   [*, *, Pr2, Truck] P2 P1 2.0 P2 P3 2.0 P2 DC3 2.0 P2 DC4 2.0 P2 DC5 2.0
+   [*, *, Pr2, Truck] P3 P2 2.0 P3 DC6 2.0 P3 DC7 2.0 P3 DC8 2.0 P3 DC9 2.0 P3 DC10 2.0
+   [*, *, Pr2, Truck] P4 P5 2.0 P4 DC9 2.0 P4 DC10 2.0 P4 DC11 2.0 P4 DC12 2.0 P4 DC13 2.0
+   [*, *, Pr2, Truck] P5 P4 2.0 P5 DC9 2.0 P5 DC10 2.0 P5 DC11 2.0 P5 DC12 2.0 P5 DC13 2.0 P5 DC1 2.0 P5 DC2 2.0
+   [*, *, Pr2, Truck] DC1 DC2 2.0 
+   [*, *, Pr2, Truck] DC2 DC1 2.0 
+   [*, *, Pr2, Truck] DC3 DC4 2.0 
+   [*, *, Pr2, Truck] DC4 DC3 2.0 DC4 DC5 2.0 
+   [*, *, Pr2, Truck] DC5 DC4 2.0 
+   [*, *, Pr2, Truck] DC6 DC7 2.0 
+   [*, *, Pr2, Truck] DC7 DC6 2.0 DC7 DC8 2.0 
+   [*, *, Pr2, Truck] DC8 DC7 2.0 
+   [*, *, Pr2, Truck] DC9 DC10 2.0 
+   [*, *, Pr2, Truck] DC10 DC9 2.0 DC10 DC11 2.0 
+   [*, *, Pr2, Truck] DC11 DC10 2.0 DC11 DC12 2.0 
+   [*, *, Pr2, Truck] DC12 DC11 2.0 DC12 DC13 2.0 
+   [*, *, Pr2, Truck] DC13 DC12 2.0 
+   [*, *, Pr2, Plane] P1 P2 1 P1 DC1 1 P1 DC2 1 P1 DC3 1 P1 DC4 1 P1 DC5 1
+   [*, *, Pr2, Plane] P2 P1 1 P2 P3 1 P2 DC3 1 P2 DC4 1 P2 DC5 1
+   [*, *, Pr2, Plane] P3 P2 1 P3 DC6 1 P3 DC7 1 P3 DC8 1 P3 DC9 1 P3 DC10 1
+   [*, *, Pr2, Plane] P4 P5 1 P4 DC9 1 P4 DC10 1 P4 DC11 1 P4 DC12 1 P4 DC13 1
+   [*, *, Pr2, Plane] P5 P4 1 P5 DC9 1 P5 DC10 1 P5 DC11 1 P5 DC12 1 P5 DC13 1 P5 DC1 1 P5 DC2 1
+   [*, *, Pr2, Plane] DC1 DC2 1 
+   [*, *, Pr2, Plane] DC2 DC1 1 
+   [*, *, Pr2, Plane] DC3 DC4 1 
+   [*, *, Pr2, Plane] DC4 DC3 1 DC4 DC5 1 
+   [*, *, Pr2, Plane] DC5 DC4 1 
+   [*, *, Pr2, Plane] DC6 DC7 1 
+   [*, *, Pr2, Plane] DC7 DC6 1 DC7 DC8 1 
+   [*, *, Pr2, Plane] DC8 DC7 1 
+   [*, *, Pr2, Plane] DC9 DC10 1 
+   [*, *, Pr2, Plane] DC10 DC9 1 DC10 DC11 1 
+   [*, *, Pr2, Plane] DC11 DC10 1 DC11 DC12 1 
+   [*, *, Pr2, Plane] DC12 DC11 1 DC12 DC13 1 
+   [*, *, Pr2, Plane] DC13 DC12 1 ;
+
+# shipping time of product j from facility k to customer r with mode m
+param lambdaR :=
+   [*, *, Pr1, Truck] DC1 R1 2.0 DC1 R2 2.0 DC1 R3 2.0 DC1 R44 2.0 DC1 R45 2.0 DC1 R46 2.0
+   [*, *, Pr1, Truck] DC2 R4 2.0 DC2 R5 2.0 DC2 R6 2.0 DC2 R7 2.0 DC2 R8 2.0 DC2 R9 2.0 DC2 R10 2.0 DC2 R11 2.0 DC2 R12 2.0
+   [*, *, Pr1, Truck] DC3 R9 2.0 DC3 R10 2.0 DC3 R11 2.0 DC3 R12 2.0 DC3 R4 2.0 DC3 R5 2.0 DC3 R6 2.0 DC3 R7 2.0 DC3 R8 2.0
+   [*, *, Pr1, Truck] DC4 R13 2.0 DC4 R14 2.0 DC4 R15 2.0
+   [*, *, Pr1, Truck] DC5 R16 2.0 DC5 R17 2.0 DC5 R18 2.0 DC5 R19 2.0 DC5 R20 2.0
+   [*, *, Pr1, Truck] DC6 R21 2.0 DC6 R22 2.0 DC6 R23 2.0
+   [*, *, Pr1, Truck] DC7 R24 2.0 DC7 R25 2.0 DC7 R26 2.0
+   [*, *, Pr1, Truck] DC8 R27 2.0 DC8 R28 2.0 DC8 R29 2.0 DC8 R30 2.0 DC8 R31 2.0 DC8 R32 2.0
+   [*, *, Pr1, Truck] DC9 R30 2.0 DC9 R31 2.0 DC9 R32 2.0 DC9 R27 2.0 DC9 R28 2.0 DC9 R29 2.0
+   [*, *, Pr1, Truck] DC10 R33 2.0 DC10 R34 2.0 DC10 R35 2.0 DC10 R36 2.0
+   [*, *, Pr1, Truck] DC11 R37 2.0 DC11 R38 2.0 DC11 R39 2.0 DC11 R40 2.0
+   [*, *, Pr1, Truck] DC12 R41 2.0 DC12 R42 2.0 DC12 R43 2.0
+   [*, *, Pr1, Truck] DC13 R44 2.0 DC13 R45 2.0 DC13 R46 2.0 DC13 R1 2.0 DC13 R2 2.0 DC13 R3 2.0
+   [*, *, Pr1, Plane] DC1 R1 1 DC1 R2 1 DC1 R3 1 DC1 R44 1 DC1 R45 1 DC1 R46 1
+   [*, *, Pr1, Plane] DC2 R4 1 DC2 R5 1 DC2 R6 1 DC2 R7 1 DC2 R8 1 DC2 R9 1 DC2 R10 1 DC2 R11 1 DC2 R12 1
+   [*, *, Pr1, Plane] DC3 R9 1 DC3 R10 1 DC3 R11 1 DC3 R12 1 DC3 R4 1 DC3 R5 1 DC3 R6 1 DC3 R7 1 DC3 R8 1
+   [*, *, Pr1, Plane] DC4 R13 1 DC4 R14 1 DC4 R15 1
+   [*, *, Pr1, Plane] DC5 R16 1 DC5 R17 1 DC5 R18 1 DC5 R19 1 DC5 R20 1
+   [*, *, Pr1, Plane] DC6 R21 1 DC6 R22 1 DC6 R23 1
+   [*, *, Pr1, Plane] DC7 R24 1 DC7 R25 1 DC7 R26 1
+   [*, *, Pr1, Plane] DC8 R27 1 DC8 R28 1 DC8 R29 1 DC8 R30 1 DC8 R31 1 DC8 R32 1
+   [*, *, Pr1, Plane] DC9 R30 1 DC9 R31 1 DC9 R32 1 DC9 R27 1 DC9 R28 1 DC9 R29 1
+   [*, *, Pr1, Plane] DC10 R33 1 DC10 R34 1 DC10 R35 1 DC10 R36 1
+   [*, *, Pr1, Plane] DC11 R37 1 DC11 R38 1 DC11 R39 1 DC11 R40 1
+   [*, *, Pr1, Plane] DC12 R41 1 DC12 R42 1 DC12 R43 1
+   [*, *, Pr1, Plane] DC13 R44 1 DC13 R45 1 DC13 R46 1 DC13 R1 1 DC13 R2 1 DC13 R3 1
+   [*, *, Pr2, Truck] DC1 R1 2.0 DC1 R2 2.0 DC1 R3 2.0 DC1 R44 2.0 DC1 R45 2.0 DC1 R46 2.0
+   [*, *, Pr2, Truck] DC2 R4 2.0 DC2 R5 2.0 DC2 R6 2.0 DC2 R7 2.0 DC2 R8 2.0 DC2 R9 2.0 DC2 R10 2.0 DC2 R11 2.0 DC2 R12 2.0
+   [*, *, Pr2, Truck] DC3 R9 2.0 DC3 R10 2.0 DC3 R11 2.0 DC3 R12 2.0 DC3 R4 2.0 DC3 R5 2.0 DC3 R6 2.0 DC3 R7 2.0 DC3 R8 2.0
+   [*, *, Pr2, Truck] DC4 R13 2.0 DC4 R14 2.0 DC4 R15 2.0
+   [*, *, Pr2, Truck] DC5 R16 2.0 DC5 R17 2.0 DC5 R18 2.0 DC5 R19 2.0 DC5 R20 2.0
+   [*, *, Pr2, Truck] DC6 R21 2.0 DC6 R22 2.0 DC6 R23 2.0
+   [*, *, Pr2, Truck] DC7 R24 2.0 DC7 R25 2.0 DC7 R26 2.0
+   [*, *, Pr2, Truck] DC8 R27 2.0 DC8 R28 2.0 DC8 R29 2.0 DC8 R30 2.0 DC8 R31 2.0 DC8 R32 2.0
+   [*, *, Pr2, Truck] DC9 R30 2.0 DC9 R31 2.0 DC9 R32 2.0 DC9 R27 2.0 DC9 R28 2.0 DC9 R29 2.0
+   [*, *, Pr2, Truck] DC10 R33 2.0 DC10 R34 2.0 DC10 R35 2.0 DC10 R36 2.0
+   [*, *, Pr2, Truck] DC11 R37 2.0 DC11 R38 2.0 DC11 R39 2.0 DC11 R40 2.0
+   [*, *, Pr2, Truck] DC12 R41 2.0 DC12 R42 2.0 DC12 R43 2.0
+   [*, *, Pr2, Truck] DC13 R44 2.0 DC13 R45 2.0 DC13 R46 2.0 DC13 R1 2.0 DC13 R2 2.0 DC13 R3 2.0
+   [*, *, Pr2, Plane] DC1 R1 1 DC1 R2 1 DC1 R3 1 DC1 R44 1 DC1 R45 1 DC1 R46 1
+   [*, *, Pr2, Plane] DC2 R4 1 DC2 R5 1 DC2 R6 1 DC2 R7 1 DC2 R8 1 DC2 R9 1 DC2 R10 1 DC2 R11 1 DC2 R12 1
+   [*, *, Pr2, Plane] DC3 R9 1 DC3 R10 1 DC3 R11 1 DC3 R12 1 DC3 R4 1 DC3 R5 1 DC3 R6 1 DC3 R7 1 DC3 R8 1
+   [*, *, Pr2, Plane] DC4 R13 1 DC4 R14 1 DC4 R15 1
+   [*, *, Pr2, Plane] DC5 R16 1 DC5 R17 1 DC5 R18 1 DC5 R19 1 DC5 R20 1
+   [*, *, Pr2, Plane] DC6 R21 1 DC6 R22 1 DC6 R23 1
+   [*, *, Pr2, Plane] DC7 R24 1 DC7 R25 1 DC7 R26 1
+   [*, *, Pr2, Plane] DC8 R27 1 DC8 R28 1 DC8 R29 1 DC8 R30 1 DC8 R31 1 DC8 R32 1
+   [*, *, Pr2, Plane] DC9 R30 1 DC9 R31 1 DC9 R32 1 DC9 R27 1 DC9 R28 1 DC9 R29 1
+   [*, *, Pr2, Plane] DC10 R33 1 DC10 R34 1 DC10 R35 1 DC10 R36 1
+   [*, *, Pr2, Plane] DC11 R37 1 DC11 R38 1 DC11 R39 1 DC11 R40 1
+   [*, *, Pr2, Plane] DC12 R41 1 DC12 R42 1 DC12 R43 1
+   [*, *, Pr2, Plane] DC13 R44 1 DC13 R45 1 DC13 R46 1 DC13 R1 1 DC13 R2 1 DC13 R3 1 ;
+
+end;

@@ -1,0 +1,5 @@
+TIME          cap41
+PERIODS
+    x[1]      TC                       TIME1
+    y[1,1]    c1[1]                    TIME2
+ENDATA

@@ -1,0 +1,33 @@
+STOCH         4node
+INDEP         DISCRETE
+    RHS       CBAB       4.50000                 0.500000    
+    RHS       CBAB       5.50000                 0.500000    
+    RHS       CBAC       6.80000                 0.250000    
+    RHS       CBAC       7.60000                 0.250000    
+    RHS       CBAC       8.40000                 0.250000    
+    RHS       CBAC       9.20000                 0.250000    
+    RHS       CBAE       3.60000                 0.500000    
+    RHS       CBAE       4.40000                 0.500000    
+    RHS       CBBA       4.05000                 0.500000    
+    RHS       CBBA       4.95000                 0.500000    
+    RHS       CBBC       5.69500                 0.250000    
+    RHS       CBBC       6.36500                 0.250000    
+    RHS       CBBC       7.03500                 0.250000    
+    RHS       CBBC       7.70500                 0.250000    
+    RHS       CBBE       3.78000                 0.500000    
+    RHS       CBBE       4.62000                 0.500000    
+    RHS       CBCA       9.09000                 0.500000    
+    RHS       CBCA       11.1100                 0.500000    
+    RHS       CBCB       7.47000                 0.500000    
+    RHS       CBCB       9.13000                 0.500000    
+    RHS       CBCE       10.9800                 0.500000    
+    RHS       CBCE       13.4200                 0.500000    
+    RHS       CBEA       2.88000                 0.500000    
+    RHS       CBEA       3.52000                 0.500000    
+    RHS       CBEB       4.77000                 0.500000    
+    RHS       CBEB       5.83000                 0.500000    
+    RHS       CBEC       6.12000                 0.250000    
+    RHS       CBEC       6.84000                 0.250000    
+    RHS       CBEC       7.56000                 0.250000    
+    RHS       CBEC       8.28000                 0.250000    
+ENDATA  

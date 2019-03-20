@@ -1,0 +1,5 @@
+TIME   transship
+PERIODS
+            orderUp(0)               obj	Stage 0
+             begEnd(0)        initInv(0)	Stage 1
+ENDATA

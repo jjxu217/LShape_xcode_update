@@ -1,0 +1,254 @@
+* Problem:    gsc
+* Class:      LP
+* Rows:       55
+* Columns:    90
+* Non-zeros:  239
+* Format:     Free MPS
+*
+NAME sgsc
+ROWS
+ N totalCost
+ E massBalanceP1[Pr1,P1,1]
+ E massBalanceP1[Pr1,P2,1]
+ E massBalanceDC1[Pr1,DC1,1]
+ E massBalanceDC1[Pr1,DC2,1]
+ E massBalanceDC1[Pr1,DC3,1]
+ L capacity1[P1,Pr1,1]
+ L capacity1[P2,Pr1,1]
+ G minimumInv1[P1,Pr1,1]
+ G minimumInv1[P2,Pr1,1]
+ G minimumInv1[DC1,Pr1,1]
+ G minimumInv1[DC2,Pr1,1]
+ G minimumInv1[DC3,Pr1,1]
+ E massBalanceC2[R1,Pr1,1]
+ E massBalanceC2[R2,Pr1,1]
+ E massBalanceC2[R3,Pr1,1]
+ E massBalanceC2[R4,Pr1,1]
+ E massBalanceC2[R5,Pr1,1]
+ E massBalanceC2[R6,Pr1,1]
+ E massBalanceP2[Pr1,P1,2]
+ E massBalanceP2[Pr1,P1,3]
+ E massBalanceP2[Pr1,P2,2]
+ E massBalanceP2[Pr1,P2,3]
+ E massBalanceDC2[Pr1,DC1,2]
+ E massBalanceDC2[Pr1,DC1,3]
+ E massBalanceDC2[Pr1,DC2,2]
+ E massBalanceDC2[Pr1,DC2,3]
+ E massBalanceDC2[Pr1,DC3,2]
+ E massBalanceDC2[Pr1,DC3,3]
+ E massBalanceC2[R1,Pr1,2]
+ E massBalanceC2[R1,Pr1,3]
+ E massBalanceC2[R2,Pr1,2]
+ E massBalanceC2[R2,Pr1,3]
+ E massBalanceC2[R3,Pr1,2]
+ E massBalanceC2[R3,Pr1,3]
+ E massBalanceC2[R4,Pr1,2]
+ E massBalanceC2[R4,Pr1,3]
+ E massBalanceC2[R5,Pr1,2]
+ E massBalanceC2[R5,Pr1,3]
+ E massBalanceC2[R6,Pr1,2]
+ E massBalanceC2[R6,Pr1,3]
+ E capacity2[P1,Pr1,2]
+ E capacity2[P1,Pr1,3]
+ E capacity2[P2,Pr1,2]
+ E capacity2[P2,Pr1,3]
+ E minimumInv2[P1,Pr1,2]
+ E minimumInv2[P1,Pr1,3]
+ E minimumInv2[P2,Pr1,2]
+ E minimumInv2[P2,Pr1,3]
+ E minimumInv2[DC1,Pr1,2]
+ E minimumInv2[DC1,Pr1,3]
+ E minimumInv2[DC2,Pr1,2]
+ E minimumInv2[DC2,Pr1,3]
+ E minimumInv2[DC3,Pr1,2]
+ E minimumInv2[DC3,Pr1,3]
+COLUMNS
+ F[P1,P2,Pr1,Truck,1] totalCost 1.5 massBalanceP1[Pr1,P1,1] 1
+ F[P1,P2,Pr1,Truck,1] massBalanceP2[Pr1,P2,2] -1
+ F[P1,DC1,Pr1,Truck,1] totalCost 1.5 massBalanceP1[Pr1,P1,1] 1
+ F[P1,DC1,Pr1,Truck,1] massBalanceDC2[Pr1,DC1,2] -1
+ F[P1,DC2,Pr1,Truck,1] totalCost 1.5 massBalanceP1[Pr1,P1,1] 1
+ F[P1,DC2,Pr1,Truck,1] massBalanceDC2[Pr1,DC2,2] -1
+ F[P2,P1,Pr1,Truck,1] totalCost 1.5 massBalanceP1[Pr1,P2,1] 1
+ F[P2,P1,Pr1,Truck,1] massBalanceP2[Pr1,P1,2] -1
+ F[P2,DC3,Pr1,Truck,1] totalCost 1.5 massBalanceP1[Pr1,P2,1] 1
+ F[P2,DC3,Pr1,Truck,1] massBalanceDC2[Pr1,DC3,2] -1
+ F[DC1,P1,Pr1,Truck,1] totalCost 1.5 massBalanceDC1[Pr1,DC1,1] 1
+ F[DC1,P1,Pr1,Truck,1] massBalanceP2[Pr1,P1,2] -1
+ F[DC2,P1,Pr1,Truck,1] totalCost 1.5 massBalanceDC1[Pr1,DC2,1] 1
+ F[DC2,P1,Pr1,Truck,1] massBalanceP2[Pr1,P1,2] -1
+ F[DC2,DC3,Pr1,Truck,1] totalCost 1.5 massBalanceDC1[Pr1,DC2,1] 1
+ F[DC2,DC3,Pr1,Truck,1] massBalanceDC2[Pr1,DC3,2] -1
+ F[DC3,P2,Pr1,Truck,1] totalCost 1.5 massBalanceDC1[Pr1,DC3,1] 1
+ F[DC3,P2,Pr1,Truck,1] massBalanceP2[Pr1,P2,2] -1
+ F[DC3,DC2,Pr1,Truck,1] totalCost 1.5 massBalanceDC1[Pr1,DC3,1] 1
+ F[DC3,DC2,Pr1,Truck,1] massBalanceDC2[Pr1,DC2,2] -1
+ I[P1,Pr1,1] totalCost 0.5 massBalanceP1[Pr1,P1,1] 1
+ I[P1,Pr1,1] minimumInv1[P1,Pr1,1] 1 massBalanceP2[Pr1,P1,2] -1
+ I[P2,Pr1,1] totalCost 0.5 massBalanceP1[Pr1,P2,1] 1
+ I[P2,Pr1,1] minimumInv1[P2,Pr1,1] 1 massBalanceP2[Pr1,P2,2] -1
+ I[DC1,Pr1,1] totalCost 0.5 massBalanceDC1[Pr1,DC1,1] 1
+ I[DC1,Pr1,1] minimumInv1[DC1,Pr1,1] 1 massBalanceDC2[Pr1,DC1,2] -1
+ I[DC2,Pr1,1] totalCost 0.5 massBalanceDC1[Pr1,DC2,1] 1
+ I[DC2,Pr1,1] minimumInv1[DC2,Pr1,1] 1 massBalanceDC2[Pr1,DC2,2] -1
+ I[DC3,Pr1,1] totalCost 0.5 massBalanceDC1[Pr1,DC3,1] 1
+ I[DC3,Pr1,1] minimumInv1[DC3,Pr1,1] 1 massBalanceDC2[Pr1,DC3,2] -1
+ S[P1,R1,Pr1,Truck,1] totalCost 2 massBalanceP1[Pr1,P1,1] 1
+ S[P1,R1,Pr1,Truck,1] massBalanceC2[R1,Pr1,2] 1
+ S[DC1,R1,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC1,1] 1
+ S[DC1,R1,Pr1,Truck,1] massBalanceC2[R1,Pr1,2] 1
+ S[DC1,R2,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC1,1] 1
+ S[DC1,R2,Pr1,Truck,1] massBalanceC2[R2,Pr1,2] 1
+ S[DC1,R3,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC1,1] 1
+ S[DC1,R3,Pr1,Truck,1] massBalanceC2[R3,Pr1,2] 1
+ S[DC2,R4,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC2,1] 1
+ S[DC2,R4,Pr1,Truck,1] massBalanceC2[R4,Pr1,2] 1
+ S[DC2,R5,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC2,1] 1
+ S[DC2,R5,Pr1,Truck,1] massBalanceC2[R5,Pr1,2] 1
+ S[DC3,R6,Pr1,Truck,1] totalCost 2 massBalanceDC1[Pr1,DC3,1] 1
+ S[DC3,R6,Pr1,Truck,1] massBalanceC2[R6,Pr1,2] 1
+ W[P1,Pr1,1] massBalanceP1[Pr1,P1,1] -1 capacity1[P1,Pr1,1] 1
+ W[P2,Pr1,1] massBalanceP1[Pr1,P2,1] -1 capacity1[P2,Pr1,1] 1
+ SF[R1,Pr1,1] totalCost 500 massBalanceC2[R1,Pr1,1] 1
+ SF[R2,Pr1,1] totalCost 500 massBalanceC2[R2,Pr1,1] 1
+ SF[R3,Pr1,1] totalCost 500 massBalanceC2[R3,Pr1,1] 1
+ SF[R4,Pr1,1] totalCost 500 massBalanceC2[R4,Pr1,1] 1
+ SF[R5,Pr1,1] totalCost 500 massBalanceC2[R5,Pr1,1] 1
+ SF[R6,Pr1,1] totalCost 500 massBalanceC2[R6,Pr1,1] 1
+ F[P1,P2,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,2] 1
+ F[P1,P2,Pr1,Truck,2] massBalanceP2[Pr1,P2,3] -1
+ F[P1,P2,Pr1,Truck,3] totalCost 1.5 massBalanceP2[Pr1,P1,3] 1
+ F[P1,DC1,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,2] 1
+ F[P1,DC1,Pr1,Truck,2] massBalanceDC2[Pr1,DC1,3] -1
+ F[P1,DC1,Pr1,Truck,3] totalCost 1.5 massBalanceP2[Pr1,P1,3] 1
+ F[P1,DC2,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,2] 1
+ F[P1,DC2,Pr1,Truck,2] massBalanceDC2[Pr1,DC2,3] -1
+ F[P1,DC2,Pr1,Truck,3] totalCost 1.5 massBalanceP2[Pr1,P1,3] 1
+ F[P2,P1,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,3] -1
+ F[P2,P1,Pr1,Truck,2] massBalanceP2[Pr1,P2,2] 1
+ F[P2,P1,Pr1,Truck,3] totalCost 1.5 massBalanceP2[Pr1,P2,3] 1
+ F[P2,DC3,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P2,2] 1
+ F[P2,DC3,Pr1,Truck,2] massBalanceDC2[Pr1,DC3,3] -1
+ F[P2,DC3,Pr1,Truck,3] totalCost 1.5 massBalanceP2[Pr1,P2,3] 1
+ F[DC1,P1,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,3] -1
+ F[DC1,P1,Pr1,Truck,2] massBalanceDC2[Pr1,DC1,2] 1
+ F[DC1,P1,Pr1,Truck,3] totalCost 1.5 massBalanceDC2[Pr1,DC1,3] 1
+ F[DC2,P1,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P1,3] -1
+ F[DC2,P1,Pr1,Truck,2] massBalanceDC2[Pr1,DC2,2] 1
+ F[DC2,P1,Pr1,Truck,3] totalCost 1.5 massBalanceDC2[Pr1,DC2,3] 1
+ F[DC2,DC3,Pr1,Truck,2] totalCost 1.5 massBalanceDC2[Pr1,DC2,2] 1
+ F[DC2,DC3,Pr1,Truck,2] massBalanceDC2[Pr1,DC3,3] -1
+ F[DC2,DC3,Pr1,Truck,3] totalCost 1.5 massBalanceDC2[Pr1,DC2,3] 1
+ F[DC3,P2,Pr1,Truck,2] totalCost 1.5 massBalanceP2[Pr1,P2,3] -1
+ F[DC3,P2,Pr1,Truck,2] massBalanceDC2[Pr1,DC3,2] 1
+ F[DC3,P2,Pr1,Truck,3] totalCost 1.5 massBalanceDC2[Pr1,DC3,3] 1
+ F[DC3,DC2,Pr1,Truck,2] totalCost 1.5 massBalanceDC2[Pr1,DC2,3] -1
+ F[DC3,DC2,Pr1,Truck,2] massBalanceDC2[Pr1,DC3,2] 1
+ F[DC3,DC2,Pr1,Truck,3] totalCost 1.5 massBalanceDC2[Pr1,DC3,3] 1
+ I[P1,Pr1,2] totalCost 0.5 massBalanceP2[Pr1,P1,2] 1
+ I[P1,Pr1,2] massBalanceP2[Pr1,P1,3] -1 minimumInv2[P1,Pr1,2] 1
+ SI[P1,Pr1,2] minimumInv2[P1,Pr1,2] -1 
+ I[P1,Pr1,3] totalCost 0.5 massBalanceP2[Pr1,P1,3] 1
+ I[P1,Pr1,3] minimumInv2[P1,Pr1,3] 1
+ SI[P1,Pr1,3] minimumInv2[P1,Pr1,3] -1 
+ I[P2,Pr1,2] totalCost 0.5 massBalanceP2[Pr1,P2,2] 1
+ I[P2,Pr1,2] massBalanceP2[Pr1,P2,3] -1 minimumInv2[P2,Pr1,2] 1
+ SI[P2,Pr1,2] minimumInv2[P2,Pr1,2] -1 
+ I[P2,Pr1,3] totalCost 0.5 massBalanceP2[Pr1,P2,3] 1
+ I[P2,Pr1,3] minimumInv2[P2,Pr1,3] 1
+ SI[P2,Pr1,3] minimumInv2[P2,Pr1,3] -1 
+ I[DC1,Pr1,2] totalCost 0.5 massBalanceDC2[Pr1,DC1,2] 1
+ I[DC1,Pr1,2] massBalanceDC2[Pr1,DC1,3] -1 minimumInv2[DC1,Pr1,2] 1
+ SI[DC1,Pr1,2] minimumInv2[DC1,Pr1,2] -1 
+ I[DC1,Pr1,3] totalCost 0.5 massBalanceDC2[Pr1,DC1,3] 1
+ I[DC1,Pr1,3] minimumInv2[DC1,Pr1,3] 1
+ SI[DC1,Pr1,3] minimumInv2[DC1,Pr1,3] -1 
+ I[DC2,Pr1,2] totalCost 0.5 massBalanceDC2[Pr1,DC2,2] 1
+ I[DC2,Pr1,2] massBalanceDC2[Pr1,DC2,3] -1 minimumInv2[DC2,Pr1,2] 1
+ SI[DC2,Pr1,2] minimumInv2[DC2,Pr1,2] -1 
+ I[DC2,Pr1,3] totalCost 0.5 massBalanceDC2[Pr1,DC2,3] 1
+ I[DC2,Pr1,3] minimumInv2[DC2,Pr1,3] 1
+ SI[DC2,Pr1,3] minimumInv2[DC2,Pr1,3] -1 
+ I[DC3,Pr1,2] totalCost 0.5 massBalanceDC2[Pr1,DC3,2] 1
+ I[DC3,Pr1,2] massBalanceDC2[Pr1,DC3,3] -1 minimumInv2[DC3,Pr1,2] 1
+ SI[DC3,Pr1,2] minimumInv2[DC3,Pr1,2] -1 
+ I[DC3,Pr1,3] totalCost 0.5 massBalanceDC2[Pr1,DC3,3] 1
+ I[DC3,Pr1,3] minimumInv2[DC3,Pr1,3] 1
+ SI[DC3,Pr1,3] minimumInv2[DC3,Pr1,3] -1 
+ S[P1,R1,Pr1,Truck,2] totalCost 2 massBalanceP2[Pr1,P1,2] 1
+ S[P1,R1,Pr1,Truck,2] massBalanceC2[R1,Pr1,3] 1
+ S[P1,R1,Pr1,Truck,3] totalCost 2 massBalanceP2[Pr1,P1,3] 1
+ S[DC1,R1,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC1,2] 1
+ S[DC1,R1,Pr1,Truck,2] massBalanceC2[R1,Pr1,3] 1
+ S[DC1,R1,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC1,3] 1
+ S[DC1,R2,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC1,2] 1
+ S[DC1,R2,Pr1,Truck,2] massBalanceC2[R2,Pr1,3] 1
+ S[DC1,R2,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC1,3] 1
+ S[DC1,R3,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC1,2] 1
+ S[DC1,R3,Pr1,Truck,2] massBalanceC2[R3,Pr1,3] 1
+ S[DC1,R3,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC1,3] 1
+ S[DC2,R4,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC2,2] 1
+ S[DC2,R4,Pr1,Truck,2] massBalanceC2[R4,Pr1,3] 1
+ S[DC2,R4,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC2,3] 1
+ S[DC2,R5,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC2,2] 1
+ S[DC2,R5,Pr1,Truck,2] massBalanceC2[R5,Pr1,3] 1
+ S[DC2,R5,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC2,3] 1
+ S[DC3,R6,Pr1,Truck,2] totalCost 2 massBalanceDC2[Pr1,DC3,2] 1
+ S[DC3,R6,Pr1,Truck,2] massBalanceC2[R6,Pr1,3] 1
+ S[DC3,R6,Pr1,Truck,3] totalCost 2 massBalanceDC2[Pr1,DC3,3] 1
+ W[P1,Pr1,2] massBalanceP2[Pr1,P1,2] -1 capacity2[P1,Pr1,2] 1
+ W[P1,Pr1,3] massBalanceP2[Pr1,P1,3] -1 capacity2[P1,Pr1,3] 1
+ W[P2,Pr1,2] massBalanceP2[Pr1,P2,2] -1 capacity2[P2,Pr1,2] 1
+ W[P2,Pr1,3] massBalanceP2[Pr1,P2,3] -1 capacity2[P2,Pr1,3] 1
+ SW[P1,Pr1,2] capacity2[P1,Pr1,2] 1
+ SW[P1,Pr1,3] capacity2[P1,Pr1,3] 1
+ SW[P2,Pr1,2] capacity2[P2,Pr1,2] 1
+ SW[P2,Pr1,3] capacity2[P2,Pr1,3] 1
+ SF[R1,Pr1,2] totalCost 500 massBalanceC2[R1,Pr1,2] 1
+ SF[R1,Pr1,3] totalCost 500 massBalanceC2[R1,Pr1,3] 1
+ SF[R2,Pr1,2] totalCost 500 massBalanceC2[R2,Pr1,2] 1
+ SF[R2,Pr1,3] totalCost 500 massBalanceC2[R2,Pr1,3] 1
+ SF[R3,Pr1,2] totalCost 500 massBalanceC2[R3,Pr1,2] 1
+ SF[R3,Pr1,3] totalCost 500 massBalanceC2[R3,Pr1,3] 1
+ SF[R4,Pr1,2] totalCost 500 massBalanceC2[R4,Pr1,2] 1
+ SF[R4,Pr1,3] totalCost 500 massBalanceC2[R4,Pr1,3] 1
+ SF[R5,Pr1,2] totalCost 500 massBalanceC2[R5,Pr1,2] 1
+ SF[R5,Pr1,3] totalCost 500 massBalanceC2[R5,Pr1,3] 1
+ SF[R6,Pr1,2] totalCost 500 massBalanceC2[R6,Pr1,2] 1
+ SF[R6,Pr1,3] totalCost 500 massBalanceC2[R6,Pr1,3] 1
+ SG[R1,Pr1,2] massBalanceC2[R1,Pr1,2] -1
+ SG[R1,Pr1,3] massBalanceC2[R1,Pr1,3] -1
+ SG[R2,Pr1,2] massBalanceC2[R2,Pr1,2] -1
+ SG[R2,Pr1,3] massBalanceC2[R2,Pr1,3] -1
+ SG[R3,Pr1,2] massBalanceC2[R3,Pr1,2] -1
+ SG[R3,Pr1,3] massBalanceC2[R3,Pr1,3] -1
+ SG[R4,Pr1,2] massBalanceC2[R4,Pr1,2] -1
+ SG[R4,Pr1,3] massBalanceC2[R4,Pr1,3] -1
+ SG[R5,Pr1,2] massBalanceC2[R5,Pr1,2] -1
+ SG[R5,Pr1,3] massBalanceC2[R5,Pr1,3] -1
+ SG[R6,Pr1,2] massBalanceC2[R6,Pr1,2] -1
+ SG[R6,Pr1,3] massBalanceC2[R6,Pr1,3] -1
+RHS
+ RHS1 massBalanceP1[Pr1,P1,1] 50 massBalanceP1[Pr1,P2,1] 50
+ RHS1 massBalanceDC1[Pr1,DC1,1] 150 massBalanceDC1[Pr1,DC2,1] 100
+ RHS1 massBalanceDC1[Pr1,DC3,1] 50 capacity1[P1,Pr1,1] 1000
+ RHS1 capacity1[P2,Pr1,1] 800 minimumInv1[P1,Pr1,1] 20
+ RHS1 minimumInv1[P2,Pr1,1] 10 minimumInv1[DC1,Pr1,1] 150
+ RHS1 minimumInv1[DC2,Pr1,1] 100 minimumInv1[DC3,Pr1,1] 50
+ RHS1 massBalanceC2[R1,Pr1,1] 100 massBalanceC2[R1,Pr1,2] 110
+ RHS1 massBalanceC2[R1,Pr1,3] 100 massBalanceC2[R2,Pr1,1] 100
+ RHS1 massBalanceC2[R2,Pr1,2] 110 massBalanceC2[R2,Pr1,3] 105
+ RHS1 massBalanceC2[R3,Pr1,1] 100 massBalanceC2[R3,Pr1,2] 100
+ RHS1 massBalanceC2[R3,Pr1,3] 110 massBalanceC2[R4,Pr1,1] 100
+ RHS1 massBalanceC2[R4,Pr1,2] 110 massBalanceC2[R4,Pr1,3] 100
+ RHS1 massBalanceC2[R5,Pr1,1] 100 massBalanceC2[R5,Pr1,2] 100
+ RHS1 massBalanceC2[R5,Pr1,3] 110 massBalanceC2[R6,Pr1,1] 100
+ RHS1 massBalanceC2[R6,Pr1,2] 110 massBalanceC2[R6,Pr1,3] 100
+ RHS1 capacity2[P1,Pr1,2] 1000 capacity2[P1,Pr1,3] 1000
+ RHS1 capacity2[P2,Pr1,2] 800 capacity2[P2,Pr1,3] 800
+ RHS1 minimumInv2[P1,Pr1,2] 20 minimumInv2[P1,Pr1,3] 20
+ RHS1 minimumInv2[P2,Pr1,2] 10 minimumInv2[P2,Pr1,3] 10
+ RHS1 minimumInv2[DC1,Pr1,2] 150 minimumInv2[DC1,Pr1,3] 150
+ RHS1 minimumInv2[DC2,Pr1,2] 100 minimumInv2[DC2,Pr1,3] 100
+ RHS1 minimumInv2[DC3,Pr1,2] 50 minimumInv2[DC3,Pr1,3] 50
+ENDATA

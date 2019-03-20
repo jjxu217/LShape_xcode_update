@@ -1,0 +1,17 @@
+STOCH         transship     
+INDEP          NORMAL
+    RHS      dummy(0)     100.00000      20.00000
+    RHS      dummy(1)     200.00000      50.00000
+    RHS      dummy(2)     150.00000      30.00000
+    RHS      dummy(3)     170.00000      50.00000
+    RHS      dummy(4)     180.00000      40.00000
+    RHS      dummy(5)     170.00000      30.00000
+    RHS      dummy(6)     170.00000      50.00000
+    repDem(0)           obj       4.00000       0.80000
+    repDem(1)           obj       4.20000       0.84000
+    repDem(2)           obj       4.40000       0.88000
+    repDem(3)           obj       4.60000       0.92000
+    repDem(4)           obj       4.80000       0.96000
+    repDem(5)           obj       5.00000       1.00000
+    repDem(6)           obj       5.20000       1.04000
+ENDATA

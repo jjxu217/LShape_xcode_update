@@ -1,0 +1,4 @@
+TIME          nrel118_aggr
+PERIODS	      2
+    g0(1)      RUg(1)                  TIME1
+    r1(2,28)      RU0(28)                  TIME2
