@@ -1,0 +1,148 @@
+====================================================================================================================================
+Stage optimization problem for given input s_t = (x_t, omega_t) is in the following form : 
+
+				 h_t(s_t) = c_t*x_t + min d_t*u_t
+				                      s.t. D_t u_t = b_t - C_t x_t,
+
+with the following linear dynamics: x_{t+} = a_{t+} + A_{t+}x_t + B_{t+}u_t.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+====================================================================================================================================
+-------------------------------------------------------- Problem Information -------------------------------------------------------
+====================================================================================================================================
+Problem                            : ssn
+Number of stages                   : 2
+------------------------------------------------------------------------------------------------------------------------------------
+Stage 0
+Number of decision variables (u_t) = 89		(Continuous = 89	Integer = 0	Binary = 0)
+Number of constraints              = 1
+Number of random variables (omega) = 0
+------------------------------------------------------------------------------------------------------------------------------------
+Stage 1
+Number of decision variables (u_t) = 706		(Continuous = 706	Integer = 0	Binary = 0)
+Number of constraints              = 175
+Number of random variables (omega) = 86		(a_t = 0; b_t = 86; c_t = 0; d_t = 0; A_t = 0; B_t = 0; C_t = 0; D_t = 0)
+====================================================================================================================================
+
+====================================================================================================================================
+Replication-1
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 542
+Lower bound estimate               : 5.203819
+Total time                         : 28.815713
+Total time to solve master         : 12.240109
+Total time to solve subproblems    : 14.046249
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-2
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 575
+Lower bound estimate               : 10.158437
+Total time                         : 36.093292
+Total time to solve master         : 13.902515
+Total time to solve subproblems    : 16.826601
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-3
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 890
+Lower bound estimate               : 7.218516
+Total time                         : 52.630697
+Total time to solve master         : 20.459421
+Total time to solve subproblems    : 22.644736
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-4
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 516
+Lower bound estimate               : 5.864569
+Total time                         : 30.915525
+Total time to solve master         : 11.052481
+Total time to solve subproblems    : 13.844382
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-5
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 529
+Lower bound estimate               : 6.942791
+Total time                         : 35.332966
+Total time to solve master         : 12.334593
+Total time to solve subproblems    : 14.777082
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-6
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 574
+Lower bound estimate               : 5.536560
+Total time                         : 38.047781
+Total time to solve master         : 13.958179
+Total time to solve subproblems    : 15.464946
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-7
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 497
+Lower bound estimate               : 5.196168
+Total time                         : 32.532637
+Total time to solve master         : 10.708163
+Total time to solve subproblems    : 13.955889
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-8
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 578
+Lower bound estimate               : 6.083955
+Total time                         : 42.239486
+Total time to solve master         : 13.500414
+Total time to solve subproblems    : 15.873650
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-9
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 569
+Lower bound estimate               : 4.211279
+Total time                         : 40.601735
+Total time to solve master         : 13.540883
+Total time to solve subproblems    : 16.512825
+Total time in verifying optimality : 0.000000
+
+====================================================================================================================================
+Replication-10
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Regularized Benders Decomposition
+Number of iterations               : 598
+Lower bound estimate               : 6.663587
+Total time                         : 48.933362
+Total time to solve master         : 14.786723
+Total time to solve subproblems    : 18.476342
+Total time in verifying optimality : 0.000000
+
+======================================================================================================

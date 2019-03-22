@@ -55,7 +55,7 @@ RUN_SEED    1395182510837913
 RUN_SEED    3735836402047426
 
 // Indicate whether to employ (by setting equal to 1) evaluation of the eventual solution
-EVAL_FLAG 0
+EVAL_FLAG 1
 
 // Solution tolerance for deciding the usage of mean solution.
 EVAL_MIN_ITER 250

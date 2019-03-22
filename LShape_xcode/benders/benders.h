@@ -17,9 +17,9 @@
 #include "smps.h"
 #include "prob.h"
 
-#undef ALGO_CHECK
-#undef STOCH_CHECK
-#define SAVE_DUALS
+//#undef ALGO_CHECK
+//#undef STOCH_CHECK
+#undef SAVE_DUALS
 
 typedef struct{
 	int		NUM_REPS;			/* Maximum number of replications that can be carried out. */

@@ -1,0 +1,214 @@
+* Source:     Pyomo MPS Writer
+* Format:     Free MPS
+*
+NAME SUFL_5_5
+OBJSENSE
+ MIN
+ROWS
+ N  x31
+ G  c_g_1
+ E  c_e_x32_
+ E  c_e_x33_
+ E  c_e_x34_
+ E  c_e_x35_
+ E  c_e_x36_
+ L  c_u_x37_
+ L  c_u_x38_
+ L  c_u_x39_
+ L  c_u_x40_
+ L  c_u_x41_
+ L  c_u_x42_
+ L  c_u_x43_
+ L  c_u_x44_
+ L  c_u_x45_
+ L  c_u_x46_
+ L  c_u_x47_
+ L  c_u_x48_
+ L  c_u_x49_
+ L  c_u_x50_
+ L  c_u_x51_
+ L  c_u_x52_
+ L  c_u_x53_
+ L  c_u_x54_
+ L  c_u_x55_
+ L  c_u_x56_
+ L  c_u_x57_
+ L  c_u_x58_
+ L  c_u_x59_
+ L  c_u_x60_
+ L  c_u_x61_
+COLUMNS
+     x1 x31 30
+     x1 c_g_1     1
+     x1 c_u_x37_ -1
+     x1 c_u_x38_ -1
+     x1 c_u_x39_ -1
+     x1 c_u_x40_ -1
+     x1 c_u_x41_ -1
+     x2 x31 30
+     x2 c_g_1     1
+     x2 c_u_x42_ -1
+     x2 c_u_x43_ -1
+     x2 c_u_x44_ -1
+     x2 c_u_x45_ -1
+     x2 c_u_x46_ -1
+     x3 x31 30
+     x3 c_g_1     1
+     x3 c_u_x47_ -1
+     x3 c_u_x48_ -1
+     x3 c_u_x49_ -1
+     x3 c_u_x50_ -1
+     x3 c_u_x51_ -1
+     x4 x31 30
+     x4 c_g_1     1
+     x4 c_u_x52_ -1
+     x4 c_u_x53_ -1
+     x4 c_u_x54_ -1
+     x4 c_u_x55_ -1
+     x4 c_u_x56_ -1
+     x5 x31 30
+     x5 c_g_1     1
+     x5 c_u_x57_ -1
+     x5 c_u_x58_ -1
+     x5 c_u_x59_ -1
+     x5 c_u_x60_ -1
+     x5 c_u_x61_ -1
+     x10 x31 54
+     x10 c_e_x36_ 1
+     x10 c_u_x41_ 1
+     x11 x31 39
+     x11 c_e_x32_ 1
+     x11 c_u_x42_ 1
+     x12 x31 54
+     x12 c_e_x33_ 1
+     x12 c_u_x43_ 1
+     x13 x31 8
+     x13 c_e_x34_ 1
+     x13 c_u_x44_ 1
+     x14 x31 64
+     x14 c_e_x35_ 1
+     x14 c_u_x45_ 1
+     x15 x31 25
+     x15 c_e_x36_ 1
+     x15 c_u_x46_ 1
+     x16 x31 48
+     x16 c_e_x32_ 1
+     x16 c_u_x47_ 1
+     x17 x31 17
+     x17 c_e_x33_ 1
+     x17 c_u_x48_ 1
+     x18 x31 34
+     x18 c_e_x34_ 1
+     x18 c_u_x49_ 1
+     x19 x31 29
+     x19 c_e_x35_ 1
+     x19 c_u_x50_ 1
+     x20 x31 52
+     x20 c_e_x36_ 1
+     x20 c_u_x51_ 1
+     x21 x31 54
+     x21 c_e_x32_ 1
+     x21 c_u_x52_ 1
+     x22 x31 83
+     x22 c_e_x33_ 1
+     x22 c_u_x53_ 1
+     x23 x31 61
+     x23 c_e_x34_ 1
+     x23 c_u_x54_ 1
+     x24 x31 92
+     x24 c_e_x35_ 1
+     x24 c_u_x55_ 1
+     x25 x31 32
+     x25 c_e_x36_ 1
+     x25 c_u_x56_ 1
+     x26 x31 38
+     x26 c_e_x32_ 1
+     x26 c_u_x57_ 1
+     x27 x31 26
+     x27 c_e_x33_ 1
+     x27 c_u_x58_ 1
+     x28 x31 25
+     x28 c_e_x34_ 1
+     x28 c_u_x59_ 1
+     x29 x31 38
+     x29 c_e_x35_ 1
+     x29 c_u_x60_ 1
+     x30 x31 50
+     x30 c_e_x36_ 1
+     x30 c_u_x61_ 1
+     x6 x31 17
+     x6 c_e_x32_ 1
+     x6 c_u_x37_ 1
+     x7 x31 47
+     x7 c_e_x33_ 1
+     x7 c_u_x38_ 1
+     x8 x31 8
+     x8 c_e_x34_ 1
+     x8 c_u_x39_ 1
+     x9 x31 59
+     x9 c_e_x35_ 1
+     x9 c_u_x40_ 1
+RHS
+     RHS c_e_x32_ 1
+     RHS c_e_x33_ 1
+     RHS c_e_x34_ 1
+     RHS c_e_x35_ 1
+     RHS c_e_x36_ 1
+     RHS c_g_1     1
+     RHS c_u_x37_ 0
+     RHS c_u_x38_ 0
+     RHS c_u_x39_ 0
+     RHS c_u_x40_ 0
+     RHS c_u_x41_ 0
+     RHS c_u_x42_ 0
+     RHS c_u_x43_ 0
+     RHS c_u_x44_ 0
+     RHS c_u_x45_ 0
+     RHS c_u_x46_ 0
+     RHS c_u_x47_ 0
+     RHS c_u_x48_ 0
+     RHS c_u_x49_ 0
+     RHS c_u_x50_ 0
+     RHS c_u_x51_ 0
+     RHS c_u_x52_ 0
+     RHS c_u_x53_ 0
+     RHS c_u_x54_ 0
+     RHS c_u_x55_ 0
+     RHS c_u_x56_ 0
+     RHS c_u_x57_ 0
+     RHS c_u_x58_ 0
+     RHS c_u_x59_ 0
+     RHS c_u_x60_ 0
+     RHS c_u_x61_ 0
+BOUNDS
+ BV BOUND x1
+ BV BOUND x2
+ BV BOUND x3
+ BV BOUND x4
+ BV BOUND x5
+ BV BOUND x10
+ BV BOUND x11
+ BV BOUND x12
+ BV BOUND x13
+ BV BOUND x14
+ BV BOUND x15
+ BV BOUND x16
+ BV BOUND x17
+ BV BOUND x18
+ BV BOUND x19
+ BV BOUND x20
+ BV BOUND x21
+ BV BOUND x22
+ BV BOUND x23
+ BV BOUND x24
+ BV BOUND x25
+ BV BOUND x26
+ BV BOUND x27
+ BV BOUND x28
+ BV BOUND x29
+ BV BOUND x30
+ BV BOUND x6
+ BV BOUND x7
+ BV BOUND x8
+ BV BOUND x9
+ENDATA

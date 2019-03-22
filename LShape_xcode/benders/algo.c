@@ -32,8 +32,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 
 	printf("Starting Benders decomposition.\n");
 	sFile = openFile(outputDir, "results.dat", "w");
-	if ( config.MASTER_TYPE == PROB_QP )
-		iFile = openFile(outputDir, "incumb.dat", "w");
+//    if ( config.MASTER_TYPE == PROB_QP )
+    iFile = openFile(outputDir, "incumb.dat", "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
 	printDecomposeSummary(stdout, probName, tim, prob);
 
@@ -129,9 +129,9 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 		}
 #endif
 		/******* 1a. Optimality tests *******/
-		if ( config.MASTER_TYPE == PROB_QP )
-			if (optimal(cell))
-				break;
+//        if ( config.MASTER_TYPE == PROB_QP )
+        if (optimal(cell))
+            break;
 
 		/******* 2. Solve the subproblem with candidate solution, form and update the candidate cut *******/
 		if ( (candidCut = formOptCut(prob[1], cell, cell->candidX, FALSE)) < 0 ) {
@@ -200,9 +200,9 @@ void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 		printVector(cell->incumbX, prob[0]->num->cols, incumb);
 	}
 
-	if ( duals != NULL ) {
-		printf("\nNumber of duals discovered = %d", duals->cnt);
-	}
+//    if ( duals != NULL ) {
+//        printf("\nNumber of duals discovered = %d", duals->cnt);
+//    }
 
 }//END WriteStat
 
