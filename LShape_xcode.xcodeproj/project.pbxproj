@@ -1230,6 +1230,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JBP2638P2L;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"STOCH_CHECK=1",
+					"ALGO_CHECK=1",
+					"$(inherited)",
+				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/CPLEX_Studio128/cplex/include,
 					/Applications/CPLEX_Studio128/concert/include,

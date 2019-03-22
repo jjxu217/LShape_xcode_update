@@ -51,9 +51,11 @@ int solveMaster(numType *num, sparseVector *dBar, cellType *cell) {
 		addVectors(cell->candidX, cell->incumbX, NULL, num->cols);
 		cell->candidEst = vXvSparse(cell->candidX, dBar) + getPrimalPoint(cell->master->lp, num->cols);
 	}
+    else if(cell->master->type == PROB_MILP){
+        cell->candidEst = getObjective(cell->master->lp, PROB_MILP);
+    }
 	else
 		cell->candidEst = getObjective(cell->master->lp, PROB_LP);
-
 	return 0;
 }//END solveMaster()
 

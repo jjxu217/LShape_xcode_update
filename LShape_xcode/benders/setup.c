@@ -39,7 +39,7 @@ int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob,
 	t = 0;
 	while ( t < tim->numStages ) {
 		if ( (*prob)[t++]->sp->type  != PROB_LP )
-			printf("Warning :: Stage-%d problem is a mixed-integer program. Solving its linear relaxation.\n", t);
+			printf("Note :: Stage-%d problem is a mixed-integer program.\n", t);
 	}
 
 	/* create the cells which will be used in the algorithms */

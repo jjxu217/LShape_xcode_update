@@ -8,7 +8,7 @@ MIN_ITER   1
 MAX_ITER   5000
 
 // Master type: 0 for LP, 1 for MILP, 5 for QP and 7 for MIQP
-MASTER_TYPE 5
+MASTER_TYPE 1
 
 // For multicut version set to one, else single cut implementation 
 MULTICUT	0

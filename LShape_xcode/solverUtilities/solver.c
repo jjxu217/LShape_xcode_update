@@ -148,7 +148,7 @@ int getDualSlacks(LPptr lp, vector Dj, int length){
 }//END getDualSlacks()
 
 int getBasis(LPptr lp, intvec cstat, intvec rstat){
-	int status;
+	int status=0;
 
 	if ( rstat != NULL && cstat != NULL ) {
 		status = CPXgetbase(env, lp, cstat+1, rstat+1);
@@ -178,8 +178,12 @@ void openSolver(){
 		errMsg("solver", "openSolver", "could not open CPLEX environment", 0);
 		goto TERMINATE;
 	}
-
+#ifdef DEBUG
+    status = setIntParam(PARAM_SCRIND, ON);
+#else
 	status = setIntParam(PARAM_SCRIND, OFF);
+#endif
+    
 	if ( status ) {
 		errMsg("solver", "open_solver", "screen output", 0);
 		goto TERMINATE;
