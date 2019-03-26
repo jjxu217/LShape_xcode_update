@@ -1,0 +1,536 @@
+====================================================================================================================================
+Stage optimization problem for given input s_t = (x_t, omega_t) is in the following form : 
+
+				 h_t(s_t) = c_t*x_t + min d_t*u_t
+				                      s.t. D_t u_t = b_t - C_t x_t,
+
+with the following linear dynamics: x_{t+} = a_{t+} + A_{t+}x_t + B_{t+}u_t.
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+====================================================================================================================================
+-------------------------------------------------------- Problem Information -------------------------------------------------------
+====================================================================================================================================
+Problem                            : SUFL_5_5
+Number of stages                   : 2
+------------------------------------------------------------------------------------------------------------------------------------
+Stage 0
+Number of decision variables (u_t) = 5		(Continuous = 0	Integer = 0	Binary = 5)
+Number of constraints              = 1
+Number of random variables (omega) = 0
+------------------------------------------------------------------------------------------------------------------------------------
+Stage 1
+Number of decision variables (u_t) = 25		(Continuous = 25	Integer = 0	Binary = 0)
+Number of constraints              = 30
+Number of random variables (omega) = 25		(a_t = 0; b_t = 0; c_t = 0; d_t = 25; A_t = 0; B_t = 0; C_t = 0; D_t = 0)
+====================================================================================================================================
+
+====================================================================================================================================
+Replication-1
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 181.890000
+Total time                         : 0.269629
+Total time to solve master         : 0.094504
+Total time to solve subproblems    : 0.031359
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.016000
+Error in estimation            : 0.001704
+Confidence interval at 95%     : [181.885879, 182.146121]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-2
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 181.970000
+Total time                         : 0.266953
+Total time to solve master         : 0.077797
+Total time to solve subproblems    : 0.033892
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.904000
+Error in estimation            : 0.001756
+Confidence interval at 95%     : [181.769954, 182.038046]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-3
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.970000
+Total time                         : 0.184105
+Total time to solve master         : 0.051251
+Total time to solve subproblems    : 0.020526
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.020000
+Error in estimation            : 0.001652
+Confidence interval at 95%     : [181.893802, 182.146198]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-4
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.020000
+Total time                         : 0.257304
+Total time to solve master         : 0.085017
+Total time to solve subproblems    : 0.030449
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.044000
+Error in estimation            : 0.001610
+Confidence interval at 95%     : [181.921022, 182.166978]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-5
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.030000
+Total time                         : 0.159828
+Total time to solve master         : 0.014239
+Total time to solve subproblems    : 0.022470
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.052000
+Error in estimation            : 0.001600
+Confidence interval at 95%     : [181.929768, 182.174232]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-6
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.120000
+Total time                         : 0.203062
+Total time to solve master         : 0.024406
+Total time to solve subproblems    : 0.031075
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.984000
+Error in estimation            : 0.001699
+Confidence interval at 95%     : [181.854215, 182.113785]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-7
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.870000
+Total time                         : 0.139668
+Total time to solve master         : 0.012761
+Total time to solve subproblems    : 0.019840
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.052000
+Error in estimation            : 0.001628
+Confidence interval at 95%     : [181.927644, 182.176356]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-8
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 181.950000
+Total time                         : 0.191506
+Total time to solve master         : 0.025692
+Total time to solve subproblems    : 0.028956
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.960000
+Error in estimation            : 0.001725
+Confidence interval at 95%     : [181.828268, 182.091732]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-9
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.110000
+Total time                         : 0.172050
+Total time to solve master         : 0.045941
+Total time to solve subproblems    : 0.019170
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.036000
+Error in estimation            : 0.001592
+Confidence interval at 95%     : [181.914421, 182.157579]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-10
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.030000
+Total time                         : 0.140315
+Total time to solve master         : 0.012325
+Total time to solve subproblems    : 0.019605
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.964000
+Error in estimation            : 0.001688
+Confidence interval at 95%     : [181.835103, 182.092897]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-11
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.120000
+Total time                         : 0.243719
+Total time to solve master         : 0.073511
+Total time to solve subproblems    : 0.029976
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.908000
+Error in estimation            : 0.001720
+Confidence interval at 95%     : [181.776719, 182.039281]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-12
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.040000
+Total time                         : 0.210831
+Total time to solve master         : 0.035757
+Total time to solve subproblems    : 0.030396
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.012000
+Error in estimation            : 0.001675
+Confidence interval at 95%     : [181.884073, 182.139927]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-13
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.370000
+Total time                         : 0.192462
+Total time to solve master         : 0.022725
+Total time to solve subproblems    : 0.029261
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.980000
+Error in estimation            : 0.001684
+Confidence interval at 95%     : [181.851404, 182.108596]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-14
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.980000
+Total time                         : 0.140255
+Total time to solve master         : 0.011971
+Total time to solve subproblems    : 0.019594
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.980000
+Error in estimation            : 0.001723
+Confidence interval at 95%     : [181.848384, 182.111616]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-15
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.070000
+Total time                         : 0.139345
+Total time to solve master         : 0.012556
+Total time to solve subproblems    : 0.019564
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.920000
+Error in estimation            : 0.001714
+Confidence interval at 95%     : [181.789133, 182.050867]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-16
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.950000
+Total time                         : 0.160015
+Total time to solve master         : 0.023529
+Total time to solve subproblems    : 0.020823
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.008000
+Error in estimation            : 0.001659
+Confidence interval at 95%     : [181.881270, 182.134730]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-17
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.020000
+Total time                         : 0.143310
+Total time to solve master         : 0.013528
+Total time to solve subproblems    : 0.020122
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.988000
+Error in estimation            : 0.001675
+Confidence interval at 95%     : [181.860073, 182.115927]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-18
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 181.970000
+Total time                         : 0.212904
+Total time to solve master         : 0.028850
+Total time to solve subproblems    : 0.032855
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.912000
+Error in estimation            : 0.001696
+Confidence interval at 95%     : [181.782530, 182.041470]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-19
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.100000
+Total time                         : 0.203417
+Total time to solve master         : 0.074149
+Total time to solve subproblems    : 0.019791
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.928000
+Error in estimation            : 0.001732
+Confidence interval at 95%     : [181.795755, 182.060245]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-20
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.130000
+Total time                         : 0.193373
+Total time to solve master         : 0.024617
+Total time to solve subproblems    : 0.029482
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.004000
+Error in estimation            : 0.001671
+Confidence interval at 95%     : [181.876409, 182.131591]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-21
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.920000
+Total time                         : 0.158237
+Total time to solve master         : 0.025963
+Total time to solve subproblems    : 0.020334
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.932000
+Error in estimation            : 0.001682
+Confidence interval at 95%     : [181.803583, 182.060417]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-22
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.100000
+Total time                         : 0.212452
+Total time to solve master         : 0.037519
+Total time to solve subproblems    : 0.030307
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.092000
+Error in estimation            : 0.001592
+Confidence interval at 95%     : [181.970384, 182.213616]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-23
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.990000
+Total time                         : 0.196347
+Total time to solve master         : 0.064943
+Total time to solve subproblems    : 0.020528
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.092000
+Error in estimation            : 0.001592
+Confidence interval at 95%     : [181.970384, 182.213616]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-24
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 181.980000
+Total time                         : 0.197405
+Total time to solve master         : 0.024105
+Total time to solve subproblems    : 0.029953
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.016000
+Error in estimation            : 0.001623
+Confidence interval at 95%     : [181.892064, 182.139936]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-25
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.200000
+Total time                         : 0.232788
+Total time to solve master         : 0.061483
+Total time to solve subproblems    : 0.029105
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 182.144000
+Error in estimation            : 0.001543
+Confidence interval at 95%     : [182.026039, 182.261961]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-26
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.910000
+Total time                         : 0.145699
+Total time to solve master         : 0.014373
+Total time to solve subproblems    : 0.019914
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.876000
+Error in estimation            : 0.001801
+Confidence interval at 95%     : [181.738504, 182.013496]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-27
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 182.110000
+Total time                         : 0.139684
+Total time to solve master         : 0.013275
+Total time to solve subproblems    : 0.019989
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.876000
+Error in estimation            : 0.001685
+Confidence interval at 95%     : [181.747360, 182.004640]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-28
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.890000
+Total time                         : 0.161627
+Total time to solve master         : 0.034106
+Total time to solve subproblems    : 0.020041
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.980000
+Error in estimation            : 0.001697
+Confidence interval at 95%     : [181.850389, 182.109611]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-29
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 4
+Lower bound estimate               : 182.070000
+Total time                         : 0.197616
+Total time to solve master         : 0.027583
+Total time to solve subproblems    : 0.030277
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.888000
+Error in estimation            : 0.001771
+Confidence interval at 95%     : [181.752792, 182.023208]
+Number of observations         : 250
+
+====================================================================================================================================
+Replication-30
+
+------------------------------------------------------------ Optimization ---------------------------------------------------------
+Algorithm                          : Benders Decomposition
+Number of iterations               : 3
+Lower bound estimate               : 181.780000
+Total time                         : 0.141037
+Total time to solve master         : 0.012626
+Total time to solve subproblems    : 0.019788
+Total time in verifying optimality : 0.000000
+------------------------------------------------------------- Evaluation ----------------------------------------------------------
+Upper bound estimate           : 181.912000
+Error in estimation            : 0.001735
+Confidence interval at 95%     : [181.779531, 182.044469]
+Number of observations         : 250

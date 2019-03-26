@@ -196,8 +196,9 @@ void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 	fprintf(soln, "Total time to solve subproblems    : %f\n", cell->time->subprobAccumTime);
 	fprintf(soln, "Total time in verifying optimality : %f\n", cell->time->optTestAccumTime);
 
+    //print candidate for a moment here
 	if ( incumb != NULL ) {
-		printVector(cell->incumbX, prob[0]->num->cols, incumb);
+		printVector(cell->candidX, prob[0]->num->cols, incumb);
 	}
 
 //    if ( duals != NULL ) {
