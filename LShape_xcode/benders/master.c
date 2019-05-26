@@ -300,6 +300,7 @@ int changeQPbds(LPptr lp, int numCols, vector bdl, vector bdu, vector xk) {
 
 /* This subroutine initializes the master problem by copying information from the decomposed prob[0](type: oneProblem) and adding a column for
  * theta for modified benders decomposition. */
+/*Jiajun, check add L1?*/
 oneProblem *newMaster(oneProblem *orig, double lb) {
 	oneProblem 	*master;
 	int         r, i, j, idx, cnt;
@@ -310,7 +311,7 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 		errMsg("Memory allocation", "new_master", "Faile to allocate memory to mcell->sp", 0);
 
 	/* -+-+-+-+-+-+-+-+-+-+-+-+-+-+- Allocating memory to master -+-+-+-+-+-+-+-+-+-+-+-+-+-+- */
-	master->type 	= config.MASTER_TYPE;               /* type of problem: LP, QP, MIP or MIQP */
+	master->type 	= config.MASTER_TYPE;               /* type of problem: LP, QP, MIP or MIQP . Jiajun L1 here? */
 	master->objsen 	= orig->objsen;                 	/* sense of the objective: 1 for minimization and -1 for maximization */
 	master->mar 	= orig->mar;                       	/* number of rows */
 	master->numInt 	= orig->numInt;                 	/* number of integer variables in the problem  */
@@ -429,7 +430,7 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 	master->matbeg[orig->mac] = orig->numnz;	// Beginning point in matval/matind in eta columns. every eta column begins at the same address
 	master->matcnt[orig->mac] = 0;               // Only optimality cuts has eta
 
-	/* Load the copy into CPLEX */
+	/* Load the copy into CPLEX, Jiajun master->type is input to setupProblem */
 	master->lp = setupProblem(master->name, master->type, master->mac, master->mar, master->objsen, master->objx, master->rhsx, master->senx, master->matbeg, master->matcnt,master->matind, master->matval, master->bdl, master->bdu, NULL, master->cname, master->rname, master->ctype);
 	if ( master->lp == NULL ) {
 		errMsg("Problem Setup", "new_master", "failed to setup master problem in the solver",0);

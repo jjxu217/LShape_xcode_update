@@ -69,7 +69,7 @@ cellType *newCell(stocType *stoc, probType **prob, vector xk) {
 
 	cell->candidX = cell->incumbX = NULL;
 
-	/* setup the master problem */
+	/* Jiajun check, setup the master problem */
 	cell->master = newMaster(prob[0]->sp, prob[0]->lb);
 	if ( cell->master == NULL ) {
 		errMsg("setup", "newCell", "failed to setup the master problem", 0);
@@ -82,7 +82,7 @@ cellType *newCell(stocType *stoc, probType **prob, vector xk) {
 	cell->k 	= 0;
 	cell->LPcnt = 0;
 
-	/* candidate solution and estimates */
+	/* candidate solution and estimates, Jiajun check */
 	cell->candidX 	= duplicVector(xk, prob[0]->num->cols);
 	cell->candidEst	= prob[0]->lb + vXvSparse(cell->candidX, prob[0]->dBar);
 

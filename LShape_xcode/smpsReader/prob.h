@@ -8,7 +8,7 @@
 #ifndef PROB_H_
 #define PROB_H_
 
-#undef DECOMPOSE_CHECK
+//#undef DECOMPOSE_CHECK
 
 /* Structure that holds various dimensions of the stage problem */
 typedef struct {

@@ -45,6 +45,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7E9293FD22766B1E00143C87 /* SUFL_5_5.tim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.tim; sourceTree = "<group>"; };
+		7E9293FE22766B1E00143C87 /* SUFL_5_5.sto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.sto; sourceTree = "<group>"; };
+		7E9293FF22766B1E00143C87 /* SUFL_5_5.cor */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.cor; sourceTree = "<group>"; };
 		7EBEFA692241EC4900250B65 /* LShape_xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LShape_xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EBEFA772241F28200250B65 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7EBEFA792241F28C00250B65 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -294,6 +297,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E9293FC22766B1E00143C87 /* SUFL_5_5 */ = {
+			isa = PBXGroup;
+			children = (
+				7E9293FD22766B1E00143C87 /* SUFL_5_5.tim */,
+				7E9293FE22766B1E00143C87 /* SUFL_5_5.sto */,
+				7E9293FF22766B1E00143C87 /* SUFL_5_5.cor */,
+			);
+			path = SUFL_5_5;
+			sourceTree = "<group>";
+		};
 		7EBEFA602241EC4900250B65 = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +392,7 @@
 		7EBEFA9A2241F44F00250B65 /* spInput */ = {
 			isa = PBXGroup;
 			children = (
+				7E9293FC22766B1E00143C87 /* SUFL_5_5 */,
 				7EBEFA9B2241F44F00250B65 /* pltexpA3_16 */,
 				7EBEFA9F2241F44F00250B65 /* cap41 */,
 				7EBEFAA32241F44F00250B65 /* dim4 */,
@@ -1235,6 +1249,7 @@
 					"STOCH_CHECK=1",
 					"ALGO_CHECK=1",
 					"$(inherited)",
+					"DECOMPOSE_CHECK=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/CPLEX_Studio128/cplex/include,

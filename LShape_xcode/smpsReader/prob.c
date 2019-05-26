@@ -57,14 +57,14 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 			prob[t]->sp->cstorsz = orig->cname[tim->col[t+1]] - orig->cname[tim->col[t]];
 			rOffset += prob[t]->sp->rstorsz;
 			cOffset += prob[t]->sp->cstorsz;
-            prob[t]->sp->type = PROB_MILP; //first stage MIP
+            prob[t]->sp->type = PROB_MILP; //Jiajun, first stage MIP
 		}
 		else {
 			prob[t]->sp->mar = prob[t]->sp->marsz = orig->mar - tim->row[t];
 			prob[t]->sp->mac = prob[t]->sp->macsz = orig->mac - tim->col[t];
 			prob[t]->sp->rstorsz = orig->rstorsz - rOffset;
 			prob[t]->sp->cstorsz = orig->cstorsz - cOffset;
-            prob[t]->sp->type = PROB_LP; //second stage LP
+            prob[t]->sp->type = PROB_LP; //Jiajun, second stage LP
 		}
 		prob[t]->sp->numInt = 0;
 		prob[t]->sp->numBin = 0;
@@ -246,6 +246,7 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 		prob[t]->sp->objx[k] = orig->objx[m];
 		prob[t]->sp->bdl[k] = orig->bdl[m];
 		prob[t]->sp->bdu[k] = orig->bdu[m];
+        //Jiajun, don't check for 'C'
 //        if (orig->ctype[m] != 'C') {
 //            errMsg("setup", "newProb", "integer variable in non-root stage",0);
 //            return NULL;
@@ -488,6 +489,7 @@ vector meanProblem(oneProblem *orig, stocType *stoc) {
 	}
 
 	/* change the coefficients and right-hand side to mean values */
+    /*Jiajun: check stoc->mean*/
 	for (n = 0; n < stoc->numOmega; n++ ) {
 		status = changeCoef(orig->lp, stoc->row[n], stoc->col[n], stoc->mean[n]);
 		if ( status ) {

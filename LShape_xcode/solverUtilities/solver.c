@@ -28,6 +28,9 @@ int solveProblem(LPptr lp, string pname, int type, int *status) {
 	case PROB_MILP:
 		(*status) = CPXmipopt(env, lp);
 		break;
+    case PROB_MILP_L1:
+        (*status) = CPXmipopt(env, lp);
+        break;
 	case PROB_MIQP:
 		(*status) = CPXmipopt(env, lp);
 		break;
@@ -284,7 +287,8 @@ LPptr setupProblem(string name, int type, int numcols, int numrows, int objsense
 		return NULL;
 	}
 
-	if ( type == PROB_MILP || type == PROB_MIQP ) {
+    /*Jiajun, add PROB_MILP_L1*/
+	if ( type == PROB_MILP || type == PROB_MIQP ||  type == PROB_MILP_L1 ) {
 		if ( !(indices = (intvec) arr_alloc(numcols, int)) )
 			errMsg("allocation", "setupProblem", "indices", 0);
 		for ( c = 0; c < numcols; c++ )

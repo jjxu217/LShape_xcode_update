@@ -40,6 +40,7 @@
 #define		PROB_QP			CPXPROB_QP
 #define		PROB_MILP		CPXPROB_MILP
 #define		PROB_MIQP		CPXPROB_MIQP
+#define     PROB_MILP_L1    2             /*solve the master with MILP with L1 regularization*/
 
 #define		AT_LOWER        CPX_AT_LOWER
 #define		BASIC           CPX_BASIC
