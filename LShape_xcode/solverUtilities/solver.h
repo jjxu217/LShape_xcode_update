@@ -21,6 +21,7 @@
 #define		PARAM_SCAIND	CPX_PARAM_SCAIND
 #define		PARAM_LPMETHOD	CPX_PARAM_LPMETHOD
 #define		PARAM_QPMETHOD	CPX_PARAM_QPMETHOD
+#define     PARAM_MIPMETHOD CPXPARAM_MIP_Strategy_StartAlgorithm
 #define 	PARAM_PREIND	CPX_PARAM_PREIND
 
 #define		ALG_AUTOMATIC	CPX_ALG_AUTOMATIC
@@ -118,5 +119,9 @@ int getBasisInvCol(LPptr lp, int i, vector phi);
 int getBasisInvARow(LPptr lp, int i, vector phi);
 int getBasisInvACol(LPptr lp, int i, vector phi);
 int freeProblem(LPptr lp);
+
+int Newcols(LPptr lp, int nzcnt, vector obj, vector lb, vector ub, string xctype, string* colname);
+int Addrows(LPptr lp, int ccnt, int rcnt, int nzcnt, vector rhs, string sense, intvec rmatbeg, intvec rmatind, vector rmatval,
+            string* colname, string* rowname);
 
 #endif /* MTSD_SOLVER_H_ */

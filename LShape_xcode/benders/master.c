@@ -16,8 +16,10 @@ extern configType config;
 /* In this his function the master problem is solved after the newest cut is added to master problem, the incumbent cut is updated if necessary.
  * Here the coefficients on all the cuts are updated, and finally master problem is solved. */
 int solveMaster(numType *num, sparseVector *dBar, cellType *cell) {
-	int 	status;
+	int 	status, i;
 	clock_t	tic;
+    vector new_X;
+    BOOL sameIndicator = TRUE;
 
 #if defined(ALGO_CHECK)
 	writeProblem(cell->master->lp,"cellMaster.lp");
@@ -35,11 +37,30 @@ int solveMaster(numType *num, sparseVector *dBar, cellType *cell) {
 	/* increment the number of problems solved during algorithm */
 	cell->LPcnt++;
 
+    if (!(new_X =(vector) arr_alloc(num->cols+1, double)))
+        errMsg("Allocation", "solveMaster", "last_x",0);
+   
 	/* Get the most recent optimal solution to master program */
-	if ( getPrimal(cell->master->lp, cell->candidX, num->cols) ) {
+	if ( getPrimal(cell->master->lp, new_X, num->cols) ) {
 		errMsg("algorithm", "solveMaster", "failed to obtain the primal solution for master", 0);
 		return 1;
 	}
+    for(i = 0; i <= num->cols; i++){
+        if (DBL_ABS(cell->candidX[i] - new_X[i]) > config.TOLERANCE){
+            sameIndicator = FALSE;
+            break;
+        }
+    }
+    if (sameIndicator){
+        cell->RepeatedTime++;
+    }
+    else{
+        cell->RepeatedTime = 0;
+        for(i = 0; i <= num->cols; i++){
+            cell->candidX[i] = new_X[i];
+        }
+    }
+    
 
 	if ( cell->master->type == PROB_QP ) {
 		/* Get the dual solution too */
@@ -54,8 +75,10 @@ int solveMaster(numType *num, sparseVector *dBar, cellType *cell) {
     else if(cell->master->type == PROB_MILP){
         cell->candidEst = getObjective(cell->master->lp, PROB_MILP);
     }
-	else
+    else{
 		cell->candidEst = getObjective(cell->master->lp, PROB_LP);
+    }
+    free(new_X);
 	return 0;
 }//END solveMaster()
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E75E76322F0B2DE0036E024 /* compromise.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E75E76222F0B2DE0036E024 /* compromise.c */; };
 		7EBEFA782241F28200250B65 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA772241F28200250B65 /* CoreFoundation.framework */; };
 		7EBEFA7A2241F28C00250B65 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA792241F28C00250B65 /* IOKit.framework */; };
 		7EBEFA7C2241F2B700250B65 /* libconcert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA7B2241F2B700250B65 /* libconcert.a */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7E75E76222F0B2DE0036E024 /* compromise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compromise.c; sourceTree = "<group>"; };
 		7E9293FD22766B1E00143C87 /* SUFL_5_5.tim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.tim; sourceTree = "<group>"; };
 		7E9293FE22766B1E00143C87 /* SUFL_5_5.sto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.sto; sourceTree = "<group>"; };
 		7E9293FF22766B1E00143C87 /* SUFL_5_5.cor */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.cor; sourceTree = "<group>"; };
@@ -263,21 +265,6 @@
 		7EBEFB8C2241F45000250B65 /* fxm3_16.cor */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fxm3_16.cor; sourceTree = "<group>"; };
 		7EBEFB8D2241F45000250B65 /* fxm3_16.sto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fxm3_16.sto; sourceTree = "<group>"; };
 		7EBEFB8E2241F45000250B65 /* fxm3_16.tim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fxm3_16.tim; sourceTree = "<group>"; };
-		7EBEFBB82241FA4400250B65 /* twoSD.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = twoSD.c; sourceTree = "<group>"; };
-		7EBEFBB92241FA4400250B65 /* soln.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = soln.c; sourceTree = "<group>"; };
-		7EBEFBBA2241FA4400250B65 /* config.sd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.sd; sourceTree = "<group>"; };
-		7EBEFBBB2241FA4400250B65 /* master.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = master.c; sourceTree = "<group>"; };
-		7EBEFBBC2241FA4400250B65 /* subprob.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = subprob.c; sourceTree = "<group>"; };
-		7EBEFBBD2241FA4400250B65 /* randCost.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = randCost.c; sourceTree = "<group>"; };
-		7EBEFBBE2241FA4400250B65 /* evaluate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = evaluate.c; sourceTree = "<group>"; };
-		7EBEFBBF2241FA4400250B65 /* twoSD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = twoSD.h; sourceTree = "<group>"; };
-		7EBEFBC02241FA4400250B65 /* setup.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = setup.c; sourceTree = "<group>"; };
-		7EBEFBC12241FA4400250B65 /* stocUpdate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stocUpdate.c; sourceTree = "<group>"; };
-		7EBEFBC22241FA4400250B65 /* cuts.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cuts.c; sourceTree = "<group>"; };
-		7EBEFBC32241FA4400250B65 /* compromise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compromise.c; sourceTree = "<group>"; };
-		7EBEFBC42241FA4400250B65 /* algo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algo.c; sourceTree = "<group>"; };
-		7EBEFBC52241FA4400250B65 /* optimal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = optimal.c; sourceTree = "<group>"; };
-		7EBEFBC62241FA4400250B65 /* stoc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stoc.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -328,7 +315,6 @@
 			isa = PBXGroup;
 			children = (
 				7EBEFA992241F44E00250B65 /* config.benders */,
-				7EBEFBB72241FA4400250B65 /* twoSD */,
 				7EBEFA902241F44E00250B65 /* benders */,
 				7EBEFA892241F44E00250B65 /* smpsReader */,
 				7EBEFA832241F44E00250B65 /* solverUtilities */,
@@ -377,6 +363,7 @@
 		7EBEFA902241F44E00250B65 /* benders */ = {
 			isa = PBXGroup;
 			children = (
+				7E75E76222F0B2DE0036E024 /* compromise.c */,
 				7EBEFA912241F44E00250B65 /* benders.c */,
 				7EBEFA922241F44E00250B65 /* master.c */,
 				7EBEFA932241F44E00250B65 /* subprob.c */,
@@ -1026,28 +1013,6 @@
 			path = fxm3_16;
 			sourceTree = "<group>";
 		};
-		7EBEFBB72241FA4400250B65 /* twoSD */ = {
-			isa = PBXGroup;
-			children = (
-				7EBEFBB82241FA4400250B65 /* twoSD.c */,
-				7EBEFBB92241FA4400250B65 /* soln.c */,
-				7EBEFBBA2241FA4400250B65 /* config.sd */,
-				7EBEFBBB2241FA4400250B65 /* master.c */,
-				7EBEFBBC2241FA4400250B65 /* subprob.c */,
-				7EBEFBBD2241FA4400250B65 /* randCost.c */,
-				7EBEFBBE2241FA4400250B65 /* evaluate.c */,
-				7EBEFBBF2241FA4400250B65 /* twoSD.h */,
-				7EBEFBC02241FA4400250B65 /* setup.c */,
-				7EBEFBC12241FA4400250B65 /* stocUpdate.c */,
-				7EBEFBC22241FA4400250B65 /* cuts.c */,
-				7EBEFBC32241FA4400250B65 /* compromise.c */,
-				7EBEFBC42241FA4400250B65 /* algo.c */,
-				7EBEFBC52241FA4400250B65 /* optimal.c */,
-				7EBEFBC62241FA4400250B65 /* stoc.h */,
-			);
-			path = twoSD;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1117,6 +1082,7 @@
 				7EBEFBE42241FA9900250B65 /* rvgen.c in Sources */,
 				7EBEFBE52241FA9900250B65 /* smps.c in Sources */,
 				7EBEFBE62241FA9900250B65 /* prob.h in Sources */,
+				7E75E76322F0B2DE0036E024 /* compromise.c in Sources */,
 				7EBEFBE72241FA9900250B65 /* utils.h in Sources */,
 				7EBEFBE82241FA9900250B65 /* utility.c in Sources */,
 				7EBEFBE92241FA9900250B65 /* solver.h in Sources */,
@@ -1250,6 +1216,8 @@
 					"ALGO_CHECK=1",
 					"$(inherited)",
 					"DECOMPOSE_CHECK=1",
+					"SETUP_CHECK=1",
+					"BATCH_CHECK=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/CPLEX_Studio128/cplex/include,

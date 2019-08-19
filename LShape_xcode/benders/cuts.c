@@ -76,18 +76,21 @@ int formOptCut(probType *prob, cellType *cell, vector Xvect, BOOL isIncumb) {
 		if ( config.MULTICUT || obs == 0)
 			cut = newCut(prob->num->prevCols, cell->k);
 
-		/* Compute the cut coefficients */
-		bOmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[0];
-		COmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[1];
-
-		alpha = vXvSparse(piS, prob->bBar) + mubBar + vXvSparse(piS, &bOmega);
-
+		
+        /* Compute the cut coefficients *///Jiajun, add the condition for prob->num->rvRowCnt == 0
+		alpha = vXvSparse(piS, prob->bBar) + mubBar ;
 		beta = vxMSparse(piS, prob->Cbar, prob->num->prevCols);
-		temp = vxMSparse(piS, &COmega, prob->num->prevCols);
-		piCBar = reduceVector(temp, prob->coord->rvCOmCols, prob->num->rvCOmCnt);
-		for (c = 1; c <= prob->num->rvCOmCnt; c++)
-			beta[prob->coord->rvCOmCols[c]] += temp[c];
-		mem_free(temp); mem_free(piCBar);
+        
+        if(prob->num->rvRowCnt > 0){
+            bOmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[0];
+            COmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[1];
+            alpha = alpha + vXvSparse(piS, &bOmega);
+            temp = vxMSparse(piS, &COmega, prob->num->prevCols);
+            piCBar = reduceVector(temp, prob->coord->rvCOmCols, prob->num->rvCOmCnt);
+            for (c = 1; c <= prob->num->rvCOmCnt; c++)
+                beta[prob->coord->rvCOmCols[c]] += temp[c];
+            mem_free(temp); mem_free(piCBar);
+        }
 
 #if defined(STOCH_CHECK)
 		printf("Objective estimate computed as cut height = %lf\n", alpha - vXv(beta, Xvect, NULL, prob->num->prevCols));

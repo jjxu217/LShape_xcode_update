@@ -26,8 +26,8 @@ int algo(oneProblem *orig, timeType *tim, stocType *stoc, string inputDir, strin
 		goto TERMINATE;
 
 	printf("Starting two-stage stochastic decomposition.\n");
-	sFile = openFile(outputDir, "results.dat", "w");
-	iFile = openFile(outputDir, "incumb.dat", "w");
+	sFile = openFile(outputDir, "results.txt", "w");
+	iFile = openFile(outputDir, "incumb.txt", "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
 	printDecomposeSummary(stdout, probName, tim, prob);
 

@@ -277,7 +277,7 @@ int randInteger(long long *SEED, int iMax) {
  * stocType. The function takes number of samples as an input from the user. The function outputs the simulated observations as a matrix with each row corresponding to a random variable, and column corresponds to
  * a simulated observation. */
 int setupSAA(stocType *stoc, long long *seed, vector **simObservVals, vector *probs, int *numSamples, double TOLERANCE) {
-	int 	obs;
+	int 	obs, n, offset, k;
 
 	if ( (*numSamples) == 0 ) {
 		/* number of samples in SAA */
@@ -292,8 +292,24 @@ int setupSAA(stocType *stoc, long long *seed, vector **simObservVals, vector *pr
 	if ( strstr(stoc->type, "BLOCKS_DISCRETE") != NULL ) {
 		for (obs = 0; obs < (*numSamples); obs++ ) {
 			(*simObservVals)[obs] = (vector) arr_alloc(stoc->numOmega+1, double);
-			generateBlocks(stoc, (*simObservVals)[obs]+1, 0, seed);
-			(*probs)[obs] = 1.0/(double) (*numSamples);
+           
+//#ifdef STOCH_CHECK
+//            for ( k = 0; k < stoc->numOmega+1; k++ )
+//                printf("%4.6lf, ", (*simObservVals)[obs][k]);
+//            printf("\n");
+//#endif
+            offset = 1;
+            for ( n = 0; n < stoc->numGroups; n++ ) {
+                generateBlocks(stoc, (*simObservVals)[obs]+offset, n, seed);
+                offset += stoc->numPerGroup[n];
+            }
+#ifdef STOCH_CHECK
+            printf("%d-th sample\n", obs);
+            for ( k = 1; k <= stoc->numOmega; k++ )
+                printf("%4.6lf, ", (*simObservVals)[obs][k]);
+            printf("\n");
+#endif
+            (*probs)[obs] = 1.0/(double) (*numSamples);
 		}
 	}
 	else if ( !strcmp(stoc->type, "INDEP_DISCRETE")) {

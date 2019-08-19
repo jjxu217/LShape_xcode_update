@@ -95,6 +95,7 @@ void addVectors(vector a, vector b, intvec indices, int len);
 
 void trPrint(string routine, int type);
 void printVector(vector vec, int len, FILE *fptr);
+void printVectorInSparse(vector vec, int len, FILE *fptr);
 void printIntvec(intvec vec, int len, FILE *fptr);
 void printSparseVector(vector vec, intvec indices, int len);
 void printSparseMatrix(sparseMatrix *V, char *string);

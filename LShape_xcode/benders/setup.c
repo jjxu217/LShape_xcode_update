@@ -13,7 +13,7 @@
 
 extern configType config;
 
-int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob, cellType **cell, vector *meanSol) {
+int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob, cellType **cell, batchSummary **batch, vector *meanSol) {
 	vector	lb = NULL;
 	int 	t;
 
@@ -48,6 +48,9 @@ int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob,
 		errMsg("setup", "setupAlgo", "failed to create the necessary cell structure", 0);
 		goto TERMINATE;
 	}
+    
+    if ( config.NUM_REPS > 1 )
+        (*batch)  = newBatchSummary((*prob)[0], config.NUM_REPS);
 
 	mem_free(lb);
 	return 0;
@@ -81,6 +84,7 @@ cellType *newCell(stocType *stoc, probType **prob, vector xk) {
 	/* -+-+-+-+-+-+-+-+-+-+-+ Allocating memory to other variables that belongs to cell +-+-+-+-+-+-+-+-+-+- */
 	cell->k 	= 0;
 	cell->LPcnt = 0;
+    cell->RepeatedTime = 0;
 
 	/* candidate solution and estimates, Jiajun check */
 	cell->candidX 	= duplicVector(xk, prob[0]->num->cols);
@@ -152,6 +156,7 @@ int cleanCellType(cellType *cell, probType *prob, vector xk) {
 	cell->LPcnt = 0;
 	cell->optFlag 		 = FALSE;
 	cell->spFeasFlag 	 = TRUE;
+    cell->RepeatedTime = 0;
 
 	copyVector(xk, cell->candidX, prob->num->cols, TRUE);
 	cell->candidEst	= prob->lb + vXvSparse(cell->candidX, prob->dBar);

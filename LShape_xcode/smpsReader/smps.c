@@ -338,7 +338,7 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 	string 	*rvRows = NULL, *rvCols = NULL, *fields = NULL;
 	char	probpath[2*BLOCKSIZE], line[BLOCKSIZE], fieldType;
 	FILE	*fptr;
-	int		maxOmegas = 1000, maxVals = 4000, n, numFields, maxFields = 10;
+	int        maxOmegas = 11000, maxVals = 60, n, numFields, maxFields = 10, maxGroups = 130;//Jiajun Setup: Omega: number of RVs; Vals: number of realization for each RVs,
 
 	/* Locate the problem sto file */
 	sprintf(probpath, "%s%s/%s.sto", inputDir, probName, probName);
@@ -368,9 +368,9 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 		errMsg("allocation", "readStoc", "stoc->row", 0);
 	if ( !(stoc->mean = (vector) arr_alloc(maxOmegas, double)) )
 		errMsg("allocation", "readStoc", "stoc->mean", 0);
-	if ( !(stoc->groupBeg = (intvec) arr_alloc(maxFields, int)) )
+	if ( !(stoc->groupBeg = (intvec) arr_alloc(maxGroups, int)) )
 		errMsg("allocation", "readStoc", "stoc->groupBeg", 0);
-	if ( !(stoc->numPerGroup = (intvec) arr_alloc(maxFields, int)) )
+	if ( !(stoc->numPerGroup = (intvec) arr_alloc(maxGroups, int)) )
 		errMsg("allocation", "readStoc", "stoc->numPerGroup", 0);
 	stoc->numOmega = 0;
 	stoc->numGroups = 0;
@@ -447,6 +447,11 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 
 	stoc->numPerGroup = (intvec) mem_realloc(stoc->numPerGroup, stoc->numGroups*sizeof(int));
 	stoc->groupBeg 	  = (intvec) mem_realloc(stoc->groupBeg ,stoc->numGroups*sizeof(int));
+    
+    // Jiajun realloc stoc->numVals
+    if (!(strcmp(stoc->type, "BLOCKS_DISCRETE"))){
+        stoc->numVals     = (intvec) mem_realloc(stoc->numVals ,stoc->numGroups*sizeof(int));
+    }
 
 	return stoc;
 }//END readStoc()

@@ -112,6 +112,7 @@ typedef struct {
     BOOL		spFeasFlag;			/* Indicates whether the subproblem is feasible */
     int			feasCnt;			/* keeps track of the number of times infeasible candidate solution was encountered */
 	BOOL		infeasIncumb;		/* indicates if the incumbent solution is infeasbible */
+    int         RepeatedTime;
 
 	runTime		*time;				/* Run time structure */
 }cellType;
@@ -125,6 +126,20 @@ typedef struct {
 }dualsType;
 #endif
 
+typedef struct {
+    oneProblem    *sp;                /* compromise problem */
+    int         cnt;                /* number of replications */
+    intvec         ck;                    /* number of iterations for each replication */
+    vector        objLB;                /* replication lower bound */
+    vector        objUB;                /* replication upper bound, if batch solution is evaluated */
+    double        objComp;            /* optimal value of compromise problem */
+    double        quadScalar;            /* average proximal terms */
+    vector        *incumbX;            /* batch incumbent solution */
+    vector        compromiseX;        /* compromise solution */
+    vector        avgX;                /* average solution across batches */
+    runTime        *time;                /* Run time structure */
+}batchSummary;
+
 int parseCmdLine(int argc, char *argv[], string probName, string inputDir);
 void createOutputDir(string outputDir, string algoName, string probName);
 int readConfig();
@@ -137,7 +152,7 @@ BOOL optimal(cellType *cell);
 void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell);
 
 /* setup.c */
-int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob, cellType **cell, vector *meanSol);
+int setupAlgo(oneProblem *orig, stocType *stoc, timeType *tim, probType ***prob, cellType **cell, batchSummary **batch, vector *meanSol);
 cellType *newCell(stocType *stoc, probType **prob, vector xk);
 int cleanCellType(cellType *cell, probType *prob, vector xk);
 void freeCellType(cellType *cell);
@@ -178,5 +193,13 @@ void freeOmegaType(omegaType *omega, BOOL partial);
 
 /* evaluate.c */
 int evaluate(FILE *soln, stocType *stoc, probType **prob, cellType *cell, vector Xvect);
+
+/* compromise.c */
+int buildCompromise(probType *prob, cellType *cell, batchSummary *batch);
+int solveCompromise(probType *prob, batchSummary *batch);
+int addL1Norm (probType *prob, batchSummary *batch);
+int addBatchEquality (probType *prob, batchSummary *batch);
+batchSummary *newBatchSummary(probType *prob, int numBatch);
+void freeBatchType(batchSummary *batch);
 
 #endif /* BENDERS_H_ */

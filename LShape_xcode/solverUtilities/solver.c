@@ -726,3 +726,35 @@ int freeProblem(LPptr lp) {
 
 	return status;
 }//END freeProb()
+
+int changeMILPSolverType(int method) {
+    int status = 0;
+    
+    status = setIntParam(PARAM_MIPMETHOD, method);
+    if (status) {
+        solverErrmsg(status);
+        return 1;
+    }
+    return 0;
+}//END changeMIPSolverType()
+
+int Newcols(LPptr lp, int nzcnt, vector obj, vector lb,
+            vector ub, string xctype, string* colname){
+    int status;
+    status = CPXnewcols (env, lp, nzcnt, obj, lb, ub, xctype, colname);
+    if ( status )
+        solverErrmsg(status);
+    return status;
+}
+
+int Addrows(LPptr lp, int ccnt, int rcnt, int nzcnt, vector rhs, string sense, intvec rmatbeg, intvec rmatind, vector rmatval,
+            string* colname, string* rowname){
+    int status;
+    status = CPXaddrows (env, lp, ccnt, rcnt, nzcnt, rhs,
+                         sense, rmatbeg, rmatind, rmatval,
+                         colname, rowname);
+    
+    if ( status )
+        solverErrmsg(status);
+    return status;
+}

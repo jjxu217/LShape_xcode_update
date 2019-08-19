@@ -22,18 +22,19 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
+    batchSummary *batch = NULL;
 	int 	 rep, m, n;
 	FILE 	*sFile, *iFile = NULL;
 	clock_t	tic;
 
 	/* complete necessary initialization for the algorithm */
-	if ( setupAlgo(orig, stoc, tim, &prob, &cell, &meanSol) )
+	if ( setupAlgo(orig, stoc, tim, &prob, &cell, &batch, &meanSol) )
 		goto TERMINATE;
 
 	printf("Starting Benders decomposition.\n");
-	sFile = openFile(outputDir, "results.dat", "w");
+	sFile = openFile(outputDir, "results.txt", "w");
 //    if ( config.MASTER_TYPE == PROB_QP )
-    iFile = openFile(outputDir, "incumb.dat", "w");
+    iFile = openFile(outputDir, "incumb.txt", "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
 	printDecomposeSummary(stdout, probName, tim, prob);
 
@@ -82,7 +83,39 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 			else
 				evaluate(sFile, stoc, prob, cell, cell->candidX);
 		}
+        /* Save the batch details and build the compromise problem. */
+        if ( config.MULTIPLE_REP ) {
+            buildCompromise(prob[0], cell, batch);
+        }
 	}
+    
+    if ( config.MULTIPLE_REP ) {
+        /* Solve the compromise problem. */
+        if ( solveCompromise(prob[0], batch)) {
+            errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
+            goto TERMINATE;
+        }
+        
+        fprintf(sFile, "\n====================================================================================================================================\n");
+        fprintf(sFile, "\n----------------------------------------- Compromise solution --------------------------------------\n\n");
+        fprintf(sFile, "\n====================================================================================================================================\n");
+        fprintf(sFile, "\n----------------------------------------- Compromise solution --------------------------------------\n\n");
+        /* Evaluate the compromise solution */
+        fprintf(sFile, "Incumbent solution, non-zero position: ");
+        printVectorInSparse(batch->compromiseX, prob[0]->num->cols, sFile);
+        evaluate(sFile, stoc, prob, cell, batch->compromiseX);
+        
+        fprintf(sFile, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
+        fprintf(stdout, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
+        /* Evaluate the average solution */
+        printVectorInSparse(batch->avgX, prob[0]->num->cols, sFile);
+        evaluate(sFile, stoc, prob, cell, batch->avgX);
+        
+        fprintf(iFile, "\n----------------------------------------- Compromise solution(1-indexed) --------------------------------------\n\n");
+        printVectorInSparse(batch->compromiseX, prob[0]->num->cols, iFile);
+        fprintf(iFile, "\n------------------------------------------- Average solution(1-indexed) ---------------------------------------\n\n");
+        printVectorInSparse(batch->avgX, prob[0]->num->cols, iFile);
+    }
 
 	fclose(sFile); fclose(iFile);
 	printf("\nSuccessfully completed the L-shaped method.\n");
@@ -173,8 +206,11 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 
 BOOL optimal(cellType *cell) {
 
-	if ( cell->k > config.MIN_ITER ) {
-		return cell->optFlag = ((cell->incumbEst - cell->candidEst) < config.EPSILON);
+	if ( cell->RepeatedTime > 0 || cell->k > config.MIN_ITER ) {
+        if (config.MASTER_TYPE == PROB_QP){
+            return cell->optFlag = ((cell->incumbEst - cell->candidEst) < config.EPSILON);
+        }
+        return TRUE;
 	}
 
 	return FALSE;
@@ -198,7 +234,8 @@ void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 
     //print candidate for a moment here
 	if ( incumb != NULL ) {
-		printVector(cell->candidX, prob[0]->num->cols, incumb);
+        printVectorInSparse(cell->candidX, prob[0]->num->cols, incumb);
+		//printVector(cell->candidX, prob[0]->num->cols, incumb);
 	}
 
 //    if ( duals != NULL ) {

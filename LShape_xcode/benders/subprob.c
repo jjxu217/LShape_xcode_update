@@ -20,6 +20,9 @@ int solveSubprob(probType *prob, oneProblem *subproblem, vector Xvect, vector ob
 	int  	status, n;
 	clock_t	tic;
 
+#ifdef DEBUG
+    printf("prob->num->rows = %d, prob->num->cols = %d \n", prob->num->rows, prob->num->cols);
+#endif
 	if ( !(indices = (intvec) arr_alloc(max(prob->num->rows, prob->num->cols), int)) )
 		errMsg("allocation", "solve_subporb", "indices", 0);
 	for ( n = 0; n < max(prob->num->rows,prob->num->cols); n++ )
@@ -45,6 +48,10 @@ int solveSubprob(probType *prob, oneProblem *subproblem, vector Xvect, vector ob
 		return 1;
 	}
 
+#ifdef DEBUG
+    printf("cost vector \n");
+    printVector(cost, prob->num->cols, NULL);
+#endif
 	/* (d) change cost coefficients in the solver */
 	if ( changeObjx(subproblem->lp, prob->num->cols, indices, cost+1) ) {
 		errMsg("solver", "solve_subprob", "failed to change the cost coefficients in the solver",0);
@@ -69,7 +76,7 @@ int solveSubprob(probType *prob, oneProblem *subproblem, vector Xvect, vector ob
 	writeProblem(subproblem->lp, "cellSubprob.lp");
 #endif
 
-#if defined(STOCH_CHECK)
+#if defined(ALGO_CHECK)
 	double obj;
 	obj = getObjective(subproblem->lp, PROB_LP);
 	printf("Objective value of Subproblem  = %lf;\t", obj);
@@ -132,30 +139,40 @@ vector computeRHS(numType *num, coordType *coord, sparseVector *bBar, sparseMatr
 	sparseVector bomega;
 	sparseMatrix Comega;
 
-	bomega.cnt = num->rvbOmCnt;	bomega.col = coord->rvbOmRows; bomega.val = coord->rvOffset[0] + observ;
-	Comega.cnt = num->rvCOmCnt; Comega.col = coord->rvCOmCols; Comega.row = coord->rvCOmRows; Comega.val = coord->rvOffset[1] + observ;
+	
 
-	/* Start with the values of b(omega) -- both fixed and varying */
+	/* Start with the values of b -- fixed */
 	rhs = expandVector(bBar->val, bBar->col, bBar->cnt, num->rows);
-	for (cnt = 1; cnt <= bomega.cnt; cnt++)
-		rhs[bomega.col[cnt]] += bomega.val[cnt];
 
-	/* (cumulatively) subtract values of C(omega) x X -- both fixed and varying */
+	/* (cumulatively) subtract values of C x X -- fixed */
 	rhs = MSparsexvSub(Cbar, X, rhs);
-	rhs = MSparsexvSub(&Comega, X, rhs);
+    
+    /*get b(omega) and C(omega)*/
+    if(num->rvRowCnt > 0){
+        bomega.cnt = num->rvbOmCnt;    bomega.col = coord->rvbOmRows; bomega.val = coord->rvOffset[0] + observ;
+        Comega.cnt = num->rvCOmCnt; Comega.col = coord->rvCOmCols; Comega.row = coord->rvCOmRows; Comega.val = coord->rvOffset[1] + observ;
+        for (cnt = 1; cnt <= bomega.cnt; cnt++)
+            rhs[bomega.col[cnt]] += bomega.val[cnt];
+        rhs = MSparsexvSub(&Comega, X, rhs);
+    }
 
 	return rhs;
 }//END computeRHS()
 
 vector computeCostCoeff(numType *num, coordType *coord, sparseVector *dBar, vector observ) {
 	vector cost;
-	sparseVector cOmega;
+	sparseVector dOmega;
 	int	cnt;
 
-	cOmega.cnt = num->rvdOmCnt; cOmega.col = coord->rvdOmCols; cOmega.val = coord->rvOffset[2] + observ;
+	dOmega.cnt = num->rvdOmCnt; dOmega.col = coord->rvdOmCols; dOmega.val = coord->rvOffset[2] + observ;
+
 	cost = expandVector(dBar->val, dBar->col, dBar->cnt, num->cols);
-	for (cnt = 1; cnt <= cOmega.cnt; cnt++)
-		cost[cOmega.col[cnt]] += cOmega.val[cnt];
+    for (cnt = 1; cnt <= dOmega.cnt; cnt++){
+		cost[dOmega.col[cnt]] += dOmega.val[cnt];
+//#ifdef DEBUG
+//        printf("cnt = %d, dOmega.val = %f, cost[dOmega.col[cnt]]=%f, dOmega.col[cnt]=%d \n", cnt, dOmega.val[cnt], cost[dOmega.col[cnt]], dOmega.col[cnt]);
+//#endif
+    }
 
 	return cost;
 }//END computeCostCoeff()
@@ -299,9 +316,9 @@ omegaType *newOmega(stocType *stoc) {
 
 	if ( !(omega = (omegaType *) mem_malloc(sizeof(omegaType))) )
 		errMsg("allocation","newOmega", "omega", 0);
-	if ( !(omega->probs = (vector) arr_alloc(100, double)) )
+	if ( !(omega->probs = (vector) arr_alloc(config.MAX_OBS, double)) )
 		errMsg("allocation", "newOmega", "omega->probs", 0);
-	if ( !(omega->vals = (vector *) arr_alloc(100, vector)) )
+	if ( !(omega->vals = (vector *) arr_alloc(config.MAX_OBS, vector)) )
 		errMsg("allocation", "newOmega", "omega->vals", 0);
 	omega->cnt = 0; omega->numRV = stoc->numOmega;
 

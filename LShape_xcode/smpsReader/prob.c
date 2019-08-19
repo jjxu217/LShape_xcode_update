@@ -755,7 +755,7 @@ void printDecomposeSummary(FILE *fptr, string probName, timeType *tim, probType 
 	fprintf(fptr, "Number of stages                   : %d\n", tim->numStages);
 	for ( t = 0; t < tim->numStages; t++ ) {
 		fprintf(fptr,  "------------------------------------------------------------------------------------------------------------------------------------\n");
-		fprintf(fptr,  "Stage %d\n", t);
+		fprintf(fptr,  "Stage %d\n", t+1);
 		fprintf(fptr,  "Number of decision variables (u_t) = %d\t\t", prob[t]->sp->mac);
 		fprintf(fptr,  "(Continuous = %d\tInteger = %d\tBinary = %d)\n", prob[t]->sp->mac - prob[t]->sp->numInt - prob[t]->sp->numBin, prob[t]->sp->numInt, prob[t]->sp->numBin);
 		fprintf(fptr,  "Number of constraints              = %d\n", prob[t]->sp->mar);

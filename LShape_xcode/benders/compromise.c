@@ -9,26 +9,29 @@
  *
  */
 
-#include "twoSD.h"
+#include "benders.h"
 
 extern configType config;
 
 int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
-	vector	coef, qsepvec;
+	vector	coef;
 	intvec	indices;
-	int 	i, idx, cnt, cOffset, rOffset1, rOffset2;
+	int 	i, idx, cnt, cOffset, rOffset1=0, rOffset2=0;
 	char 	*q, tempName[NAMESIZE], batchNameSuffix[NAMESIZE];
 
 	sprintf(batchNameSuffix, "_B%02d", batch->cnt);
-    
-    fprintf(soln, "Total time                             : %f\n", cell->time.repTime);
-    fprintf(soln, "Total time to solve master             : %f\n", cell->time.masterAccumTime);
-    fprintf(soln, "Total time to solve subproblems        : %f\n", cell->time.subprobAccumTime);
-    
-	batch->ck[batch->cnt] 	 = cell->k;
-	batch->objLB[batch->cnt] = cell->incumbEst;
 
-	batch->incumbX[batch->cnt] = duplicVector(cell->incumbX, prob->num->cols);
+	batch->ck[batch->cnt] 	 = cell->k;
+	//batch->objLB[batch->cnt] = cell->incumbEst;
+    
+    if (config.MASTER_TYPE == PROB_QP){
+        batch->objLB[batch->cnt] = cell->incumbEst;
+        batch->incumbX[batch->cnt] = duplicVector(cell->incumbX, prob->num->cols);
+    }
+    else{
+        batch->objLB[batch->cnt] = cell->candidEst;
+        batch->incumbX[batch->cnt] = duplicVector(cell->candidX, prob->num->cols);
+    }
 	batch->cnt++;
 
 	/* a. Setup or update the batch problem */
@@ -38,6 +41,10 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	batch->sp->macsz	+= prob->sp->macsz+1;
 	batch->sp->cstorsz  += prob->sp->cstorsz + strlen(batchNameSuffix) * batch->sp->macsz;
 	batch->sp->rstorsz  += prob->sp->rstorsz + strlen(batchNameSuffix) * batch->sp->marsz;
+    
+#if defined(BATCH_CHECK)
+    printf("batch->cnt=%d, batch->sp->mar = %d, batch->sp->mac = %d, batch->sp->macsz= %d, batch->sp->marsz= %d, batch->sp->matsz= %d\n", batch->cnt, batch->sp->mar, batch->sp->mac,batch->sp->macsz, batch->sp->marsz, batch->sp->matsz);
+#endif
 
 	batch->sp->rhsx 	= (vector) mem_realloc(batch->sp->rhsx, batch->sp->marsz*sizeof(double));
 	batch->sp->senx		= (string) mem_realloc(batch->sp->senx, batch->sp->marsz*sizeof(char));
@@ -75,6 +82,9 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	if ( batch->sp->rstorsz > 0 ) {
 		cnt = batch->sp->rstorsz;
 		rOffset1 = batch->sp->mar; rOffset2 = idx = (batch->cnt-1)*prob->num->rows;
+#if defined(BATCH_CHECK)
+        printf("rOffset1 = %d, rOffset2 = %d\n", rOffset1, rOffset2);
+#endif
 		batch->sp->rname[idx] = batch->sp->rstore + cnt;
 		for (q = prob->sp->rname[0]; q < prob->sp->rname[0] + prob->sp->rstorsz; q++) {
 			if ( *q == '\0' ) {
@@ -88,6 +98,9 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 		}
 		batch->sp->rstorsz = cnt; batch->sp->mar += (idx - rOffset2);
 	}
+#if defined(BATCH_CHECK)
+    printf("batch->sp->mar = %d, batch->sp->mac = %d, batch->sp->macsz= %d, batch->sp->marsz= %d, batch->sp->matsz= %d\n", batch->sp->mar, batch->sp->mac,batch->sp->macsz, batch->sp->marsz, batch->sp->matsz);
+#endif
 
 	/* Copy all column information from the batch master problem */
 	cnt = batch->sp->numnz;
@@ -171,11 +184,11 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	coef = (vector) arr_alloc(prob->num->rows+1, double);
 	for (i = 0; i < prob->num->rows; i++) {
 		coef[i+1]  = prob->sp->rhsx[i];
-		indices[i] = i+rOffset1;\
+		indices[i] = i+rOffset1;
 	}
 
-	/* b - A * xbar */
-	coef = MSparsexvSub(prob->Dbar, cell->incumbX, coef);
+//    /* b - A * xbar */
+//    coef = MSparsexvSub(prob->Dbar, cell->incumbX, coef);
 
 	/* change the right-hand of the problem on the solver. */
 	if ( changeRHS(batch->sp->lp, prob->num->rows, indices, coef+1) ) {
@@ -192,7 +205,7 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	batch->sp->mar += cell->cuts->cnt;
 	for ( cnt = 0; cnt < cell->cuts->cnt; cnt++ ) {
 		sprintf(tempName, "%s%s", cell->cuts->vals[cnt]->name, batchNameSuffix);
-		cell->cuts->vals[cnt]->beta[0] = (double) (batch->ck[batch->cnt-1]) / (double) cell->cuts->vals[cnt]->numSamples;
+        //TODO:cell->cuts->vals[cnt]->beta[0] = (double) (batch->ck[batch->cnt-1]) / (double) cell->cuts->vals[cnt]->numSamples;
 		if ( addRow(batch->sp->lp, prob->num->cols+1, cell->cuts->vals[cnt]->alphaIncumb, GE, 0, indices,
 				cell->cuts->vals[cnt]->beta, tempName) ) {
 			errMsg("solver", "buildCompromise", "failed to add new cut row to problem in solver", 0);
@@ -201,37 +214,39 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	}
 
 	/* Feasibility cuts, if any */
-	batch->sp->mar += cell->fcuts->cnt;
-	for ( cnt = 0; cnt < cell->fcuts->cnt; cnt++ ) {
-		sprintf(tempName, "%s%s", cell->fcuts->vals[cnt]->name, batchNameSuffix);
-		if ( addRow(batch->sp->lp, prob->num->cols+1, cell->fcuts->vals[cnt]->alphaIncumb, GE, 0, indices,
-				cell->fcuts->vals[cnt]->beta, tempName) ) {
-			errMsg("solver", "buildCompromise", "failed to add new feasibility cut row to problem in solver", 0);
-			return 1;
-		}
-	}
+//    batch->sp->mar += cell->fcuts->cnt;
+//    for ( cnt = 0; cnt < cell->fcuts->cnt; cnt++ ) {
+//        sprintf(tempName, "%s%s", cell->fcuts->vals[cnt]->name, batchNameSuffix);
+//        if ( addRow(batch->sp->lp, prob->num->cols+1, cell->fcuts->vals[cnt]->alphaIncumb, GE, 0, indices,
+//                cell->fcuts->vals[cnt]->beta, tempName) ) {
+//            errMsg("solver", "buildCompromise", "failed to add new feasibility cut row to problem in solver", 0);
+//            return 1;
+//        }
+//    }
 
 	/* d. Change the bounds on the batch variables */
-	if (changeQPbds(batch->sp->lp, prob->num->cols, prob->sp->bdl, prob->sp->bdu, cell->incumbX, cOffset) ) {
-		errMsg("algorithm", "buildCompromise", "failed to change the bounds to convert the problem into QP", 0);
-		return 1;
-	}
+//    if (changeQPbds(batch->sp->lp, prob->num->cols, prob->sp->bdl, prob->sp->bdu, cell->incumbX, cOffset) ) {
+//        errMsg("algorithm", "buildCompromise", "failed to change the bounds to convert the problem into QP", 0);
+//        return 1;
+//    }
 
 	/* e. Change the proximal term */
-	for ( i = 0; i < batch->cnt; i++ )
-		batch->quadScalar = ((batch->cnt-1)*batch->quadScalar + cell->quadScalar)/batch->cnt;
+    //Jiajun BUG:
+	//for ( i = 0; i < batch->cnt; i++ )
+    //batch->quadScalar = ((batch->cnt-1)*batch->quadScalar + cell->quadScalar)/batch->cnt;
+    batch->quadScalar = config.MIN_QUAD_SCALAR;
 
-	qsepvec = (vector) arr_alloc(batch->sp->mac, double); idx = 0;
-	for ( cnt = 0; cnt < batch->cnt; cnt++ ) {
-		for (i = 0; i < prob->num->cols; i++)
-			qsepvec[idx++] = 0.5 * batch->quadScalar;
-		qsepvec[idx++] = 0.0;
-	}
-
-	if ( copyQPseparable(batch->sp->lp, qsepvec) ) {
-		errMsg("solver", "changeQPproximal", "failed to copy Q matrix", 0);
-		return 1;
-	}
+//    qsepvec = (vector) arr_alloc(batch->sp->mac, double); idx = 0;
+//    for ( cnt = 0; cnt < batch->cnt; cnt++ ) {
+//        for (i = 0; i < prob->num->cols; i++)
+//            qsepvec[idx++] = 0.5 * batch->quadScalar;
+//        qsepvec[idx++] = 0.0;
+//    }
+//
+//    if ( copyQPseparable(batch->sp->lp, qsepvec) ) {
+//        errMsg("solver", "changeQPproximal", "failed to copy Q matrix", 0);
+//        return 1;
+//    }
 
 #if defined(BATCH_CHECK)
 	sprintf(tempName, "master_B%02d.lp", batch->cnt);
@@ -245,22 +260,36 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	}
 #endif
 
-	mem_free(indices); mem_free(coef); 	mem_free(qsepvec);
+	mem_free(indices); mem_free(coef);
+    //mem_free(qsepvec);
 
 	return 0;
 }//END buildCompromise()
 
 int solveCompromise(probType *prob, batchSummary *batch) {
-	int b, j, status;
+	int b, j, status, tempX;
 
 	/* Add the equality constraints that tie the replications together */
 	if ( addBatchEquality(prob, batch) ) {
 		errMsg("algorithm", "solveCompromise", "failed to add the equality constraint", 0);
 		return 1;
 	}
+    
+    if ( addL1Norm(prob, batch) ) {
+        errMsg("algorithm", "solveCompromise", "failed to add L1 norm", 0);
+        return 1;
+    }
+    
+
 
 	/* solve the compromise problem */
-	changeQPSolverType(ALG_CONCURRENT);
+    if(config.MASTER_TYPE == PROB_QP){
+        changeQPSolverType(ALG_CONCURRENT);
+    }
+    else if(config.MASTER_TYPE == PROB_MILP){
+        changeMILPSolverType(ALG_CONCURRENT);
+    }
+	
 	if ( solveProblem(batch->sp->lp, batch->sp->name, config.MASTER_TYPE, &status) ) {
 		writeProblem(batch->sp->lp, "error.lp");
 		errMsg("algorithm", "solveCompromise", "failed to solve the compromise problem", 0);
@@ -269,9 +298,13 @@ int solveCompromise(probType *prob, batchSummary *batch) {
 
 	/* Get the primal solution to the compromise problem */
 	batch->compromiseX = (vector) arr_alloc(prob->num->cols+1, double);
-	getPrimal(batch->sp->lp, batch->compromiseX, prob->num->cols);
-	for ( j = 1; j <= prob->num->cols; j++ )
-		batch->compromiseX[j] += batch->incumbX[0][j];
+//    if(config.MASTER_TYPE == PROB_MILP)
+//        getMIPPrimal(batch->sp->lp, batch->compromiseX, prob->num->cols);
+//    else
+    getPrimal(batch->sp->lp, batch->compromiseX, prob->num->cols);
+    
+//    for ( j = 1; j <= prob->num->cols; j++ )
+//        batch->compromiseX[j] += batch->incumbX[0][j];
 
 	/* Evaluate the average solution */
 	batch->avgX = (vector) arr_alloc(prob->num->cols+1, double);
@@ -281,6 +314,11 @@ int solveCompromise(probType *prob, batchSummary *batch) {
 			batch->avgX[j] += batch->incumbX[b][j];
 		}
 		batch->avgX[j] /= (double) batch->cnt;
+        tempX = (int) batch->avgX[j];
+        if ((batch->avgX[j] - tempX) >= 0.5)
+            batch->avgX[j] = tempX + 1;
+        else
+            batch->avgX[j] = tempX;
 	}
 
 	return 0;
@@ -296,7 +334,8 @@ int addBatchEquality (probType *prob, batchSummary *batch) {
 		for ( b = 1; b < batch->cnt; b++ ) {
 			sprintf(tempName, "%s_B%02d_%02d", prob->sp->cname[j], 1, b);
 			indices[1] = b*(prob->num->cols+1) + j;
-			rhs = batch->incumbX[b][j+1] - batch->incumbX[0][j+1];
+			//rhs = batch->incumbX[b][j+1] - batch->incumbX[0][j+1];
+            rhs = 0;
 			if ( addRow(batch->sp->lp, 2, rhs, EQ, 0, indices, coef, tempName) ) {
 				errMsg("solver", "buildCompromise", "failed to add new feasibility cut row to problem in solver", 0);
 				return 1;
@@ -330,7 +369,7 @@ batchSummary *newBatchSummary(probType *prob, int numBatch) {
 	/* Setup the elements of the batch problem */
 	batch->sp = (oneProblem *) mem_malloc(sizeof(oneProblem));
 	batch->sp->lp = NULL;
-	batch->sp->type 	= PROB_QP;
+	batch->sp->type 	= config.MASTER_TYPE;
 	batch->sp->objsen 	= prob->sp->objsen;
 
 	batch->sp->mar = batch->sp->numInt = batch->sp->numnz =  batch->sp->mac = 0;
@@ -378,4 +417,105 @@ void freeBatchType(batchSummary *batch) {
 		mem_free(batch);
 	}
 
+}
+
+int addL1Norm (probType *prob, batchSummary *batch) {
+    int i, j, cnt;
+    int status;
+    int NumABS;
+    intvec rmatbeg, rmatind;
+    vector obj, rhs, rmatval, lb, ub;
+    string sense;
+    
+    NumABS = prob->sp->macsz * batch->cnt;
+    
+    obj = (vector) arr_alloc(NumABS, double);
+    lb = (vector) arr_alloc(NumABS, double);
+    ub = (vector) arr_alloc(NumABS, double);
+    
+    for (i = 0; i < NumABS; i++){
+        obj[i] = batch->quadScalar;
+        lb[i] = 0;
+        ub[i] = 1;
+    }
+    /*add new variables: d_i = abs(X_i - incumbX_i)*/
+    status = Newcols (batch->sp->lp, NumABS, obj, lb, ub, NULL, NULL);
+    if(status)
+        errMsg("addL1Norm", "Newcols", "failed to add new cols", 0);
+    
+    
+#if defined(BATCH_CHECK)
+    if ( writeProblem(batch->sp->lp, "batchwNorm_addcols.lp") ) {
+        errMsg("solver", "buildCompromise", "failed to write master problem to file", 0);
+        return 1;
+    }
+#endif
+    
+    /*add the constraints: d_i >= X_i - incumbX_i, d_i >= -X_i +incumbX_i, which are
+     -x_i +d_i >= -incumbX_i,
+     x_i +d_i >= incumbX_i,
+     Thus,
+     rhs = [-incumbX_i, incumbX_i ...]
+     rmatbeg = [0, 2, 4, ...]
+     rmatind = [0, col_number * batch_cnt, 0, col_number * batch_cnt, 1, col_number * batch_cnt+1, 1, col_number * batch_cnt+1...], col_number =first stage variable number + 1
+     rmatval = [-1, 1, 1, 1] * NumABS; */
+    rhs = (vector) arr_alloc(2*NumABS, double);
+    sense = (string) arr_alloc(2*NumABS, char);
+    
+    rmatbeg = (intvec) arr_alloc(2*NumABS, int);
+    rmatind = (intvec) arr_alloc(4*NumABS, int);
+    rmatval = (vector) arr_alloc(4*NumABS, double);
+    
+    for (i = 0; i < batch->cnt; i++){
+        for (j = 0; j < prob->sp->macsz; j++){
+            cnt = i * prob->sp->macsz + j;
+            rhs[2 * cnt] = -batch->incumbX[i][j+1]; rhs[2 * cnt+ 1] = batch->incumbX[i][j+1];
+            sense[2 * cnt] = 'G'; sense[2 * cnt + 1] = 'G';
+            rmatbeg[2 * cnt] = 4 * cnt; rmatbeg[2 * cnt + 1] = 4 * cnt + 2;
+            
+            rmatind[4 * cnt] = rmatind[4 * cnt + 2] = i * (prob->sp->macsz + 1) + j;
+            rmatind[4 * cnt + 1] = rmatind[4 * cnt + 3] = batch->cnt * (prob->sp->macsz + 1) + cnt;
+            
+            rmatval[4 * cnt] = -1;
+            rmatval[4 * cnt + 1] = rmatval[4 * cnt + 2] = rmatval[4 * cnt + 3] = 1;
+            
+        }
+    }
+
+#ifdef BATCH_CHECK
+    printf("\n rhs:\n");
+    for(i=0;i < 2*NumABS;i++)
+        printf("%f ", rhs[i]);
+    printf("\n rmatbeg:\n");
+    for(i=0;i < 2*NumABS;i++)
+        printf("%d ", rmatbeg[i]);
+    printf("\n rmatind:\n");
+    for(i=0;i < 4*NumABS;i++)
+        printf("%d ", rmatind[i]);
+    printf("\n rmatval:\n");
+    for(i=0;i < 4*NumABS;i++)
+        printf("%f ", rmatval[i]);
+#endif
+    
+    
+    status = Addrows (batch->sp->lp, 0, 2*NumABS, 4*NumABS, rhs, sense, rmatbeg, rmatind, rmatval, NULL, NULL);
+    if(status)
+        errMsg("addL1Norm", "Addrows", "failed to add rows", 0);
+    
+    #if defined(BATCH_CHECK)
+        if ( writeProblem(batch->sp->lp, "batchwNorm.lp") ) {
+            errMsg("solver", "buildCompromise", "failed to write master problem to file", 0);
+            return 1;
+        }
+    #endif
+
+    mem_free(obj);
+    mem_free(rhs);
+    mem_free(rmatval);
+    mem_free(lb);
+    mem_free(ub);
+    mem_free(sense);
+    mem_free(rmatbeg); mem_free(rmatind);
+    
+    return 0;
 }

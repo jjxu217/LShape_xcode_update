@@ -435,6 +435,25 @@ void printVector(vector vec, int len, FILE *fptr){
 
 }//END printVector()
 
+void printVectorInSparse(vector vec, int len, FILE *fptr){
+    int n;
+    
+    if ( fptr == NULL ) {
+        printf("(");
+        for ( n = 1; n <= len; n++ )
+            if(vec[n] > 0.0001 )
+                printf("%d, ", n);
+        printf(")\n");
+    }
+    else {
+        fprintf(fptr, "(");
+        for ( n = 1; n <= len; n++ )
+            if(vec[n] > 0.0001 )
+                fprintf(fptr, "%d, ", n);
+        fprintf(fptr, ")\n");
+    }
+}//END printVectorInSparse
+
 void printVectorWName(vector vec, string *vecName, int len, FILE *fptr){
 	int n;
 
