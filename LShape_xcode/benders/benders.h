@@ -138,6 +138,7 @@ typedef struct {
     vector        compromiseX;        /* compromise solution */
     vector        avgX;                /* average solution across batches */
     runTime        *time;                /* Run time structure */
+    double         Est;                 /*lower bound estimation*/
 }batchSummary;
 
 int parseCmdLine(int argc, char *argv[], string probName, string inputDir);

@@ -91,10 +91,12 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
     
     if ( config.MULTIPLE_REP ) {
         /* Solve the compromise problem. */
+        tic = clock();
         if ( solveCompromise(prob[0], batch)) {
             errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
             goto TERMINATE;
         }
+        batch->time->repTime += ((double) (clock() - tic))/CLOCKS_PER_SEC;
         
         fprintf(sFile, "\n====================================================================================================================================\n");
         fprintf(sFile, "\n----------------------------------------- Compromise solution --------------------------------------\n\n");
@@ -104,6 +106,12 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         fprintf(sFile, "Incumbent solution, non-zero position: ");
         printVectorInSparse(batch->compromiseX, prob[0]->num->cols, sFile);
         evaluate(sFile, stoc, prob, cell, batch->compromiseX);
+        fprintf(sFile, "Total time                         : %f\n", batch->time->repTime);
+        fprintf(sFile, "Total time to solve master         : %f\n", batch->time->masterAccumTime);
+        fprintf(sFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);
+        
+        fprintf(sFile, "Lower bound estimate               : %f\n", batch->Est);
+        
         
         fprintf(sFile, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
         fprintf(stdout, "\n------------------------------------------- Average solution ---------------------------------------\n\n");

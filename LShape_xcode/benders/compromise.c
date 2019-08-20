@@ -212,6 +212,18 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 			return 1;
 		}
 	}
+    
+    /*record the time information from replications*/
+    
+    batch->time->repTime += cell->time->repTime;
+    batch->time->iterTime += cell->time->iterTime;
+    batch->time->masterIter += cell->time->masterIter ;
+    batch->time->subprobIter += cell->time->subprobIter;
+    batch->time->optTestIter += cell->time->optTestIter;
+    batch->time->iterAccumTime += cell->time->iterAccumTime;
+    batch->time->masterAccumTime += cell->time->masterAccumTime;
+    batch->time->subprobAccumTime += cell->time->subprobAccumTime;
+    batch->time->optTestAccumTime += cell->time->optTestAccumTime;
 
 	/* Feasibility cuts, if any */
 //    batch->sp->mar += cell->fcuts->cnt;
@@ -268,7 +280,8 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 
 int solveCompromise(probType *prob, batchSummary *batch) {
 	int b, j, status, tempX;
-
+    clock_t    tic;
+    
 	/* Add the equality constraints that tie the replications together */
 	if ( addBatchEquality(prob, batch) ) {
 		errMsg("algorithm", "solveCompromise", "failed to add the equality constraint", 0);
@@ -290,11 +303,21 @@ int solveCompromise(probType *prob, batchSummary *batch) {
         changeMILPSolverType(ALG_CONCURRENT);
     }
 	
+    tic = clock();
 	if ( solveProblem(batch->sp->lp, batch->sp->name, config.MASTER_TYPE, &status) ) {
 		writeProblem(batch->sp->lp, "error.lp");
 		errMsg("algorithm", "solveCompromise", "failed to solve the compromise problem", 0);
 		return 1;
 	}
+    batch->time->masterIter += ((double) (clock() - tic))/CLOCKS_PER_SEC;
+    
+    if(config.MASTER_TYPE == PROB_MILP){
+        batch->Est = getObjective(batch->sp->lp, PROB_MILP);
+    }
+    else{
+        batch->Est = getObjective(batch->sp->lp, PROB_LP);
+    }
+    batch->Est = batch->Est / config.NUM_REPS;
 
 	/* Get the primal solution to the compromise problem */
 	batch->compromiseX = (vector) arr_alloc(prob->num->cols+1, double);
@@ -365,6 +388,7 @@ batchSummary *newBatchSummary(probType *prob, int numBatch) {
 	batch->cnt = 0;
 	batch->quadScalar = config.MIN_QUAD_SCALAR;
 	batch->avgX = batch->compromiseX = NULL;
+    batch->Est = 0;
 
 	/* Setup the elements of the batch problem */
 	batch->sp = (oneProblem *) mem_malloc(sizeof(oneProblem));
@@ -394,6 +418,11 @@ batchSummary *newBatchSummary(probType *prob, int numBatch) {
 	batch->sp->matbeg 	= (intvec) arr_alloc(1, int);
 	batch->sp->matcnt 	= (intvec) arr_alloc(1, int);
 	batch->sp->matind 	= (intvec) arr_alloc(1, int);
+    
+    if ( !(batch->time = (runTime *) mem_malloc(sizeof(runTime)) ) ){
+        errMsg("setup", "newCell", "cell->runTime", 0);}
+    batch->time->repTime = batch->time->iterTime = batch->time->masterIter = batch->time->subprobIter = batch->time->optTestIter = 0.0;
+    batch->time->iterAccumTime = batch->time->masterAccumTime = batch->time->subprobAccumTime = batch->time->optTestAccumTime = 0.0;
 
 	return batch;
 }//END newBatchSummary()
@@ -414,6 +443,7 @@ void freeBatchType(batchSummary *batch) {
 		if (batch->compromiseX) mem_free(batch->compromiseX);
 		if (batch->avgX) mem_free(batch->avgX);
 		if ( batch->sp ) freeOneProblem(batch->sp);
+        if (batch->time) mem_free(batch->time);
 		mem_free(batch);
 	}
 
