@@ -42,7 +42,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -68,6 +68,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "SUFL_F4_MinF1_FO3_D5_S4"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "SUFL_F20_MinF2_FO30_D40_S50 "
             isEnabled = "NO">
          </CommandLineArgument>
@@ -77,10 +81,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "SUFL_F30_MinF2_FO40_D70_S50 "
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spInput/SUFL_C20/  "
+            argument = " ./spInput/"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -88,7 +92,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spOutput/Q1_Var5_25_C20_SCE500"
+            argument = " ./spOutput/Q1_Var5_25_C20_SCE500test"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "./spOutput/test"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

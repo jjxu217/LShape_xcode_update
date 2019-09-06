@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/benders.c"
-            timestampString = "586742206.549314"
+            timestampString = "588733269.312603"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "31"
@@ -42,27 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.6893589"
+            timestampString = "588735233.3166749"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "37"
             endingLineNumber = "37"
-            landmarkName = "algo()"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.689739"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
             landmarkName = "algo()"
             landmarkType = "9">
          </BreakpointContent>
@@ -90,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.690042"
+            timestampString = "588735233.316766"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
+            startingLineNumber = "253"
+            endingLineNumber = "253"
             landmarkName = "writeStatistic()"
             landmarkType = "9">
          </BreakpointContent>
@@ -138,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.6903991"
+            timestampString = "588735233.316861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "148"
-            endingLineNumber = "148"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "solveBendersCell()"
             landmarkType = "9">
          </BreakpointContent>
@@ -154,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.690673"
+            timestampString = "588735233.316911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
             landmarkName = "solveBendersCell()"
             landmarkType = "9">
          </BreakpointContent>
@@ -186,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.690973"
+            timestampString = "588735233.3169791"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "solveBendersCell()"
             landmarkType = "9">
          </BreakpointContent>
@@ -314,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/cuts.c"
-            timestampString = "586330277.374539"
+            timestampString = "588734162.262303"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "33"
@@ -346,7 +330,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.691406"
+            timestampString = "588735233.3171771"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "29"
@@ -394,7 +378,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/cuts.c"
-            timestampString = "586723290.4003021"
+            timestampString = "588734162.262745"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "112"
@@ -442,11 +426,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
-            timestampString = "587956038.691864"
+            timestampString = "588735233.3173079"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
+            startingLineNumber = "100"
+            endingLineNumber = "100"
             landmarkName = "algo()"
             landmarkType = "9">
          </BreakpointContent>

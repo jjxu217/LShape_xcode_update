@@ -64,6 +64,16 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 					cell->omega->vals[m][n] -= stoc->mean[n-1];
 		}
 
+//        set initialized points
+//        int idx;
+//        for(idx=0;idx<=20;idx++){
+//            cell->candidX[idx] = 0;
+//        }
+//        cell->candidX[2] = cell->candidX[3] = cell->candidX[4] = cell->candidX[5] = cell->candidX[8] = cell->candidX[12] = cell->candidX[14] = cell->candidX[19] = cell->candidX[6] = cell->candidX[9] = 1;
+//        cell->candidX[0] = 10;
+//        printVectorInSparse(cell->candidX, 20, NULL);
+//
+        
 		tic = clock();
 		/* Use two-stage algorithm to solve the problem */
 		if ( solveBendersCell(stoc, prob, cell) ) {
