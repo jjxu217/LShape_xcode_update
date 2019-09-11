@@ -22,19 +22,26 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
+    double   std=0;
     batchSummary *batch = NULL;
-	int 	 rep, m, n;
+	int 	 rep, m, n, out_idx=0;
 	FILE 	*sFile, *iFile = NULL;
+    char results_name[BLOCKSIZE];
+    char incumb_name[BLOCKSIZE];
 	clock_t	tic;
 
+
+    while (TRUE) {
 	/* complete necessary initialization for the algorithm */
 	if ( setupAlgo(orig, stoc, tim, &prob, &cell, &batch, &meanSol) )
 		goto TERMINATE;
 
 	printf("Starting Benders decomposition.\n");
-	sFile = openFile(outputDir, "results.txt", "w");
+    sprintf(results_name, "results%d.txt", out_idx);
+	sFile = openFile(outputDir, results_name, "w");
 //    if ( config.MASTER_TYPE == PROB_QP )
-    iFile = openFile(outputDir, "incumb.txt", "w");
+    sprintf(incumb_name, "incumb%d.txt", out_idx);
+    iFile = openFile(outputDir, incumb_name, "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
 	printDecomposeSummary(stdout, probName, tim, prob);
 
@@ -121,7 +128,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         fprintf(sFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);
         
         fprintf(sFile, "Lower bound estimate               : %f\n", batch->Est);
-        
+        std = LowerBoundVariance(batch);
+        fprintf(sFile, "Lower bound estimation std               : %f\n", std);
         
         fprintf(sFile, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
         fprintf(stdout, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
@@ -136,7 +144,19 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
     }
 
 	fclose(sFile); fclose(iFile);
-	printf("\nSuccessfully completed the L-shaped method.\n");
+     
+        
+        /*outer loop condition*/
+        
+        if (InConvexHull(batch, prob[0]->num->cols) && (std  < config.std_tol)){
+            printf("\nSuccessfully completed the L-shaped method.\n");
+            break;
+        }
+        
+        config.MAX_OBS = 2 * config.MAX_OBS;
+        out_idx++;
+    }
+	
 
 	/* free up memory before leaving */
 	freeCellType(cell);

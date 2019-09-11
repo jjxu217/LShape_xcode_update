@@ -48,6 +48,7 @@ typedef struct{
 	int		SAA; 				/* Use SAA when continuous distribution in stoch file (1), or not (0) */
 
 	int 	MULTIPLE_REP;		/* When multiple replications are needed, set this to (1), else (0) */
+    double  std_tol;
 }configType;
 
 typedef struct {
@@ -202,5 +203,8 @@ int addL1Norm (probType *prob, batchSummary *batch);
 int addBatchEquality (probType *prob, batchSummary *batch);
 batchSummary *newBatchSummary(probType *prob, int numBatch);
 void freeBatchType(batchSummary *batch);
+
+BOOL InConvexHull(batchSummary *batch, int col);
+double LowerBoundVariance(batchSummary *batch);
 
 #endif /* BENDERS_H_ */

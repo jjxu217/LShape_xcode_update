@@ -42,7 +42,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -64,12 +64,12 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "SUFL_F20_MinF2_FO20_D40_S50"
+            argument = "SUFL_F4_MinF1_FO3_D5_S4"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "SUFL_F4_MinF1_FO3_D5_S4"
-            isEnabled = "YES">
+            argument = "SUFL_F20_MinF2_FO20_D40_S50"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "SUFL_F20_MinF2_FO30_D40_S50 "
@@ -77,7 +77,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "SUFL_F30_MinF2_FO40_D50_S50 "
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "SUFL_F30_MinF2_FO40_D70_S50 "
@@ -85,18 +85,18 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = " ./spInput/"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spInput/SUFL_C30/  "
-            isEnabled = "NO">
+            argument = " ./spInput/SUFL_C20/  "
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = " ./spOutput/Q1_Var5_25_C20_SCE500test"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "./spOutput/test"
+            argument = "./spOutput/cvxhull_variace_sample30"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

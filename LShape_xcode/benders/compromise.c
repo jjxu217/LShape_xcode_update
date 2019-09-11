@@ -549,3 +549,35 @@ int addL1Norm (probType *prob, batchSummary *batch) {
     
     return 0;
 }
+
+BOOL InConvexHull(batchSummary *batch, int col){
+    int i, j;
+    BOOL flag=TRUE;
+    for(i = 0; i < batch->cnt; i++){
+        flag = TRUE;
+        for(j = 0; j < col; j++)
+            if(DBL_ABS(batch->compromiseX[j] - batch->incumbX[i][j]) > config.TOLERANCE){
+                flag = FALSE;
+                break;
+            }
+        if(flag) return TRUE;
+    }
+    return FALSE;
+}
+
+double LowerBoundVariance(batchSummary *batch){
+    int cnt;
+    double mean, temp, variance=0, stdev=0;
+    
+    mean = batch->objLB[0] ;
+    for(cnt = 1; cnt < batch->cnt; cnt++){
+        temp = mean;
+        mean = mean + (batch->objLB[cnt] - mean) / (double) (cnt + 1);
+        variance  = (1 - 1 / (double) cnt) * variance
+        + (cnt + 1) * (mean - temp) * (mean - temp);
+        stdev = sqrt(variance/ (double) cnt);
+      
+    }
+    
+    return stdev;
+}
