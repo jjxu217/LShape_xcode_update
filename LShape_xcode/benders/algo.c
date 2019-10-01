@@ -245,7 +245,7 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 BOOL optimal(cellType *cell) {
 
 	if ( cell->RepeatedTime > 0 || cell->k > config.MIN_ITER ) {
-        if (config.MASTER_TYPE == PROB_QP){
+        if (config.MASTER_TYPE == PROB_QP || config.reg == 1){
             return cell->optFlag = ((cell->incumbEst - cell->candidEst) < config.EPSILON);
         }
         return TRUE;

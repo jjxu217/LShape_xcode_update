@@ -111,3 +111,7 @@ MAX_OBS 30
 // standard deviation tolerence for the lower bound estimation
 std_tol 1.0
 
+// regularization in the replication
+reg 1
+
+

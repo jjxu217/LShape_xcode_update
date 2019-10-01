@@ -100,7 +100,7 @@ cellType *newCell(stocType *stoc, probType **prob, vector xk) {
 	cell->infeasIncumb 	= FALSE;
 
 	/* incumbent solution and estimates */
-	if (config.MASTER_TYPE == PROB_QP) {
+	if (config.MASTER_TYPE == PROB_QP || config.reg == 1) {
 		cell->incumbX   = duplicVector(xk, prob[0]->num->cols);
 		cell->incumbEst = cell->candidEst;
 		cell->quadScalar= config.MIN_QUAD_SCALAR;     						/* The quadratic scalar, 'sigma'*/
@@ -144,6 +144,20 @@ cellType *newCell(stocType *stoc, probType **prob, vector xk) {
 		}
 #endif
 	}
+    if (config.reg == 1){
+        if ( constructMILP(prob[0], cell, cell->incumbX, cell->quadScalar) ) {
+            errMsg("algorithm", "replaceIncumbent", "failed to change the right-hand side after incumbent change", 0);
+            return NULL;
+    }
+        
+        cell->incumbChg = FALSE;
+#if defined(ALGO_CHECK)
+        if ( writeProblem(cell->master->lp, "newMILPMaster.lp") ) {
+            errMsg("write problem", "new_master", "failed to write master problem to file",0);
+            return NULL;
+        }
+#endif
+    }
 
 	return cell;
 }//END newCell()

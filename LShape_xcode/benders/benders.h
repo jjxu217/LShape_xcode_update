@@ -49,6 +49,7 @@ typedef struct{
 
 	int 	MULTIPLE_REP;		/* When multiple replications are needed, set this to (1), else (0) */
     double  std_tol;
+    int     reg;                /*when the master is MILP, if we use regularizer within the replication, 1 represent yes, 0 represent 0*/
 }configType;
 
 typedef struct {
@@ -168,6 +169,13 @@ int constructQP(probType *prob, cellType *cell, vector incumbX, double quadScala
 int changeQPproximal(LPptr lp, int numCols, double sigma);
 int changeQPrhs(probType *prob, cellType *cell, vector xk);
 int changeQPbds(LPptr lp, int numCols, vector bdl, vector bdu, vector xk);
+
+int constructMILP(probType *prob, cellType *cell, vector incumbX, double quadScalar);
+int changeMILPwithL1(LPptr lp, oneProblem *sp, int numCols);
+int changeMILPproximal(LPptr lp, vector objx, int numCols, double sigma);
+int changeMILPrhs(probType *prob, cellType *cell, vector xk);
+int changeMILPbds(LPptr lp, int numCols, vector bdl, vector bdu, vector xk, int offset);
+
 oneProblem *newMaster(oneProblem *orig, double lb);
 
 /* cuts.c */
