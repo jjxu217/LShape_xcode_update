@@ -22,7 +22,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
-    double   std=0;
+    double   std=0, compromise_time=0;
     batchSummary *batch = NULL;
 	int 	 rep, m, n, out_idx=0;
 	FILE 	*sFile, *iFile = NULL;
@@ -44,6 +44,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
     iFile = openFile(outputDir, incumb_name, "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
 	printDecomposeSummary(stdout, probName, tim, prob);
+    fprintf(sFile, "\n Number of observations in each replications: %d", config.MAX_OBS);
 
 	for ( rep = 0; rep < config.NUM_REPS; rep++ ) {
 		fprintf(sFile, "\n====================================================================================================================================\n");
@@ -113,7 +114,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
             errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
             goto TERMINATE;
         }
-        batch->time->repTime += ((double) (clock() - tic))/CLOCKS_PER_SEC;
+        compromise_time = ((double) (clock() - tic))/CLOCKS_PER_SEC;
+        batch->time->repTime += compromise_time; 
         
         fprintf(sFile, "\n====================================================================================================================================\n");
         fprintf(sFile, "\n----------------------------------------- Compromise solution --------------------------------------\n\n");
@@ -123,6 +125,12 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         fprintf(sFile, "Incumbent solution, non-zero position: ");
         printVectorInSparse(batch->compromiseX, prob[0]->num->cols, sFile);
         evaluate(sFile, stoc, prob, cell, batch->compromiseX);
+        
+//        //evaluate the test solution if needed:
+//        double test[] = {4, 0, 0, 0, 0,1, 0, 0, 0, 0,1,1, 0,1,0, 0, 0, 0,0, 0, 0};
+//        evaluate(sFile, stoc, prob, cell, test);
+        
+        fprintf(sFile, "Time to solve compromise problem   : %f\n", compromise_time);
         fprintf(sFile, "Total time                         : %f\n", batch->time->repTime);
         fprintf(sFile, "Total time to solve master         : %f\n", batch->time->masterAccumTime);
         fprintf(sFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);

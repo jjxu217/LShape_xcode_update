@@ -553,6 +553,8 @@ int addL1Norm (probType *prob, batchSummary *batch) {
 BOOL InConvexHull(batchSummary *batch, int col){
     int i, j;
     BOOL flag=TRUE;
+    int counter=0;
+    
     for(i = 0; i < batch->cnt; i++){
         flag = TRUE;
         for(j = 0; j < col; j++)
@@ -560,7 +562,10 @@ BOOL InConvexHull(batchSummary *batch, int col){
                 flag = FALSE;
                 break;
             }
-        if(flag) return TRUE;
+        if(flag) counter++;
+    }
+    if (counter > 14){
+        return TRUE;
     }
     return FALSE;
 }

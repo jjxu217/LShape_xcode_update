@@ -680,6 +680,18 @@ int addRow(LPptr lp, int nzcnt, double inputRHS, char inputSense, int matbeg, in
 	return status;
 }//END addRow()
 
+
+int addcols(LPptr lp, int ccnt, int nzcnt, vector obj, intvec matbeg, intvec cmatind, vector cmatval, vector lb,
+            vector ub, string* colname){
+    int status=0;
+    
+    status = CPXaddcols (env, lp, ccnt, nzcnt, obj, matbeg,
+                         cmatind, cmatval, lb, ub, colname);
+    if ( status )
+        solverErrmsg(status);
+    return status;
+}
+
 int addCol(LPptr lp, int nzcnt, double objx, int matbeg, intvec cmatind, vector cmatval, double bdu,
 		double bdl, string colname){
 	string	*cNames;
