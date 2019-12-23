@@ -1,10 +1,11 @@
 /*
  * readFIles.c
  *
- *  Created on: Oct 17, 2016
- *      Author: Harsha Gangammanavar
- *              Southern Methodist University.
- *  	Report: harsha@smu.edu
+ *  Created on: Feb 17, 2019
+ *      Author: Jiajun Xu
+ * Institution: University of Southern California
+ *
+ * Please send your comments or bug report to jiajunx (at) usc (dot) edu
  */
 
 #include "utils.h"

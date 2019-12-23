@@ -1,8 +1,11 @@
 /*
  * solver.h
  *
- *  Created on: Apr 20, 2014
- *      Author: gjharsha
+ *  Created on: Feb 17, 2019
+ *      Author: Jiajun Xu
+ * Institution: University of Southern California
+ *
+ * Please send your comments or bug report to jiajunx (at) usc (dot) edu
  */
 #ifndef MTSD_SOLVER_H_
 #define MTSD_SOLVER_H_

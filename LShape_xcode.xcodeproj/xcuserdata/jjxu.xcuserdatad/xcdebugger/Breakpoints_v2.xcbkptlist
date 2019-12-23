@@ -221,7 +221,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "229"
             endingLineNumber = "229"
-            landmarkName = "newSubproblem()"
+            landmarkName = "newSubproblem(subprob)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -238,7 +238,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
             endingLineNumber = "43"
-            landmarkName = "solveSubprob()"
+            landmarkName = "solveSubprob(prob, subproblem, Xvect, obsVals, spFeasFlag, subprobTime, piS, mubBar)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -255,7 +255,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "176"
             endingLineNumber = "176"
-            landmarkName = "computeCostCoeff()"
+            landmarkName = "computeCostCoeff(num, coord, dBar, observ)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -272,7 +272,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "26"
             endingLineNumber = "26"
-            landmarkName = "solveSubprob()"
+            landmarkName = "solveSubprob(prob, subproblem, Xvect, obsVals, spFeasFlag, subprobTime, piS, mubBar)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -289,7 +289,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
             endingLineNumber = "55"
-            landmarkName = "solveSubprob()"
+            landmarkName = "solveSubprob(prob, subproblem, Xvect, obsVals, spFeasFlag, subprobTime, piS, mubBar)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -391,7 +391,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "114"
             endingLineNumber = "114"
-            landmarkName = "solveSubprob()"
+            landmarkName = "solveSubprob(prob, subproblem, Xvect, obsVals, spFeasFlag, subprobTime, piS, mubBar)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

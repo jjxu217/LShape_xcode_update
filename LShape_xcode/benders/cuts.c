@@ -1,11 +1,11 @@
 /*
  * cuts.c
  *
- *  Created on: Sep 21, 2017
- *      Author: Harsha Gangammanavar
- * Institution: Southern Methodist University
- *  
- * Please send you comments or bug report to harsha (at) smu (dot) edu
+ *  Created on: Feb 17, 2019
+ *      Author: Jiajun Xu
+ * Institution: University of Southern California
+ *
+ * Please send your comments or bug report to jiajunx (at) usc (dot) edu
  *
  */
 

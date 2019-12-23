@@ -1,8 +1,11 @@
 /*
  * prob.c
  *
- *  Created on: Sep 30, 2015
- *      Author: Harsha Gangammanavar
+ *  Created on: Feb 17, 2019
+ *      Author: Jiajun Xu
+ * Institution: University of Southern California
+ *
+ * Please send your comments or bug report to jiajunx (at) usc (dot) edu
  */
 
 #include "utils.h"

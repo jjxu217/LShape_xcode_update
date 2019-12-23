@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7E75E76322F0B2DE0036E024 /* compromise.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E75E76222F0B2DE0036E024 /* compromise.c */; };
+		7E7C8F6F23A834CE00F176FA /* progressive_benders.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E7C8F6E23A834CE00F176FA /* progressive_benders.c */; };
 		7EBEFA782241F28200250B65 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA772241F28200250B65 /* CoreFoundation.framework */; };
 		7EBEFA7A2241F28C00250B65 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA792241F28C00250B65 /* IOKit.framework */; };
 		7EBEFA7C2241F2B700250B65 /* libconcert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA7B2241F2B700250B65 /* libconcert.a */; };
@@ -48,6 +49,8 @@
 /* Begin PBXFileReference section */
 		7E1043A1232307930063E017 /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		7E75E76222F0B2DE0036E024 /* compromise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compromise.c; sourceTree = "<group>"; };
+		7E7C8F6D23A834CE00F176FA /* progressive_benders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progressive_benders.h; sourceTree = "<group>"; };
+		7E7C8F6E23A834CE00F176FA /* progressive_benders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = progressive_benders.c; sourceTree = "<group>"; };
 		7E9293FD22766B1E00143C87 /* SUFL_5_5.tim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.tim; sourceTree = "<group>"; };
 		7E9293FE22766B1E00143C87 /* SUFL_5_5.sto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.sto; sourceTree = "<group>"; };
 		7E9293FF22766B1E00143C87 /* SUFL_5_5.cor */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.cor; sourceTree = "<group>"; };
@@ -288,6 +291,8 @@
 		7E7C8F6C23A8330500F176FA /* Progressive Benders */ = {
 			isa = PBXGroup;
 			children = (
+				7E7C8F6E23A834CE00F176FA /* progressive_benders.c */,
+				7E7C8F6D23A834CE00F176FA /* progressive_benders.h */,
 			);
 			path = "Progressive Benders";
 			sourceTree = "<group>";
@@ -1097,6 +1102,7 @@
 				7EBEFBE82241FA9900250B65 /* utility.c in Sources */,
 				7EBEFBE92241FA9900250B65 /* solver.h in Sources */,
 				7EBEFBEB2241FA9900250B65 /* solver.c in Sources */,
+				7E7C8F6F23A834CE00F176FA /* progressive_benders.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
