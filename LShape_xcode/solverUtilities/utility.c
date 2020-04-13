@@ -304,7 +304,7 @@ vector expandVector(vector red, intvec col, int redElems, int expElems){
 BOOL equalVector(vector a, vector b, int len, double tolerance) {
 	int		cnt;
 
-	for (cnt = 1; cnt <= len; cnt++)
+	for (cnt = 0; cnt <= len; cnt++)
 		if ( DBL_ABS(a[cnt] - b[cnt]) > tolerance )
 			return FALSE;
     
