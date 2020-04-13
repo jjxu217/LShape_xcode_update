@@ -143,6 +143,23 @@ typedef struct {
     double         Est;                 /*lower bound estimation*/
 }batchSummary;
 
+
+typedef struct {
+    int         cnt;                /* number of distint solutions */
+    int         idx;                /*index of select solution**/
+    intvec         ck;                    /* number of iterations for each replication */
+    vector        objLB;                /* replication lower bound */
+   
+    runTime        *time;                /* Run time structure */
+    vector        *incumbX;             /*distinct replication solution*/
+    intvec        appearance;           /*appearance time of the distinct sol*/
+    
+    vector      mean;       /*evaluation mean of different solutions*/
+    vector      var;        /*evaluation variance of different solutions*/
+    intvec      n;          /*evaluation sample size for different solutions*/
+    intvec      an;         /*additional evaluation sample size for different solutions*/
+}ocbaSummary;
+
 int parseCmdLine(int argc, char *argv[], string probName, string inputDir);
 void createOutputDir(string outputDir, string algoName, string probName);
 int readConfig();
@@ -211,6 +228,13 @@ int addL1Norm (probType *prob, batchSummary *batch);
 int addBatchEquality (probType *prob, batchSummary *batch);
 batchSummary *newBatchSummary(probType *prob, int numBatch);
 void freeBatchType(batchSummary *batch);
+
+ocbaSummary *newOcbaSummary(int first_stage_cols, int numBatch);
+void freeOcba(ocbaSummary *ocba, int numBatch);
+int solveOCBA(vector s_mean,vector s_var,int nd, intvec n, int add_budget,intvec an);
+int best(vector t_s_mean, int nd);
+int second_best(vector t_s_mean, int nd, int b);
+int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba);
 
 BOOL InConvexHull(batchSummary *batch, int col);
 double LowerBoundVariance(batchSummary *batch);
