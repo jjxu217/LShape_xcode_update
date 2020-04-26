@@ -83,10 +83,10 @@
             timestampString = "589699458.472223"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
-            landmarkName = "optimal(cell)"
-            landmarkType = "9">
+            startingLineNumber = "280"
+            endingLineNumber = "280"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -134,8 +134,8 @@
             timestampString = "589699458.472337"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
             landmarkName = "algo(orig, tim, stoc, probName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -151,8 +151,8 @@
             timestampString = "589699458.472393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "180"
-            endingLineNumber = "180"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
             landmarkName = "algo(orig, tim, stoc, probName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -185,8 +185,8 @@
             timestampString = "589699458.4724621"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "solveBendersCell(stoc, prob, cell)"
             landmarkType = "9">
          </BreakpointContent>
@@ -440,8 +440,8 @@
             timestampString = "589699458.472782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "274"
-            endingLineNumber = "274"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
             landmarkName = "buildCompromise(prob, cell, batch)"
             landmarkType = "9">
          </BreakpointContent>
@@ -474,9 +474,9 @@
             timestampString = "589699458.472888"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
-            landmarkName = "addBatchEquality(prob, batch)"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
+            landmarkName = "solveCompromise(prob, batch)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -491,9 +491,9 @@
             timestampString = "589699458.472936"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
-            landmarkName = "addL1Norm(prob, batch)"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
+            landmarkName = "freeBatchType(batch)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -508,8 +508,8 @@
             timestampString = "589699458.472986"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "541"
-            endingLineNumber = "541"
+            startingLineNumber = "542"
+            endingLineNumber = "542"
             landmarkName = "addL1Norm(prob, batch)"
             landmarkType = "9">
          </BreakpointContent>
@@ -525,9 +525,9 @@
             timestampString = "589699458.473035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "476"
-            endingLineNumber = "476"
-            landmarkName = "addL1Norm(prob, batch)"
+            startingLineNumber = "477"
+            endingLineNumber = "477"
+            landmarkName = "freeBatchType(batch)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -542,8 +542,8 @@
             timestampString = "589699458.4730819"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "321"
-            endingLineNumber = "321"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "solveCompromise(prob, batch)"
             landmarkType = "9">
          </BreakpointContent>
@@ -559,8 +559,8 @@
             timestampString = "589699458.473129"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "133"
-            endingLineNumber = "133"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "algo(orig, tim, stoc, probName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -586,14 +586,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "24E454E8-5061-4E21-A770-AED80472BE40"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "algo(orig, tim, stoc, probName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -602,15 +602,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "782BC49D-DF58-4947-98E1-7A72F1F7A9B8"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/compromise.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "558"
-            endingLineNumber = "558"
-            landmarkName = "InConvexHull(batch, col)"
+            startingLineNumber = "559"
+            endingLineNumber = "559"
+            landmarkName = "addL1Norm(prob, batch)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -634,7 +634,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "3BEFC0E6-D26F-4212-A8A7-FB27A86E17D4"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/compromise.c"
@@ -650,14 +650,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "498F3E19-2801-4FB4-AAFF-CDB6A2ADA2D0"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "119"
+            endingLineNumber = "119"
             landmarkName = "algo(orig, tim, stoc, probName)"
             landmarkType = "9">
          </BreakpointContent>
@@ -682,7 +682,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "33981FB6-F314-4553-93FA-064390DC989F"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/algo.c"
@@ -714,7 +714,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2EFD383E-47EC-4A51-B2ED-010224D16C82"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/smpsReader/prob.c"
@@ -723,6 +723,134 @@
             startingLineNumber = "512"
             endingLineNumber = "512"
             landmarkName = "meanProblem(orig, stoc)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3478AA1F-FCB6-46E1-B653-C96F4FF079DF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/benders/benders.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "main(argc, argv)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "07FB4495-6E2C-4FA1-94A3-A3E44FFABC2E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/benders/compromise.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "buildCompromise(prob, cell, batch)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7EBB75EA-0A36-4453-A350-2B062E5DC8AB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/smpsReader/smps.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
+            landmarkName = "readStoc(inputDir, probName, orig, tim)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5F361E5A-EDE9-47AC-875F-602129747F53"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/smpsReader/prob.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "515"
+            endingLineNumber = "515"
+            landmarkName = "meanProblem(orig, stoc)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "591546FA-EEA0-4119-90B4-23BF60A86FBA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/benders/master.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "593"
+            endingLineNumber = "593"
+            landmarkName = "newMaster(orig, lb)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B4BBB52B-4D72-43DE-ADB4-93223CFD7728"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/smpsReader/prob.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "539"
+            endingLineNumber = "539"
+            landmarkName = "meanProblem(orig, stoc)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1E9BEF47-466C-4961-A003-42F3BCC9E342"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/smpsReader/prob.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "newProb(orig, stoc, tim, lb, TOLERANCE)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5AF4DAB7-B5D5-419A-924D-C3AF2D00D0C2"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/smpsReader/prob.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
+            landmarkName = "newProb(orig, stoc, tim, lb, TOLERANCE)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

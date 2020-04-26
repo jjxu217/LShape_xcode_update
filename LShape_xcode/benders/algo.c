@@ -105,7 +105,17 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         if ( config.MULTIPLE_REP ) {
             buildCompromise(prob[0], cell, batch);
         }
+        
+#if defined(ALGO_CHECK)
+        if (!equalVector(meanSol, cell->candidX, prob[0]->num->cols, config.TOLERANCE)){
+            fprintf(sFile, "\n-------------------------mean solution-------------------------\n");
+              printVectorInSparse(meanSol, prob[0]->num->cols, sFile);
+              evaluate(sFile, stoc, prob, cell, meanSol);
+        }
+#endif
+        
 	}
+
     
     if ( config.MULTIPLE_REP ) {
         /* Solve the compromise problem. */
@@ -149,17 +159,32 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         printVectorInSparse(batch->compromiseX, prob[0]->num->cols, iFile);
         fprintf(iFile, "\n------------------------------------------- Average solution(1-indexed) ---------------------------------------\n\n");
         printVectorInSparse(batch->avgX, prob[0]->num->cols, iFile);
+        
+        fprintf(sFile, "\n---------------------------bagging output-------------------------- \n");
+        fprintf(sFile, "bagging solution: \n");
+        printVectorInSparse(batch->distinctX[batch->bagging_idx], prob[0]->num->cols, sFile);
+        fprintf(sFile, "\n Repeat time: %d \n Performance Estimate: %f \n number of distinct solutions %d \n", batch->max_repeat, batch->distinctEst[batch->bagging_idx], batch->distNum);
+        
+        
     }
+        
+    
 
-	fclose(sFile); fclose(iFile);
+	
      
         
-        /*outer loop condition*/
+        /*outer loop condition, check if bagging solution is the same as compromise solution*/
         
-        if (InConvexHull(batch, prob[0]->num->cols) && (std  < config.std_tol)){
+        if (equalVector(batch->compromiseX, batch->distinctX[batch->bagging_idx], prob[0]->num->cols, config.TOLERANCE)){
             printf("\nSuccessfully completed the L-shaped method.\n");
+            fclose(sFile); fclose(iFile);
             break;
         }
+        else{
+            evaluate(sFile, stoc, prob, cell, batch->distinctX[batch->bagging_idx]);
+            fclose(sFile); fclose(iFile);
+        }
+        
         
         config.MAX_OBS = 2 * config.MAX_OBS;
         out_idx++;
@@ -201,7 +226,10 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 		cell->k++;
 
 #if defined(STOCH_CHECK) || defined(ALGO_CHECK)
-		printf("\nIteration-%d :: Incumbent estimate = %lf; Candidate estimate = %lf.\n", cell->k, cell->incumbEst, cell->candidEst);
+        printf("\nCandidate solution");
+        printVectorInSparse(cell->candidX, prob[0]->num->cols, NULL);
+        
+		printf("\nIteration-%d :: Candidate estimate = %lf.\n", cell->k, cell->candidEst);
 #else
 		if ( (cell->k-1) % 100 == 0) {
 			printf("\nIteration-%4d: ", cell->k);
@@ -252,7 +280,7 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 
 BOOL optimal(cellType *cell) {
 
-	if ( cell->RepeatedTime > 0 || cell->k > config.MIN_ITER ) {
+	if ( cell->RepeatedTime > 0 ) {
         if (config.MASTER_TYPE == PROB_QP || config.reg == 1){
             return cell->optFlag = ((cell->incumbEst - cell->candidEst) < config.EPSILON);
         }

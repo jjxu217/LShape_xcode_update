@@ -518,7 +518,7 @@ vector meanProblem(oneProblem *orig, stocType *stoc) {
 	}
 
 	/* solve the mean value problem */
-	changeLPSolverType(ALG_AUTOMATIC);
+	changeLPSolverType(ALG_NET);
 	status = solveProblem(orig->lp, orig->name, orig->type, &status);
 	if ( status ) {
 		errMsg("setup", "meanProblem", "failed to solve mean value problem", 0);
@@ -535,7 +535,7 @@ vector meanProblem(oneProblem *orig, stocType *stoc) {
 
 	/* obtain the primal solution */
 	getPrimal(orig->lp,	xk, orig->mac);
-
+    printf("x[0]=%d", xk[0]);
 	return xk;
 }//END meanProblem()
 

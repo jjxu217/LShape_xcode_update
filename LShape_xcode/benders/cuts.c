@@ -24,7 +24,7 @@ int formOptCut(probType *prob, cellType *cell, vector Xvect, BOOL isIncumb) {
 	sparseVector bOmega;
 	double	mubBar, alpha;
 	int    	cutIdx, obs, c;
-	clock_t	tic;
+	//clock_t	tic;
 
 	if ( !(piS = (vector) arr_alloc(prob->num->rows+1, double)) )
 		errMsg("allocation", "stochasticUpdates", "piS", 0);

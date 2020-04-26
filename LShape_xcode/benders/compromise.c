@@ -16,6 +16,7 @@ extern configType config;
 int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
 	vector	coef;
 	intvec	indices;
+    BOOL    distinct = TRUE;
 	int 	i, idx, cnt, cOffset, rOffset1=0, rOffset2=0;
 	char 	*q, tempName[NAMESIZE], batchNameSuffix[NAMESIZE];
 
@@ -33,6 +34,35 @@ int buildCompromise(probType *prob, cellType *cell, batchSummary *batch) {
         batch->incumbX[batch->cnt] = duplicVector(cell->candidX, prob->num->cols);
     }
 	batch->cnt++;
+    
+    /*Jiajun: find distict solution, adn bagging solution*/
+    for (i = 0; i < batch->distNum; i++){
+        if(equalVector(batch->distinctX[i], cell->candidX, prob->num->cols, config.TOLERANCE)){
+            distinct = FALSE;
+            break;
+        }
+    }
+    if(distinct == TRUE){
+        batch->distinctEst[i] = cell->candidEst;
+        batch->distinctX[i] = duplicVector(cell->candidX, prob->num->cols);
+        batch->repeatTime[i]  = 1;
+        batch->distNum++;
+    }
+    else{
+        batch->repeatTime[i]++;
+        batch->distinctEst[i] = (batch->repeatTime[i] - 1.0) / batch->repeatTime[i] * batch->distinctEst[i] + cell->candidEst / batch->repeatTime[i];
+    }
+    
+// printf("\n i = %d, repeat time = %d, etimate: %f", i, batch->repeatTime[i], batch->distinctEst[i]);
+    
+    if (batch->repeatTime[i] > batch->max_repeat){
+        batch->max_repeat = batch->repeatTime[i];
+        batch->bagging_idx = i;
+    }
+    
+        
+    
+    
 
 	/* a. Setup or update the batch problem */
 	batch->sp->numInt   += prob->sp->numInt;
@@ -389,6 +419,13 @@ batchSummary *newBatchSummary(probType *prob, int numBatch) {
 	batch->quadScalar = config.MIN_QUAD_SCALAR;
 	batch->avgX = batch->compromiseX = NULL;
     batch->Est = 0;
+    
+    batch->distinctX = (vector *) arr_alloc(numBatch, vector);
+    batch->distinctEst = (vector) arr_alloc(numBatch, double);
+    batch->repeatTime = (intvec) arr_alloc(numBatch, int);;
+    batch->distNum = 0;
+    batch->max_repeat = 0;
+    batch->bagging_idx = 0;
 
 	/* Setup the elements of the batch problem */
 	batch->sp = (oneProblem *) mem_malloc(sizeof(oneProblem));
@@ -444,6 +481,10 @@ void freeBatchType(batchSummary *batch) {
 		if (batch->avgX) mem_free(batch->avgX);
 		if ( batch->sp ) freeOneProblem(batch->sp);
         if (batch->time) mem_free(batch->time);
+        
+        if (batch->distinctX) mem_free(batch->distinctX);
+        if (batch->distinctEst) mem_free(batch->distinctEst);
+        if (batch->repeatTime) mem_free(batch->repeatTime);
 		mem_free(batch);
 	}
 
@@ -564,7 +605,7 @@ BOOL InConvexHull(batchSummary *batch, int col){
             }
         if(flag) counter++;
     }
-    if (counter > 14){
+    if (counter > config.Bag_num){
         return TRUE;
     }
     return FALSE;

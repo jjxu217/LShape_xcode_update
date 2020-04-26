@@ -48,7 +48,7 @@ typedef struct{
 	int		SAA; 				/* Use SAA when continuous distribution in stoch file (1), or not (0) */
 
 	int 	MULTIPLE_REP;		/* When multiple replications are needed, set this to (1), else (0) */
-    double  std_tol;
+    double  Bag_num;
     int     reg;                /*when the master is MILP, if we use regularizer within the replication, 1 represent yes, 0 represent 0*/
 }configType;
 
@@ -141,6 +141,12 @@ typedef struct {
     vector        avgX;                /* average solution across batches */
     runTime        *time;                /* Run time structure */
     double         Est;                 /*lower bound estimation*/
+    vector         *distinctX;          /*distict solutions*/
+    intvec         repeatTime;          /*appearance time of distinctX*/
+    vector         distinctEst;         /*lower bound of the distict solutions*/
+    int            distNum;              /*number of distict solutions*/
+    int            bagging_idx;          /*index in distinctX that is bagging solution*/
+    int            max_repeat;           /*maximum of repeat time*/
 }batchSummary;
 
 int parseCmdLine(int argc, char *argv[], string probName, string inputDir);

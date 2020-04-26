@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7E75E76322F0B2DE0036E024 /* compromise.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E75E76222F0B2DE0036E024 /* compromise.c */; };
-		7E7C8F6F23A834CE00F176FA /* progressive_benders.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E7C8F6E23A834CE00F176FA /* progressive_benders.c */; };
+		7E9ECA2A24539F63005DA04B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E9ECA2924539F63005DA04B /* main.c */; };
 		7EBEFA782241F28200250B65 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA772241F28200250B65 /* CoreFoundation.framework */; };
 		7EBEFA7A2241F28C00250B65 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA792241F28C00250B65 /* IOKit.framework */; };
 		7EBEFA7C2241F2B700250B65 /* libconcert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA7B2241F2B700250B65 /* libconcert.a */; };
@@ -35,6 +35,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7E9ECA2524539F63005DA04B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 		7EBEFA672241EC4900250B65 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -47,13 +56,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7E1043A1232307930063E017 /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		7E75E76222F0B2DE0036E024 /* compromise.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compromise.c; sourceTree = "<group>"; };
 		7E7C8F6D23A834CE00F176FA /* progressive_benders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progressive_benders.h; sourceTree = "<group>"; };
 		7E7C8F6E23A834CE00F176FA /* progressive_benders.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = progressive_benders.c; sourceTree = "<group>"; };
 		7E9293FD22766B1E00143C87 /* SUFL_5_5.tim */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.tim; sourceTree = "<group>"; };
 		7E9293FE22766B1E00143C87 /* SUFL_5_5.sto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.sto; sourceTree = "<group>"; };
 		7E9293FF22766B1E00143C87 /* SUFL_5_5.cor */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SUFL_5_5.cor; sourceTree = "<group>"; };
+		7E9ECA2724539F63005DA04B /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E9ECA2924539F63005DA04B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7EBEFA692241EC4900250B65 /* LShape_xcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LShape_xcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EBEFA772241F28200250B65 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7EBEFA792241F28C00250B65 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -272,6 +282,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7E9ECA2424539F63005DA04B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7EBEFA662241EC4900250B65 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -307,10 +324,19 @@
 			path = SUFL_5_5;
 			sourceTree = "<group>";
 		};
+		7E9ECA2824539F63005DA04B /* test */ = {
+			isa = PBXGroup;
+			children = (
+				7E9ECA2924539F63005DA04B /* main.c */,
+			);
+			path = test;
+			sourceTree = "<group>";
+		};
 		7EBEFA602241EC4900250B65 = {
 			isa = PBXGroup;
 			children = (
 				7EBEFA6B2241EC4900250B65 /* LShape_xcode */,
+				7E9ECA2824539F63005DA04B /* test */,
 				7EBEFA6A2241EC4900250B65 /* Products */,
 				7EBEFA762241F28200250B65 /* Frameworks */,
 			);
@@ -320,6 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				7EBEFA692241EC4900250B65 /* LShape_xcode */,
+				7E9ECA2724539F63005DA04B /* test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -378,7 +405,6 @@
 			isa = PBXGroup;
 			children = (
 				7E75E76222F0B2DE0036E024 /* compromise.c */,
-				7E1043A1232307930063E017 /* test.c */,
 				7EBEFA912241F44E00250B65 /* benders.c */,
 				7EBEFA922241F44E00250B65 /* master.c */,
 				7EBEFA932241F44E00250B65 /* subprob.c */,
@@ -1031,6 +1057,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7E9ECA2624539F63005DA04B /* test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E9ECA2D24539F63005DA04B /* Build configuration list for PBXNativeTarget "test" */;
+			buildPhases = (
+				7E9ECA2324539F63005DA04B /* Sources */,
+				7E9ECA2424539F63005DA04B /* Frameworks */,
+				7E9ECA2524539F63005DA04B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = test;
+			productName = test;
+			productReference = 7E9ECA2724539F63005DA04B /* test */;
+			productType = "com.apple.product-type.tool";
+		};
 		7EBEFA682241EC4900250B65 /* LShape_xcode */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7EBEFA702241EC4900250B65 /* Build configuration list for PBXNativeTarget "LShape_xcode" */;
@@ -1038,6 +1081,7 @@
 				7EBEFA652241EC4900250B65 /* Sources */,
 				7EBEFA662241EC4900250B65 /* Frameworks */,
 				7EBEFA672241EC4900250B65 /* CopyFiles */,
+				7E9ECA312453B1B2005DA04B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1057,6 +1101,9 @@
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = jjxu;
 				TargetAttributes = {
+					7E9ECA2624539F63005DA04B = {
+						CreatedOnToolsVersion = 11.0;
+					};
 					7EBEFA682241EC4900250B65 = {
 						CreatedOnToolsVersion = 10.1;
 					};
@@ -1075,11 +1122,40 @@
 			projectRoot = "";
 			targets = (
 				7EBEFA682241EC4900250B65 /* LShape_xcode */,
+				7E9ECA2624539F63005DA04B /* test */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7E9ECA312453B1B2005DA04B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		7E9ECA2324539F63005DA04B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E9ECA2A24539F63005DA04B /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7EBEFA652241EC4900250B65 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1102,13 +1178,32 @@
 				7EBEFBE82241FA9900250B65 /* utility.c in Sources */,
 				7EBEFBE92241FA9900250B65 /* solver.h in Sources */,
 				7EBEFBEB2241FA9900250B65 /* solver.c in Sources */,
-				7E7C8F6F23A834CE00F176FA /* progressive_benders.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		7E9ECA2B24539F63005DA04B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JBP2638P2L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		7E9ECA2C24539F63005DA04B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JBP2638P2L;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		7EBEFA6E2241EC4900250B65 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1228,12 +1323,12 @@
 				DEVELOPMENT_TEAM = JBP2638P2L;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"STOCH_CHECK=1",
+					"STOCH_CHECK=0",
 					"ALGO_CHECK=1",
 					"$(inherited)",
 					"DECOMPOSE_CHECK=1",
 					"SETUP_CHECK=1",
-					"BATCH_CHECK=1",
+					"BATCH_CHECK=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/CPLEX_Studio128/cplex/include,
@@ -1270,6 +1365,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7E9ECA2D24539F63005DA04B /* Build configuration list for PBXNativeTarget "test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E9ECA2B24539F63005DA04B /* Debug */,
+				7E9ECA2C24539F63005DA04B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7EBEFA642241EC4900250B65 /* Build configuration list for PBXProject "LShape_xcode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

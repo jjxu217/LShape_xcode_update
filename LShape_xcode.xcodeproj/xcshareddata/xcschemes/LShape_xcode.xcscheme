@@ -40,7 +40,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -62,39 +62,69 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "SUFL_F20_MinF1_5_FO0_D15_S365"
+            argument = "F15_MinF1_10_FO5_D15_3d"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "SUFL_F20_MinF1_5_FO0_D119_S100"
+            argument = "F30_MinF1_20_FO10_D15_1d"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "SUFL_F20_MinF1_5_FO0_D15_S100"
+            argument = "F45_MinF1_30_FO15_D15_3d"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "SUFL_F15_MinF0_3_FO5_D15_S100"
+            argument = "F60_MinF1_40_FO20_D15_1d"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "F3_MinF1_2_FO1_D15_1d"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spInput/SUFL_CC20/"
+            argument = ""
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spInput/"
+            argument = "F15_MinF1_10_FO5_D118_1z"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = " ./spInput/model3/"
+            argument = "F30_MinF1_20_FO10_D118_1z"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "F45_MinF1_30_FO15_D118_1z"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "F60_MinF1_40_FO20_D118_1z"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "  ./spInput/"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "./spOutput/model3"
+            argument = " ./spOutput/d_"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "F30_MinF1_20_FO10_D15_1d ./spInput/ ./spOutput/d_"
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
+         <EnvironmentVariable
+            key = ""
+            value = ""
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = ""
+            value = ""
+            isEnabled = "NO">
+         </EnvironmentVariable>
          <EnvironmentVariable
             key = ""
             value = ""

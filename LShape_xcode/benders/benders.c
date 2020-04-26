@@ -160,9 +160,9 @@ int readConfig() {
 			fscanf(fptr, "%d", &config.MAX_OBS);
 		else if (!(strcmp(line, "SAA")))
 			fscanf(fptr, "%d", &config.SAA);
-        else if (!(strcmp(line, "std_tol")))
-            fscanf(fptr, "%lf", &config.std_tol);
-        else if (!(strcmp(line, "std_tol")))
+        else if (!(strcmp(line, "Bag_num")))
+            fscanf(fptr, "%lf", &config.Bag_num);
+        else if (!(strcmp(line, "Bag_num")))
             fscanf(fptr, "%d", &config.reg);
 
 		else if (!(strcmp(line, "MULTIPLE_REP")))
