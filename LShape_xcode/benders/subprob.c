@@ -49,7 +49,7 @@ int solveSubprob(probType *prob, oneProblem *subproblem, vector Xvect, vector ob
 	}
 
 #ifdef DEBUG
-    printf("cost vector \n");
+    printf("cost vector (%d elements):\n", prob->num->cols);
     printVector(cost, prob->num->cols, NULL);
 #endif
 	/* (d) change cost coefficients in the solver */

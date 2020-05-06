@@ -21,7 +21,7 @@ dualsType *duals = NULL;
 int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
-	vector 	 meanSol;
+	vector 	 meanSol; //the first stage decision variable solution of the mean problem
     double   std=0, compromise_time=0;
     batchSummary *batch = NULL;
 	int 	 rep, m, n, out_idx=0;

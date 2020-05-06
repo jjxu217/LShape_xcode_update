@@ -451,9 +451,11 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 	stoc->numPerGroup = (intvec) mem_realloc(stoc->numPerGroup, stoc->numGroups*sizeof(int));
 	stoc->groupBeg 	  = (intvec) mem_realloc(stoc->groupBeg ,stoc->numGroups*sizeof(int));
     
-    // Jiajun realloc stoc->numVals
+    // Jiajun realloc stoc->numVals, stoc->probs, stoc->vals
     if (!(strcmp(stoc->type, "BLOCKS_DISCRETE"))){
         stoc->numVals     = (intvec) mem_realloc(stoc->numVals ,stoc->numGroups*sizeof(int));
+        stoc->probs       =  (vector*) mem_realloc(stoc->probs ,stoc->numGroups*sizeof(vector));
+        stoc->vals       =  (vector*) mem_realloc(stoc->vals ,stoc->numOmega*sizeof(vector));
     }
 
 	return stoc;
@@ -883,6 +885,25 @@ int readOneBlock(FILE *fptr, string *fields, oneProblem *orig, int maxOmegas, in
 		if ( rvCols[n] ) mem_free(rvCols[n]);
 	}
 	mem_free(rvRows); mem_free(rvCols);
+    
+    
+#if defined(DEBUG)
+//    int i, j;
+//    for(i = 0; i < 15; i++){
+//        printf("%d, ", stoc->numPerGroup[i]);
+//    }
+//    printf("\n beg\n");
+//    for(i = 0; i < 15; i++){
+//        printf("%d, ", stoc->groupBeg[i]);
+//    }
+//    printf("\n numVals\n");
+//    for(i = 0; i < 60; i++)
+//        for (j = 0; j < 100; j++){
+//            printf("%f, ", stoc->vals[i][j]);
+//    }
+#endif
+    
+    
 
 	return 0;
 }//END readOneBlock()
@@ -1348,6 +1369,10 @@ void freeStocType(stocType *stoc) {
 			if ( !(strcmp(stoc->type, "SCENARIOS_DISCRETE")) ) {
 				if (stoc->probs[0]) mem_free(stoc->probs[0]);
 			}
+            else if (!(strcmp(stoc->type, "BLOCKS_DISCRETE"))) {
+                for ( n = 0; n < stoc->numGroups; n++ )
+                    if ( stoc->probs[n] ) mem_free(stoc->probs[n]);
+            }
 			else {
 				for ( n = 0; n < max(stoc->numOmega, stoc->numGroups); n++ )
 					if ( stoc->probs[n] ) mem_free(stoc->probs[n]);

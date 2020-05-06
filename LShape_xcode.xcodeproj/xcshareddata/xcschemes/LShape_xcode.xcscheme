@@ -40,7 +40,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -74,11 +74,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "F60_MinF1_40_FO20_D15_1d"
+            argument = "3d_F60_MinF1_40_FO20"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "F3_MinF1_2_FO1_D15_1d"
+            argument = "1d_F45_MinF1_30_FO15"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

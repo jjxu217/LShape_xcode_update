@@ -19,7 +19,8 @@
 probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, double TOLERANCE) {
 	probType **prob;
 	char	 *q;
-	int		 i, k, m, t, rOffset = 0, cOffset = 0;
+    int		 i, k, m, t;
+    int rOffset = 0, cOffset = 0;
 
 	/* allocate memory to elements of probType */
 	if ( !(prob = (probType **) arr_alloc(tim->numStages, probType *)) )
@@ -56,8 +57,8 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 		if ( t < tim->numStages - 1 ) {
 			prob[t]->sp->mar = prob[t]->sp->marsz = tim->row[t+1] - tim->row[t];
 			prob[t]->sp->mac = prob[t]->sp->macsz = tim->col[t+1] - tim->col[t];
-			prob[t]->sp->rstorsz = orig->rname[tim->row[t+1]] - orig->rname[tim->row[t]];
-			prob[t]->sp->cstorsz = orig->cname[tim->col[t+1]] - orig->cname[tim->col[t]];
+			prob[t]->sp->rstorsz = (int) (orig->rname[tim->row[t+1]] - orig->rname[tim->row[t]]);
+			prob[t]->sp->cstorsz = (int) (orig->cname[tim->col[t+1]] - orig->cname[tim->col[t]]);
 			rOffset += prob[t]->sp->rstorsz;
 			cOffset += prob[t]->sp->cstorsz;
             prob[t]->sp->type = PROB_MILP; //Jiajun, first stage MIP
@@ -169,7 +170,7 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 			prob[t]->sp->cstore[m++] = *q;
 
 		/* copy column information for non-terminal stage */
-		cOffset = prob[t]->sp->cstore - orig->cname[tim->col[t]];
+		//cOffset = prob[t]->sp->cstore - orig->cname[tim->col[t]];
 		for ( m = tim->col[t]; m < tim->col[t+1]; m++ ) {
 			k = m - tim->col[t];
 			prob[t]->dBar->val[prob[t]->dBar->cnt+1] = orig->objx[m];
@@ -183,7 +184,7 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 			else if ( orig->ctype[m] == 'B' )
 				prob[t]->sp->numBin++;
 			prob[t]->sp->ctype[k] = orig->ctype[m];
-			prob[t]->sp->cname[k] = orig->cname[m] + cOffset;
+			prob[t]->sp->cname[k] = orig->cname[m] + (prob[t]->sp->cstore - orig->cname[tim->col[t]]);
 			prob[t]->sp->matcnt[k] = 0;
 			for ( i = orig->matbeg[m]; i < orig->matbeg[m]+orig->matcnt[m]; i++ ) {
 				if (orig->matind[i] < tim->row[t+1]) {
@@ -222,12 +223,12 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 			prob[t]->sp->rstore[m++] = *q;
 
 		/* copy row information for non-terminal stage */
-		rOffset = prob[t]->sp->rstore - orig->rname[tim->row[t]];
+		//rOffset = prob[t]->sp->rstore - orig->rname[tim->row[t]];
 		for ( m = tim->row[t]; m < tim->row[t+1]; m++ ) {
 			k = m - tim->row[t];
 			prob[t]->sp->rhsx[k] = orig->rhsx[m];
 			prob[t]->sp->senx[k] = orig->senx[m];
-			prob[t]->sp->rname[k] = orig->rname[m]+rOffset;
+			prob[t]->sp->rname[k] = orig->rname[m] + (prob[t]->sp->rstore - orig->rname[tim->row[t]]);
 			prob[t]->bBar->val[prob[t]->bBar->cnt+1] = orig->rhsx[m];
 			prob[t]->bBar->col[prob[t]->bBar->cnt+1] = m - tim->row[t]+1;
 			prob[t]->bBar->cnt++;
@@ -240,7 +241,7 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 	for ( q = orig->cname[tim->col[t]]; q < orig->cname[0] + orig->cstorsz; q++ )
 		prob[t]->sp->cstore[m++] = *q;
 
-	cOffset = prob[t]->sp->cstore - orig->cname[tim->col[t]];
+	//cOffset = prob[t]->sp->cstore - orig->cname[tim->col[t]];
 	for ( m = tim->col[t]; m < orig->mac; m++ ) {
 		k = m - tim->col[t];
 		prob[t]->dBar->val[prob[t]->dBar->cnt+1] = orig->objx[m];
@@ -256,7 +257,7 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 //        }
 //        else
 //            prob[t]->sp->ctype[k] = orig->ctype[m];
-		prob[t]->sp->cname[k] = orig->cname[m] + cOffset;
+		prob[t]->sp->cname[k] = orig->cname[m] + (prob[t]->sp->cstore - orig->cname[tim->col[t]]);
 		prob[t]->sp->matcnt[k] = 0;
 		if ( orig->matcnt[m] > 0 )
 			for ( i = orig->matbeg[m]; i < orig->matbeg[m]+orig->matcnt[m]; i++ ) {
@@ -284,32 +285,32 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 	for ( q = orig->rname[tim->row[t]]; q < orig->rname[0] + orig->rstorsz; q++ )
 		prob[t]->sp->rstore[m++] = *q;
 
-	rOffset = prob[t]->sp->rstore - orig->rname[tim->row[t]];
+	//rOffset = prob[t]->sp->rstore - orig->rname[tim->row[t]];
 	for ( m = tim->row[t]; m < orig->mar; m++ ) {
 		k = m - tim->row[t];
 		prob[t]->sp->rhsx[k] = orig->rhsx[m];
 		prob[t]->sp->senx[k] = orig->senx[m];
-		prob[t]->sp->rname[k] = orig->rname[m]+rOffset;
+		prob[t]->sp->rname[k] = orig->rname[m] + (prob[t]->sp->rstore - orig->rname[tim->row[t]]);
 		prob[t]->bBar->val[prob[t]->bBar->cnt+1] = orig->rhsx[m];
 		prob[t]->bBar->col[prob[t]->bBar->cnt+1] = m - tim->row[t]+1;
 		prob[t]->bBar->cnt++;
 	}
 
 #ifdef DECOMPOSE_CHECK
-	/* write stage problems in LP format to verify decomposition */
-	char fname[BLOCKSIZE];
-	for ( t = 0; t < tim->numStages; t++) {
-		if ( !(prob[t]->sp->lp = setupProblem(prob[t]->sp->name, prob[t]->sp->type, prob[t]->sp->mac, prob[t]->sp->mar, prob[t]->sp->objsen, prob[t]->sp->objx, prob[t]->sp->rhsx, prob[t]->sp->senx,
-				prob[t]->sp->matbeg, prob[t]->sp->matcnt, prob[t]->sp->matind, prob[t]->sp->matval, prob[t]->sp->bdl, prob[t]->sp->bdu, NULL, prob[t]->sp->cname, prob[t]->sp->rname, prob[t]->sp->ctype)) ) {
-			errMsg("solver", "newProb", "failed to setup stage problem in solver", 0);
-			return prob;
-		}
-		sprintf(fname, "stageProb%d.lp", t);
-		if ( writeProblem(prob[t]->sp->lp, fname) ) {
-			errMsg("solver", "newProb", "failed to write stage problem", 0);
-			return prob;
-		}
-	}
+//	/* write stage problems in LP format to verify decomposition */
+//	char fname[BLOCKSIZE];
+//	for ( t = 0; t < tim->numStages; t++) {
+//		if ( !(prob[t]->sp->lp = setupProblem(prob[t]->sp->name, prob[t]->sp->type, prob[t]->sp->mac, prob[t]->sp->mar, prob[t]->sp->objsen, prob[t]->sp->objx, prob[t]->sp->rhsx, prob[t]->sp->senx,
+//				prob[t]->sp->matbeg, prob[t]->sp->matcnt, prob[t]->sp->matind, prob[t]->sp->matval, prob[t]->sp->bdl, prob[t]->sp->bdu, NULL, prob[t]->sp->cname, prob[t]->sp->rname, prob[t]->sp->ctype)) ) {
+//			errMsg("solver", "newProb", "failed to setup stage problem in solver", 0);
+//			return prob;
+//		}
+//		sprintf(fname, "stageProb%d.lp", t);
+//		if ( writeProblem(prob[t]->sp->lp, fname) ) {
+//			errMsg("solver", "newProb", "failed to write stage problem", 0);
+//			return prob;
+//		}
+//	}
 #endif
 
 	/* save size information in numType */
@@ -477,8 +478,9 @@ probType **newProb(oneProblem *orig, stocType *stoc, timeType *tim, vector lb, d
 }//END newProb()
 
 /* setup and solve the original problem _orig_ with expected values for all random variables provided in _stoc_. If the problem is an mixed-integer program,
- *  then a relaxed problem is solved. The function returns a vector of mean value solutions, if there is an error it returns NULL.*/
-vector meanProblem(oneProblem *orig, stocType *stoc) {
+ *  then a relaxed problem is solved. The function returns a vector of mean value solutions, if there is an error it returns NULL.
+ dim= the dimension of the decision variable in first stage*/
+vector meanProblem(oneProblem *orig, stocType *stoc, int dim) {
 	vector	xk;
 	double	obj = 0.0;
 	int 	n, status;
@@ -526,7 +528,7 @@ vector meanProblem(oneProblem *orig, stocType *stoc) {
 	}
 
 	/* obtain solution information and print */
-	if ( !(xk = (vector) arr_alloc(orig->mac+1, double)) )
+	if ( !(xk = (vector) arr_alloc(dim+1, double)) )
 		errMsg("allocation", "meanProblem", "sol", 0);
 
 	/* print results */
@@ -534,8 +536,8 @@ vector meanProblem(oneProblem *orig, stocType *stoc) {
 	printf("Optimal objective function value for mean value problem (Problem Type %d) = %lf\n", orig->type, obj);
 
 	/* obtain the primal solution */
-	getPrimal(orig->lp,	xk, orig->mac);
-    printf("x[0]=%d", xk[0]);
+	getPrimal(orig->lp,	xk, dim);
+    
 	return xk;
 }//END meanProblem()
 

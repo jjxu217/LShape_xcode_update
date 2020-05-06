@@ -520,7 +520,7 @@ int changeQPbds(LPptr lp, int numCols, vector bdl, vector bdu, vector xk) {
 oneProblem *newMaster(oneProblem *orig, double lb) {
 	oneProblem 	*master;
 	int         r, i, j, idx, cnt;
-	long        colOffset, rowOffset;
+	//long        colOffset, rowOffset;
 	char        *q;
 
 	if (!(master = (oneProblem *) mem_malloc (sizeof(oneProblem))))
@@ -586,17 +586,17 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 	strcpy(master->objname, orig->objname);     /* Copy objective name */
 
 	/* Copy problem's column and row names, and calculate the pointers for master/copy row and column names. */
-	i = 0;
-	for (q = orig->cname[0]; q < orig->cname[0] + orig->cstorsz; q++)
-		master->cstore[i++] = *q;
-	colOffset = master->cstore - orig->cname[0];
+    for (i = 0; i < orig->cstorsz; i++){
+        master->cstore[i] = orig->cstore[i];
+    }
+    //colOffset = master->cstore - orig->cstore;
 
-	if ( master->mar > 0 ) {
-		i = 0;
-		for (q = orig->rname[0]; q < orig->rname[0] + orig->rstorsz; q++)
-			master->rstore[i++] = *q;
-		rowOffset = master->rstore - orig->rname[0];
-	}
+    if ( master->mar > 0 ) {
+        for (i = 0; i < orig->rstorsz; i++){
+            master->rstore[i] = orig->rstore[i];
+        }
+        //rowOffset = master->rstore - orig->rstore;
+    }
 
 	/* Copy the all column information from the original master problem */
 	cnt = 0;
@@ -609,12 +609,15 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 		master->bdu[j] = orig->bdu[j];
 		master->bdl[j] = orig->bdl[j];
 		/* Copy column names, offset by length */
-		master->cname[j] = orig->cname[j] + colOffset;
+        if (j == 0)
+            master->cname[0] = master->cstore;
+        else
+            master->cname[j] = master->cname[j - 1] + (orig->cname[j] - orig->cname[j - 1]);
+        //master->cname[j] = orig->cname[j] + colOffset;
 		/* Copy the master sparse matrix beginning position of each column */
 		master->matbeg[j] = cnt;
 		/* Copy the sparse matrix non-zero element count */
 		master->matcnt[j] = orig->matcnt[j];
-		master->ctype[j] = orig->ctype[j];
 		/* Loop through all non-zero elements in this column */
 		for (idx = orig->matbeg[j]; idx < orig->matbeg[j] + orig->matcnt[j]; idx++) {
 			/* Copy the non-zero coefficient */
@@ -632,13 +635,17 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 		/* Copy the constraint sense */
 		master->senx[r] = orig->senx[r];
 		/* Copy row names, offset by length */
-		master->rname[r] = orig->rname[r] + rowOffset;
+        if (r == 0)
+            master->rname[0] = master->rstore;
+        else
+            master->rname[r] = orig->rname[r - 1] + (orig->rname[r] - orig->rname[r - 1]);
+        //master->rname[r] = orig->rname[r] + rowOffset;
 	}
 
 	/* Initialize information for the extra column in the new master. */
-	colOffset = orig->cstorsz;
+	//colOffset = orig->cstorsz;
 	strcpy(master->cstore + orig->cstorsz, "eta");
-	master->cname[orig->mac] = master->cstore + colOffset;
+	master->cname[orig->mac] = master->cstore + orig->cstorsz;
 	master->objx[orig->mac] = 1.0;			// orig->mac is the last column in the original master
 	master->ctype[orig->mac] = 'C';
 	master->bdu[orig->mac] = INFBOUND;
@@ -646,6 +653,22 @@ oneProblem *newMaster(oneProblem *orig, double lb) {
 	master->matbeg[orig->mac] = orig->numnz;	// Beginning point in matval/matind in eta columns. every eta column begins at the same address
 	master->matcnt[orig->mac] = 0;               // Only optimality cuts has eta
 
+//    printf("----------------\n");
+//    for (i = 0; i <= orig->mar; i++){
+//        printf("master->rhsx[i]=%f\n", master->rhsx[i]);fflush(NULL);
+//        printf("master->rname[i]=%s\n", master->rname[i]);fflush(NULL);
+//        printf("master->senx[i]=%c\n", master->senx[i]);fflush(NULL);
+//    }
+//    
+//    for (i = 0; i <= orig->mac; i++){
+//        printf("master->objx[i]=%f\n", master->objx[i]);fflush(NULL);
+//        printf("master->lb[i]=%f\n", master->bdl[i]);fflush(NULL);
+//        printf("master->ub[i]=%f\n", master->bdu[i]);fflush(NULL);
+//        printf("master->cname[i]=%s\n", master->cname[i]);fflush(NULL);
+//        printf("master->matbeg[i]=%d\n", master->matbeg[i]);fflush(NULL);
+//        printf("master->matcnt[i]=%d\n\n", master->matcnt[i]);fflush(NULL);
+//    }
+    
 	/* Load the copy into CPLEX, Jiajun master->type is input to setupProblem */
 	master->lp = setupProblem(master->name, master->type, master->mac, master->mar, master->objsen, master->objx, master->rhsx, master->senx, master->matbeg, master->matcnt,master->matind, master->matval, master->bdl, master->bdu, NULL, master->cname, master->rname, master->ctype);
 	if ( master->lp == NULL ) {
