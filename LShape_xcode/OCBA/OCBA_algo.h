@@ -230,7 +230,7 @@ batchSummary *newBatchSummary(probType *prob, int numBatch);
 void freeBatchType(batchSummary *batch);
 
 ocbaSummary *newOcbaSummary(int first_stage_cols, int numBatch);
-void freeOcba(ocbaSummary *ocba, int numBatch);
+void freeOCBA(ocbaSummary *ocba, int numBatch);
 int solveOCBA(vector s_mean,vector s_var,int nd, intvec n, int add_budget,intvec an);
 int best(vector t_s_mean, int nd);
 int second_best(vector t_s_mean, int nd, int b);

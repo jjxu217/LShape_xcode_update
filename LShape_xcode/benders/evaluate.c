@@ -105,14 +105,14 @@ int evaluate(FILE *soln, stocType *stoc, probType **prob, cellType *cell, vector
 			fflush(stdout);
 		}
 		if (!(cnt % 10000))
-			printf("\nObs:%d mean:%lf   error: %lf \n 0.90 CI: [%lf , %lf]\n", cnt, mean, 3.92 * stdev / mean,  mean - 1.645 * stdev, mean + 1.645 * stdev);
+			printf("\nObs:%d mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", cnt, mean, 3.92 * stdev / mean,  mean - 1.96  * stdev, mean + 1.96  * stdev);
 	}//END while loop
 	mean += vXvSparse(Xvect, prob[0]->dBar);
 
 	printf("\n\nEvaluation complete. Final evaluation results :: \n");
 	printf("Upper bound estimate               : %lf\n", mean);
 	printf("Error in estimation                : %lf\n", 3.92 * stdev / mean);
-	printf("Confidence interval at 95%%         : [%lf, %lf]\n", mean - 1.645 * stdev, mean + 1.645 * stdev);
+	printf("Confidence interval at 95%%         : [%lf, %lf]\n", mean - 1.96  * stdev, mean + 1.96  * stdev);
 	printf("Number of observations             : %d\n", cnt);
 
 	if ( soln != NULL ) {
@@ -120,7 +120,7 @@ int evaluate(FILE *soln, stocType *stoc, probType **prob, cellType *cell, vector
 		fprintf(soln, "------------------------------------------------------------- Evaluation ----------------------------------------------------------\n");
 		fprintf(soln, "Upper bound estimate           : %lf\n", mean);
 		fprintf(soln, "Error in estimation            : %lf\n", 3.92 * stdev / mean);
-		fprintf(soln, "Confidence interval at 95%%     : [%lf, %lf]\n", mean - 1.645 * stdev, mean + 1.645 * stdev);
+		fprintf(soln, "Confidence interval at 95%%     : [%lf, %lf]\n", mean - 1.96  * stdev, mean + 1.96  * stdev);
 		fprintf(soln, "Number of observations         : %d\n", cnt);
 	}
 

@@ -23,7 +23,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
-    double   std=0, ocba_time=0, stdev=0, pr;
+    double   std=0, ocba_time=0, naive_time=0, stdev=0, pr, temp;
     batchSummary *batch = NULL;
 	int 	 rep, m, n, out_idx=0;
 	FILE 	*sFile, *iFile = NULL;
@@ -32,10 +32,9 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	clock_t	tic;
     
     BOOL distinct;
-    double   tol=0.001;
     double   inverse_appearance[config.NUM_REPS];
     int Delta = 1000;
-    int     i;
+    int     i, j=0;
     ocbaSummary *ocba = NULL;
     
     
@@ -103,6 +102,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //		}
         /* check is the new solution is distict or not. */
         if ( config.MULTIPLE_REP ) {
+            buildCompromise(prob[0], cell, batch);
+            
             distinct = TRUE;
             for(i = 0; i < ocba->cnt; i++ ){
                 if (equalVector(ocba->incumbX[i], cell->candidX, prob[0]->num->cols, config.TOLERANCE)){
@@ -118,12 +119,18 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
             }
             else{
                 ocba->appearance[i]++;
-                ocba->objLB[i] = (ocba->appearance[i] - 1) / ocba->appearance[i] * ocba->objLB[i] + cell->candidEst / ocba->appearance[i];
+                temp = ocba->objLB[i];
+                ocba->objLB[i] = (ocba->appearance[i] - 1.0) / ocba->appearance[i] * temp + cell->candidEst / ocba->appearance[i];
             }
         }
 	}
     
     if ( config.MULTIPLE_REP ) {
+        
+        if ( solveCompromise(prob[0], batch)) {
+            errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
+            goto TERMINATE;
+        }
         
         for (i = 0; i < ocba->cnt; i++)
             inverse_appearance[i] = 1.0 / ocba->appearance[i];
@@ -135,13 +142,20 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         eval_all(sFile, stoc, prob, cell, ocba);
         
         stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
-        while(stdev > tol){
+        while(3.92 * stdev > config.EVAL_ERROR * DBL_ABS(ocba->mean[ocba->idx]) || ocba->n[ocba->idx] < config.EVAL_MIN_ITER  ){
             ocba->idx = solveOCBA(ocba->mean, ocba->var, ocba->cnt, ocba->n, Delta, ocba->an);
             eval_all(sFile, stoc, prob, cell, ocba);
         }
         
         ocba_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
         batch->time->repTime += ocba_time;
+        
+        tic = clock();
+        for (i = 0; i < ocba->cnt; i++){
+            for(j = 0; j < ocba->appearance[i]; j++)
+                evaluate(sFile, stoc, prob, cell, ocba->incumbX[i]);
+        }
+        naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
         
         fprintf(sFile, "\n====================================================================================================================================\n");
         fprintf(sFile, "\n----------------------------------------- Final solution --------------------------------------\n\n");
@@ -170,8 +184,22 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         
         fprintf(iFile, "\n----------------------------------------- Compromise solution(1-indexed) --------------------------------------\n\n");
         printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, iFile);
-//        fprintf(iFile, "\n------------------------------------------- Average solution(1-indexed) ---------------------------------------\n\n");
-//        printVectorInSparse(batch->avgX, prob[0]->num->cols, iFile);
+        
+        /*calculate the   Approximate  Probability  of  Correct  Selection(APCS),
+         see: https://math.stackexchange.com/questions/178334/the-probability-of-one-gaussian-larger-than-another */
+        pr = 1;
+        for (i = 0; i < ocba->cnt; i++){
+            if (i != ocba->idx)
+                pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i] + ocba->var[ocba->idx])));
+        }
+            
+        printf("The Approximate  Probability  of  Correct  Selection(APCS) is %lf", pr);
+        
+        
+        fprintf(sFile, "\n print for latex\n");
+        fprintf(sFile, "&%.2f &%.2f &%.2f%% &%.2f &%.2f%% &[%.2f, %.2f], &[%.2f, %.2f] &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, ocba->objLB[ocba->idx], 100*(1- 1/sqrt(ocba->appearance[ocba->idx])), batch->Est - 1.96*std, batch->Est + 1.96*std, ocba->mean[ocba->idx] - 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), ocba->mean[ocba->idx] + 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
+        
+
     }
 
 	fclose(sFile); fclose(iFile);
@@ -188,30 +216,93 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //        out_idx++;
 //    }
 	
-    /*calculate the   Approximate  Probability  of  Correct  Selection(APCS),
-     see: https://math.stackexchange.com/questions/178334/the-probability-of-one-gaussian-larger-than-another */
-    pr = 1;
-    for (i = 0; i < ocba->cnt; i++){
-        pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i] + ocba->var[ocba->idx])));
-    }
-        
-    printf("The Approximate  Probability  of  Correct  Selection(APCS) is %lf", pr);
+
 
 	/* free up memory before leaving */
 	freeCellType(cell);
 	freeProbType(prob, 2);
 	mem_free(meanSol);
-    freeOcba(ocba, config.NUM_REPS);
+    freeOCBA(ocba, config.NUM_REPS);
 	return 0;
 
 	TERMINATE:
 	if(cell) freeCellType(cell);
 	if(prob) freeProbType(prob, 2);
 	mem_free(meanSol);
-    freeOcba(ocba, config.NUM_REPS);
+    freeOCBA(ocba, config.NUM_REPS);
 	return 1;
 }//END algo()
 
+int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
+    int     candidCut;
+    clock_t    tic, mainTic;
+
+#if defined(SAVE_DUALS)
+    if ( duals == NULL ) {
+        duals = (dualsType *) mem_malloc(sizeof(dualsType));
+        duals->iter = (intvec) arr_alloc(config.MAX_ITER*cell->omega->cnt, int);
+        duals->obs = (intvec) arr_alloc(config.MAX_ITER*cell->omega->cnt, int);
+        duals->vals = (vector *) arr_alloc(config.MAX_ITER*cell->omega->cnt, vector);
+        duals->cnt = 0;
+    }
+#endif
+
+    mainTic = clock();
+    /* Main loop of the algorithm */
+    while (cell->k < config.MAX_ITER) {
+        tic = clock();
+
+        cell->k++;
+
+#if defined(STOCH_CHECK) || defined(ALGO_CHECK)
+        printf("\nIteration-%d :: Incumbent estimate = %lf; Candidate estimate = %lf.\n", cell->k, cell->incumbEst, cell->candidEst);
+#else
+        if ( (cell->k-1) % 100 == 0) {
+            printf("\nIteration-%4d: ", cell->k);
+        }
+#endif
+        /******* 1a. Optimality tests *******/
+//        if ( config.MASTER_TYPE == PROB_QP )
+        if (optimal(cell))
+            break;
+
+        /******* 2. Solve the subproblem with candidate solution, form and update the candidate cut *******/
+        if ( (candidCut = formOptCut(prob[1], cell, cell->candidX, FALSE)) < 0 ) {
+            errMsg("algorithm", "solveCell", "failed to add candidate cut", 0);
+            return 1;
+        }
+
+        /******* 4. Check improvement in predicted values at candidate solution *******/
+        if ( config.MASTER_TYPE == PROB_QP ) {
+            if ( cell->k > 1 ) {
+                /* If the incumbent has not changed in the current iteration */
+                checkImprovement(prob[0], cell, candidCut);
+            }
+            else
+                cell->incumbEst = vXvSparse(cell->incumbX, prob[0]->dBar) + cutHeight(cell->cuts->vals[candidCut], cell->incumbX, prob[0]->num->cols);
+        }
+        else {
+            cell->incumbEst = vXvSparse(cell->candidX, prob[0]->dBar) + cutHeight(cell->cuts->vals[candidCut], cell->candidX, prob[0]->num->cols);
+
+            if (optimal(cell))
+                break;
+        }
+
+        /******* 3. Solve the master problem to obtain the new candidate solution */
+        if ( solveMaster(prob[0]->num, prob[0]->dBar, cell) ) {
+            errMsg("algorithm", "solveCell", "failed to solve master problem", 0);
+            return 1;
+        }
+        cell->time->masterAccumTime += cell->time->masterIter; cell->time->subprobAccumTime += cell->time->subprobIter;
+        cell->time->masterIter = cell->time->subprobIter = cell->time->optTestIter = 0.0;
+        cell->time->iterTime = ((double) clock() - tic)/CLOCKS_PER_SEC; cell->time->iterAccumTime += cell->time->iterTime;
+
+        if ( cell->k % 10 == 0 )
+            printf("Time = %lf", ((double) (clock() - mainTic))/CLOCKS_PER_SEC);
+    }
+
+    return 0;
+}//END solveCell()
 
 BOOL optimal(cellType *cell) {
 
@@ -408,7 +499,7 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
 
     for (i = 0; i < ocba->cnt; i++){
     
-        printf("\nStarting evaluate solution %d.\n", i);
+        printf("\nStarting evaluate solution %d with obs %d.\n", i, ocba->an[i]);
 
         /* initialize parameters used for evaluations */
         cnt = 0; mean = 0.0; variance = 0.0; pre_mean = 0; //stdev = INFBOUND;
@@ -417,7 +508,7 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
         /* change the right hand side with the solution */
         chgRHSwSoln(prob[1]->bBar, prob[1]->Cbar, rhs, ocba->incumbX[i]);
 
-        while (ocba->an[i] ) {
+        while (cnt < ocba->an[i] ) {
             /* use the stoc file to generate observations */
             generateOmega(stoc, observ, config.TOLERANCE, &config.EVAL_SEED[0]);
 
@@ -476,7 +567,9 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
                 fflush(stdout);
             }
             if (!(cnt % 10000))
-                printf("\nObs:%d mean:%lf   error: %lf \n 0.90 CI: [%lf , %lf]\n", cnt, mean, 3.92 * stdev / mean,  mean - 1.645 * stdev, mean + 1.645 * stdev);
+                printf("\nObs:%d mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", cnt, mean, 3.92 * stdev / mean,  mean - 1.96 * stdev, mean + 1.96 * stdev);
+            
+    
         }//END while loop
         mean += vXvSparse(ocba->incumbX[i], prob[0]->dBar);
         
@@ -493,14 +586,14 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
         ocba->an[i] = 0;
         
         stdev = sqrt(ocba->var[i] / ocba->n[i]);
-        printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[i], 3.92 * stdev / ocba->mean[i],  ocba->mean[i] - 1.645 * stdev, ocba->mean[i] + 1.645 * stdev);
+        printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[i], 3.92 * stdev / ocba->mean[i],  ocba->mean[i] - 1.96 * stdev, ocba->mean[i] + 1.96 * stdev);
         
         
 
 //        printf("\n\nEvaluation complete. Final evaluation results :: \n");
 //        printf("Upper bound estimate               : %lf\n", mean);
 //        printf("Error in estimation                : %lf\n", 3.92 * stdev / mean);
-//        printf("Confidence interval at 95%%         : [%lf, %lf]\n", mean - 1.645 * stdev, mean + 1.645 * stdev);
+//        printf("Confidence interval at 95%%         : [%lf, %lf]\n", mean - 1.96 * stdev, mean + 1.96 * stdev);
 //        printf("Number of observations             : %d\n", cnt);
 //
 //        if ( soln != NULL ) {
@@ -508,7 +601,7 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
 //            fprintf(soln, "------------------------------------------------------------- Evaluation ----------------------------------------------------------\n");
 //            fprintf(soln, "Upper bound estimate           : %lf\n", mean);
 //            fprintf(soln, "Error in estimation            : %lf\n", 3.92 * stdev / mean);
-//            fprintf(soln, "Confidence interval at 95%%     : [%lf, %lf]\n", mean - 1.645 * stdev, mean + 1.645 * stdev);
+//            fprintf(soln, "Confidence interval at 95%%     : [%lf, %lf]\n", mean - 1.96 * stdev, mean + 1.96 * stdev);
 //            fprintf(soln, "Number of observations         : %d\n", cnt);
 //        }
 

@@ -74,7 +74,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "SUFL_F15_MinF0_3_FO5_D15_S100"
+            argument = "1d_F15_MinF1_10_FO5"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -83,14 +83,14 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = " ./spInput/"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = " ./spInput/model3/"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "./spOutput/model3"
+            argument = " ./spInput/model3/"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "./spOutput/ocba"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
