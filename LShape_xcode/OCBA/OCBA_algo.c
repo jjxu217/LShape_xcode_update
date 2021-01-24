@@ -197,7 +197,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         
         
         fprintf(sFile, "\n print for latex\n");
-        fprintf(sFile, "&%.2f &%.2f &%.2f%% &%.2f &%.2f%% &[%.2f, %.2f], &[%.2f, %.2f] &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, ocba->objLB[ocba->idx], 100*(1- 1/sqrt(ocba->appearance[ocba->idx])), batch->Est - 1.96*std, batch->Est + 1.96*std, ocba->mean[ocba->idx] - 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), ocba->mean[ocba->idx] + 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
+        fprintf(sFile, "&%.2f &%.2f &%.2f%%  &[%.2f, %.2f], &[%.2f, %.2f] &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, batch->Est - 1.645*std, batch->Est + 1.645*std, ocba->mean[ocba->idx] - 1.645 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), ocba->mean[ocba->idx] + 1.645 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
         
 
     }
