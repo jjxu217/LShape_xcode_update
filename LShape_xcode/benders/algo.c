@@ -22,8 +22,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
-	int 	 rep, m, n;
-	FILE 	*sFile, *iFile = NULL;
+	int 	 rep, m, n, j;
+    FILE 	*sFile, *iFile = NULL, *csvFile=NULL;
 	clock_t	tic;
 
 	/* complete necessary initialization for the algorithm */
@@ -32,6 +32,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 
 	printf("Starting Benders decomposition.\n");
 	sFile = openFile(outputDir, "results.dat", "w");
+    csvFile = openFile(outputDir, "sol.csv", "w");
 	if ( config.MASTER_TYPE == PROB_QP )
 		iFile = openFile(outputDir, "incumb.dat", "w");
 	printDecomposeSummary(sFile, probName, tim, prob);
@@ -56,16 +57,16 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 		}
 
 		/* Update omega structure */
-		if ( config.SAA ) {
-			setupSAA(stoc, &config.RUN_SEED[0], &cell->omega->vals, &cell->omega->probs, &cell->omega->cnt, config.TOLERANCE);
-			for ( m = 0; m < cell->omega->cnt; m++ )
-				for ( n = 1; n <= stoc->numOmega; n++ )
-					cell->omega->vals[m][n] -= stoc->mean[n-1];
-		}
+//		if ( config.SAA ) {
+//			setupSAA(stoc, &config.RUN_SEED[0], &cell->omega->vals, &cell->omega->probs, &cell->omega->cnt, config.TOLERANCE);
+//			for ( m = 0; m < cell->omega->cnt; m++ )
+//				for ( n = 1; n <= stoc->numOmega; n++ )
+//					cell->omega->vals[m][n] -= stoc->mean[n-1];
+//		}
 
 		tic = clock();
 		/* Use two-stage algorithm to solve the problem */
-		if ( solveBendersCell(stoc, prob, cell) ) {
+		if ( solveBendersCell(orig, stoc, prob, cell) ) {
 			errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
 			goto TERMINATE;
 		}
@@ -74,7 +75,19 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 		/* Write solution statistics for optimization process */
 		writeStatistic(sFile, iFile, prob, cell);
 		writeStatistic(stdout, NULL, prob, cell);
-
+        
+        /* Write out the solution */
+        for (j = 0; j < prob[0]->num->cols; j++) {
+           fprintf (sFile, "%-16s: ", orig->cname[j]);
+           fprintf (sFile, "%4.6lf\n", cell->incumbX[j+1]);
+        }
+        
+        /* Write out the solution */
+        for (j = 0; j < prob[0]->num->cols; j++) {
+            fprintf(csvFile,"%-16s, %4.6lf,\n", orig->cname[j], cell->incumbX[j + 1]);
+        }
+        printf( "num of cols: %d", prob[0]->num->cols);
+        
 		/* evaluating the optimal solution*/
 		if (config.EVAL_FLAG == 1) {
 			if ( config.MASTER_TYPE == PROB_QP )
@@ -100,7 +113,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	return 1;
 }//END algo()
 
-int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
+int solveBendersCell(oneProblem *orig, stocType *stoc, probType **prob, cellType *cell) {
 	int 	candidCut;
 	clock_t	tic, mainTic;
 
@@ -134,7 +147,7 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 				break;
 
 		/******* 2. Solve the subproblem with candidate solution, form and update the candidate cut *******/
-		if ( (candidCut = formOptCut(prob[1], cell, cell->candidX, FALSE)) < 0 ) {
+		if ( (candidCut = formOptCut(orig, stoc, prob[1], cell, cell->candidX, FALSE)) < 0 ) {
 			errMsg("algorithm", "solveCell", "failed to add candidate cut", 0);
 			return 1;
 		}

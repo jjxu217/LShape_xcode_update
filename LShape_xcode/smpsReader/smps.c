@@ -73,11 +73,11 @@ oneProblem *readCore(string inputDir, string probName) {
 		errMsg("read", "readCore", "failed to read the problem name", 0);
 		return NULL;
 	}
-	if ( !(strncmp(field1, "NAME", 4)) )
-		if( strcmp(probName, field2) ) {
-			errMsg("read", "readCore", "problem name does not match, in NAME section", 0);
-			return NULL;
-		}
+//	if ( !(strncmp(field1, "NAME", 4)) )
+//		if( strcmp(probName, field2) ) {
+//			errMsg("read", "readCore", "problem name does not match, in NAME section", 0);
+//			return NULL;
+//		}
 	fclose (fptr);
 	/* Create LP pointer */
 	if ((createProblem(probName, &lp))) {
@@ -236,11 +236,11 @@ timeType *readTime(string inputDir, string probName, oneProblem *orig) {
 		errMsg("read", "readTime", "failed to read the problem name", 0);
 		return NULL;
 	}
-	if ( !(strncmp(field1, "TIME", 4)) )
-		if( strcmp(probName, field2) ) {
-			errMsg("read", "readTime", "problem name does not match, TIME section", 0);
-			return NULL;
-		}
+//	if ( !(strncmp(field1, "TIME", 4)) )
+//		if( strcmp(probName, field2) ) {
+//			errMsg("read", "readTime", "problem name does not match, TIME section", 0);
+//			return NULL;
+//		}
 
 	/* PERIODS section: collect the time file type */
 	if ( fgets(line, sizeof line, fptr) != NULL )
@@ -338,7 +338,7 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 	string 	*rvRows = NULL, *rvCols = NULL, *fields = NULL;
 	char	probpath[2*BLOCKSIZE], line[BLOCKSIZE], fieldType;
 	FILE	*fptr;
-	int		maxOmegas = 1000, maxVals = 4000, n, numFields, maxFields = 10;
+	int		maxOmegas = 1000, maxVals = 4000, n, numFields, maxFields = 10, maxGroups = 60;
 
 	/* Locate the problem sto file */
 	sprintf(probpath, "%s%s/%s.sto", inputDir, probName, probName);
@@ -368,10 +368,10 @@ stocType *readStoc(string inputDir, string probName, oneProblem *orig, timeType 
 		errMsg("allocation", "readStoc", "stoc->row", 0);
 	if ( !(stoc->mean = (vector) arr_alloc(maxOmegas, double)) )
 		errMsg("allocation", "readStoc", "stoc->mean", 0);
-	if ( !(stoc->groupBeg = (intvec) arr_alloc(maxFields, int)) )
-		errMsg("allocation", "readStoc", "stoc->groupBeg", 0);
-	if ( !(stoc->numPerGroup = (intvec) arr_alloc(maxFields, int)) )
-		errMsg("allocation", "readStoc", "stoc->numPerGroup", 0);
+    if ( !(stoc->groupBeg = (intvec) arr_alloc(maxGroups, int)) )
+        errMsg("allocation", "readStoc", "stoc->groupBeg", 0);
+    if ( !(stoc->numPerGroup = (intvec) arr_alloc(maxGroups, int)) )
+        errMsg("allocation", "readStoc", "stoc->numPerGroup", 0);
 	stoc->numOmega = 0;
 	stoc->numGroups = 0;
 	stoc->sim = FALSE;
@@ -841,6 +841,7 @@ int readOneBlock(FILE *fptr, string *fields, oneProblem *orig, int maxOmegas, in
 				/* increment the number of random variables in the group */
 				stoc->numPerGroup[stoc->numGroups-1]++;
 				numRV++;
+                //printf("%d", numRV);
 			}
 			else {
 				/* locate the random variable in the list and record realization */
@@ -853,6 +854,7 @@ int readOneBlock(FILE *fptr, string *fields, oneProblem *orig, int maxOmegas, in
 					n++;
 				}
 				if ( n == numRV )
+                    
 					errMsg("read", "readOneBlock", "unknown block random variable name", 1);
 
 				n += stoc->groupBeg[stoc->numGroups-1];

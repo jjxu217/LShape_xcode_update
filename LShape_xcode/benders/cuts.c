@@ -17,101 +17,43 @@ extern configType config;
 extern dualsType *duals;
 #endif
 
-int formOptCut(probType *prob, cellType *cell, vector Xvect, BOOL isIncumb) {
+int formOptCut(oneProblem *orig, stocType *stoc, probType *prob, cellType *cell, vector Xvect, BOOL isIncumb) {
 	oneCut 	*cut;
-	vector 	piS, beta, temp, piCBar;
-	sparseMatrix COmega;
-	sparseVector bOmega;
-	double	mubBar, alpha;
-	int    	cutIdx, obs, c;
-	clock_t	tic;
-
-	if ( !(piS = (vector) arr_alloc(prob->num->rows+1, double)) )
-		errMsg("allocation", "stochasticUpdates", "piS", 0);
-	bOmega.cnt = prob->num->rvbOmCnt; bOmega.col = prob->coord->rvbOmRows;
-	COmega.cnt = prob->num->rvCOmCnt; COmega.col = prob->coord->rvCOmCols; COmega.row = prob->coord->rvCOmRows;
+	int    	cutIdx, obs,  t, i, idx;
+    char *str_obs= malloc(2);
+    char *u= malloc(6);
 
 	/* Only a fraction (at least one) of subproblems are solved in any iteration. */
-	for ( obs = 0; obs < cell->omega->cnt; obs++ ) {
-		/* Construct the subproblem with a given observation and master solution, solve the subproblem, and obtain dual information. */
-		if ( solveSubprob(prob, cell->subprob, Xvect, cell->omega->vals[obs], &cell->spFeasFlag, &cell->time->subprobIter, piS, &mubBar) ) {
-			errMsg("algorithm", "solveAgents", "failed to solve the subproblem", 0);
-			goto TERMINATE;;
-		}
-		cell->LPcnt++;
+    cut = newCut(prob->num->prevCols, cell->k);
 
-		if ( ! cell->spFeasFlag ) {
-			printf("Subproblem is infeasible, adding feasibility cut to the master.\n");
-
-			cut->alpha = vXvSparse(piS, prob->bBar) + mubBar + vXvSparse(piS, &bOmega);
-
-			beta = vxMSparse(piS, prob->Cbar, prob->num->prevCols);
-			temp = vxMSparse(piS, &COmega, prob->num->prevCols);
-			piCBar = reduceVector(temp, prob->coord->rvCOmCols, prob->num->rvCOmCnt);
-			for (c = 1; c <= prob->num->rvCOmCnt; c++)
-				beta[prob->coord->rvCOmCols[c]] += temp[c];
-
-			for (c = 1; c <= prob->num->prevCols; c++)
-				cut->beta[c] = beta[c];
-
-			mem_free(beta);
-			break;
-		}
-
-#if defined(SAVE_DUALS)
-		c = 0;
-		while ( c < duals->cnt ) {
-			if ( equalVector(duals->vals[c], piS, prob->num->rows, config.TOLERANCE) )
-				break;
-			c++;
-		}
-		if ( c == duals->cnt ) {
-			duals->vals[duals->cnt] = duplicVector(piS, prob->num->rows);
-			duals->iter[duals->cnt] = cell->k;
-			duals->obs[duals->cnt++] = obs;
-		}
-#endif
-
-		/* allocate memory to hold a new cut */
-		if ( config.MULTICUT || obs == 0)
-			cut = newCut(prob->num->prevCols, cell->k);
-
-		/* Compute the cut coefficients */
-		bOmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[0];
-		COmega.val = cell->omega->vals[obs] + prob->coord->rvOffset[1];
-
-		alpha = vXvSparse(piS, prob->bBar) + mubBar + vXvSparse(piS, &bOmega);
-
-		beta = vxMSparse(piS, prob->Cbar, prob->num->prevCols);
-		temp = vxMSparse(piS, &COmega, prob->num->prevCols);
-		piCBar = reduceVector(temp, prob->coord->rvCOmCols, prob->num->rvCOmCnt);
-		for (c = 1; c <= prob->num->rvCOmCnt; c++)
-			beta[prob->coord->rvCOmCols[c]] += temp[c];
-		mem_free(temp); mem_free(piCBar);
-
-#if defined(STOCH_CHECK)
-		printf("Objective estimate computed as cut height = %lf\n", alpha - vXv(beta, Xvect, NULL, prob->num->prevCols));
-#endif
-		if ( config.MULTICUT ) {
-			cut->alpha = alpha;
-			for (c = 1; c <= prob->num->prevCols; c++)
-				cut->beta[c] = beta[c];
-			cut->beta[0] = 1.0;
-			printf("Multi-cut implementation not ready yet.\n");
-		}
-		else {
-			cut->alpha += cell->omega->probs[obs]*alpha;
-			for (c = 1; c <= prob->num->prevCols; c++)
-				cut->beta[c] += cell->omega->probs[obs]*beta[c];
-		}
-		mem_free(beta);
-	}
-
+    for (obs=0; obs < 51; obs++){
+        sprintf(str_obs, "%d", obs);
+        u[0] = '\0';
+        strcat(u, "u(");
+        strcat(u, str_obs);
+        strcat(u, ")");
+        for (t=0; t < 7; t++){
+            for (i=0; i < 3; i++){
+                for (idx = 1; idx <= prob->num->prevCols; idx++)
+                    if (!strcmp(orig->cname[idx-1], u))
+                        break;
+                if (stoc->vals[stoc->groupBeg[obs]+t][i] > Xvect[idx]){
+                    cut->alpha += 1.0 / 3 * stoc->vals[stoc->groupBeg[obs]+t][i];
+                    cut->beta[idx] += 1.0 / 3;
+                    }
+                }
+            }
+        }
+    
 	cut->beta[0] = 1.0;
 	if ( config.MASTER_TYPE == PROB_QP )
 		cut->alphaIncumb = cut->alpha - vXv(cut->beta, cell->incumbX, NULL, prob->num->prevCols);
 	else
 		cut->alphaIncumb = cut->alpha;
+    
+#if defined(STOCH_CHECK)
+        printf("Objective estimate computed as cut height = %lf\n", cut->alpha - vXv(cut->beta, Xvect, NULL, prob->num->prevCols));
+#endif
 
 	/* (c) add cut to the master problem  */
 	if ( (cutIdx = addCut2Master(cell, cell->cuts, cut, prob->num->prevCols)) < 0 ) {
@@ -119,9 +61,10 @@ int formOptCut(probType *prob, cellType *cell, vector Xvect, BOOL isIncumb) {
 		goto TERMINATE;
 	}
 
-	mem_free(piS);
+    mem_free(u);
+    mem_free(str_obs);
 	return cutIdx;
-	TERMINATE: 	mem_free(piS); return -1;
+	TERMINATE: 	return -1;
 }//END formCut()
 
 /* This function loops through a set of cuts and find the highest cut height at the specified position x */
@@ -226,6 +169,7 @@ int dropCut(oneProblem *master, cutsType *cuts, int cutIdx, int *iCutIdx) {
 
 oneCut *newCut(int numX, int currentIter) {
 	oneCut *cut;
+    int i;
 
 	cut = (oneCut *) mem_malloc (sizeof(oneCut));
 	cut->isIncumb = FALSE; 								/* new cut is by default not an incumbent */
@@ -234,6 +178,9 @@ oneCut *newCut(int numX, int currentIter) {
 	cut->ck = currentIter;
 	if (!(cut->beta = arr_alloc(numX + 1, double)))
 		errMsg("allocation", "new_cut", "beta", 0);
+    for (i=0; i < numX + 1; i++){
+        cut->beta[i] = 0;
+    }
 	cut->alpha = 0.0;
 	cut->name = (string) arr_alloc(NAMESIZE, char);
 

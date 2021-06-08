@@ -132,7 +132,7 @@ void freeConfig();
 
 /* algo.c */
 int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName);
-int solveBendersCell(stocType *stoc, probType **prob, cellType *cell);
+int solveBendersCell(oneProblem *orig, stocType *stoc, probType **prob, cellType *cell);
 BOOL optimal(cellType *cell);
 void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell);
 
@@ -154,7 +154,7 @@ int changeQPbds(LPptr lp, int numCols, vector bdl, vector bdu, vector xk);
 oneProblem *newMaster(oneProblem *orig, double lb);
 
 /* cuts.c */
-int formOptCut(probType *prob, cellType *cell, vector Xvect, BOOL isIncumb);
+int formOptCut(oneProblem *orig, stocType *stoc, probType *prob, cellType *cell, vector Xvect, BOOL isIncumb);
 double maxCutHeight(cutsType *cuts, vector xk, int betaLen);
 double cutHeight(oneCut *cut, vector xk, int betaLen);
 int reduceCuts(oneProblem *master, cutsType *cuts, vector vectX, vector piM, int betaLen, int *iCutIdx);

@@ -292,7 +292,8 @@ int setupSAA(stocType *stoc, long long *seed, vector **simObservVals, vector *pr
 	if ( strstr(stoc->type, "BLOCKS_DISCRETE") != NULL ) {
 		for (obs = 0; obs < (*numSamples); obs++ ) {
 			(*simObservVals)[obs] = (vector) arr_alloc(stoc->numOmega+1, double);
-			generateBlocks(stoc, (*simObservVals)[obs]+1, 0, seed);
+			//generateBlocks(stoc, (*simObservVals)[obs]+1, 0, seed);
+            generateOmega(stoc, (*simObservVals)[obs]+1, 0, seed);
 			(*probs)[obs] = 1.0/(double) (*numSamples);
 		}
 	}
