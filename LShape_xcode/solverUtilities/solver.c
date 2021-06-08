@@ -236,6 +236,17 @@ int changeQPSolverType(int method) {
 	return 0;
 }//END changeQPSolverType()
 
+int changeMILPSolverType(int method) {
+    int status = 0;
+
+    status = setIntParam(PARAM_QPMETHOD, method);
+    if (status) {
+        solverErrmsg(status);
+        return 1;
+    }
+    return 0;
+}//END changeMILPSolverType()
+
 
 int setIntParam(int paramname, int paramvalue){
 
@@ -742,16 +753,6 @@ int freeProblem(LPptr lp) {
 	return status;
 }//END freeProb()
 
-int changeMILPSolverType(int method) {
-    int status = 0;
-    
-    status = setIntParam(PARAM_MIPMETHOD, method);
-    if (status) {
-        solverErrmsg(status);
-        return 1;
-    }
-    return 0;
-}//END changeMIPSolverType()
 
 int Newcols(LPptr lp, int nzcnt, vector obj, vector lb,
             vector ub, string xctype, string* colname){

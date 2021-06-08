@@ -98,6 +98,7 @@ int setIntParam(int paramname, int paramvalue);
 void solverErrmsg(int status);
 int changeLPSolverType(int method);
 int changeQPSolverType(int method);
+int changeMILPSolverType(int method);
 
 int getProbName(LPptr lp, string probName, int len);
 int getObjSen(LPptr lp);

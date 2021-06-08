@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E75E76322F0B2DE0036E024 /* compromise.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E75E76222F0B2DE0036E024 /* compromise.c */; };
 		7EBEFA782241F28200250B65 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA772241F28200250B65 /* CoreFoundation.framework */; };
 		7EBEFA7A2241F28C00250B65 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA792241F28C00250B65 /* IOKit.framework */; };
 		7EBEFA7C2241F2B700250B65 /* libconcert.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EBEFA7B2241F2B700250B65 /* libconcert.a */; };
@@ -19,7 +18,6 @@
 		7EBEFBE42241FA9900250B65 /* rvgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA8D2241F44E00250B65 /* rvgen.c */; };
 		7EBEFBE52241FA9900250B65 /* smps.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA8E2241F44E00250B65 /* smps.c */; };
 		7EBEFBE62241FA9900250B65 /* prob.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA8F2241F44E00250B65 /* prob.h */; };
-		7EBEFBE72241FA9900250B65 /* utils.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA842241F44E00250B65 /* utils.h */; };
 		7EBEFBE82241FA9900250B65 /* utility.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA852241F44E00250B65 /* utility.c */; };
 		7EBEFBE92241FA9900250B65 /* solver.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA862241F44E00250B65 /* solver.h */; };
 		7EBEFBEB2241FA9900250B65 /* solver.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA882241F44E00250B65 /* solver.c */; };
@@ -31,6 +29,8 @@
 		7EBEFBF22241FDB900250B65 /* cuts.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA962241F44E00250B65 /* cuts.c */; };
 		7EBEFBF32241FDB900250B65 /* benders.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA972241F44E00250B65 /* benders.h */; };
 		7EDEDA56242042AC00866FAA /* OCBA_algo.c in Sources */ = {isa = PBXBuildFile; fileRef = 7EDEDA55242042AC00866FAA /* OCBA_algo.c */; };
+		7EE5753C266FF87E00F27DF1 /* utils.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EBEFA842241F44E00250B65 /* utils.h */; };
+		7EE5753E266FFDDD00F27DF1 /* compromise.c in Sources */ = {isa = PBXBuildFile; fileRef = 7E75E76222F0B2DE0036E024 /* compromise.c */; };
 		7EE600B8246781EF003131F9 /* OCBA_algo.h in Sources */ = {isa = PBXBuildFile; fileRef = 7EAC4015243C474B009CD811 /* OCBA_algo.h */; };
 /* End PBXBuildFile section */
 
@@ -1094,6 +1094,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EE5753E266FFDDD00F27DF1 /* compromise.c in Sources */,
+				7EE5753C266FF87E00F27DF1 /* utils.h in Sources */,
 				7EE600B8246781EF003131F9 /* OCBA_algo.h in Sources */,
 				7EBEFBED2241FDB900250B65 /* benders.c in Sources */,
 				7EBEFBEE2241FDB900250B65 /* master.c in Sources */,
@@ -1107,8 +1109,6 @@
 				7EBEFBE42241FA9900250B65 /* rvgen.c in Sources */,
 				7EBEFBE52241FA9900250B65 /* smps.c in Sources */,
 				7EBEFBE62241FA9900250B65 /* prob.h in Sources */,
-				7E75E76322F0B2DE0036E024 /* compromise.c in Sources */,
-				7EBEFBE72241FA9900250B65 /* utils.h in Sources */,
 				7EDEDA56242042AC00866FAA /* OCBA_algo.c in Sources */,
 				7EBEFBE82241FA9900250B65 /* utility.c in Sources */,
 				7EBEFBE92241FA9900250B65 /* solver.h in Sources */,
@@ -1236,6 +1236,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JBP2638P2L;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GCC_NO_COMMON_BLOCKS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1265,6 +1267,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JBP2638P2L;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GCC_NO_COMMON_BLOCKS = NO;
 				HEADER_SEARCH_PATHS = (
 					/Applications/CPLEX_Studio128/cplex/include,

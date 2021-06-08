@@ -213,6 +213,4 @@ batchSummary *newBatchSummary(probType *prob, int numBatch);
 void freeBatchType(batchSummary *batch);
 
 BOOL InConvexHull(batchSummary *batch, int col);
-double LowerBoundVariance(batchSummary *batch);
-
 #endif /* BENDERS_H_ */

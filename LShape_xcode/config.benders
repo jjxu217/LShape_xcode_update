@@ -115,7 +115,7 @@ MULTIPLE_REP 1
 SAA 1
 
 // Number of observations to be used to set the sample average approximation
-MAX_OBS 300
+MAX_OBS 30
 
 // standard deviation tolerence for the lower bound estimation
 std_tol 40

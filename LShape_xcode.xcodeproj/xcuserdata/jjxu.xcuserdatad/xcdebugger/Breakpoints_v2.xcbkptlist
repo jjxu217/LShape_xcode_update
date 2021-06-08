@@ -100,8 +100,8 @@
             timestampString = "587956038.690323"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "402"
-            endingLineNumber = "402"
+            startingLineNumber = "413"
+            endingLineNumber = "413"
             landmarkName = "getNumInt(lp)"
             landmarkType = "9">
          </BreakpointContent>
@@ -154,23 +154,6 @@
             startingLineNumber = "180"
             endingLineNumber = "180"
             landmarkName = "algo(orig, tim, stoc, probName)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F4045B16-9FA4-4FFE-9E38-94731A67ECDC"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LShape_xcode/benders/master.c"
-            timestampString = "586742206.5511431"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "solveMaster(num, dBar, cell)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -634,7 +617,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "3BEFC0E6-D26F-4212-A8A7-FB27A86E17D4"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/benders/compromise.c"
@@ -714,7 +697,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2EFD383E-47EC-4A51-B2ED-010224D16C82"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/smpsReader/prob.c"
@@ -736,8 +719,8 @@
             filePath = "LShape_xcode/OCBA/OCBA_algo.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
             landmarkName = "freeOCBA(ocba, numBatch)"
             landmarkType = "9">
          </BreakpointContent>

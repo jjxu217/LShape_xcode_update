@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	mem_free(observ);
 
 	/* setup mean value problem which will act as reference for all future computations */
-	meanSol = meanProblem(orig, stoc);
+	meanSol = meanProblem(orig, stoc, tim->col[1] - tim->col[0]);
 	if ( meanSol == NULL ) {
 		errMsg("setup", "setupAlgo", "failed to setup and solve mean value problem", 0);
 		return 1;

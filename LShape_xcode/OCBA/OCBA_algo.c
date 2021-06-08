@@ -23,13 +23,13 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 	probType **prob = NULL;
 	cellType *cell = NULL;
 	vector 	 meanSol;
-    double   std=0, ocba_time=0, naive_time=0, stdev=0, pr, temp;
+    double   lb_mean=0, lb_std=0, ocba_time=0, naive_time=0, stdev=0, pr, temp;
     batchSummary *batch = NULL;
 	int 	 rep, m, n, out_idx=0;
 	FILE 	*sFile, *iFile = NULL;
     char results_name[BLOCKSIZE];
     char incumb_name[BLOCKSIZE];
-	clock_t	tic;
+	clock_t	tic, tic_time;
     
     BOOL distinct;
     double   inverse_appearance[config.NUM_REPS];
@@ -123,46 +123,52 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
                 ocba->objLB[i] = (ocba->appearance[i] - 1.0) / ocba->appearance[i] * temp + cell->candidEst / ocba->appearance[i];
             }
         }
-	}
+	}//end all replciation run
     
     if ( config.MULTIPLE_REP ) {
         
-        if ( solveCompromise(prob[0], batch)) {
-            errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
-            goto TERMINATE;
-        }
+//        if ( solveCompromise(prob[0], batch)) {
+//            errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
+//            goto TERMINATE;
+//        }
         
         for (i = 0; i < ocba->cnt; i++)
             inverse_appearance[i] = 1.0 / ocba->appearance[i];
         
         /* Solve the ocba problem. */
-        tic = clock();
+        
         
         ocba->idx = solveOCBA(ocba->objLB, inverse_appearance, ocba->cnt, ocba->n, Delta, ocba->an);
+        
+        tic = clock();
         eval_all(sFile, stoc, prob, cell, ocba);
+        tic_time = clock() - tic;
         
         stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
         while(3.92 * stdev > config.EVAL_ERROR * DBL_ABS(ocba->mean[ocba->idx]) || ocba->n[ocba->idx] < config.EVAL_MIN_ITER  ){
             ocba->idx = solveOCBA(ocba->mean, ocba->var, ocba->cnt, ocba->n, Delta, ocba->an);
+            
+            tic = clock();
             eval_all(sFile, stoc, prob, cell, ocba);
+            tic_time += clock() - tic;
         }
         
-        ocba_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
+        ocba_time = ((double) tic_time) / CLOCKS_PER_SEC;
         batch->time->repTime += ocba_time;
         
         tic = clock();
         for (i = 0; i < ocba->cnt; i++){
-            for(j = 0; j < ocba->appearance[i]; j++)
-                evaluate(sFile, stoc, prob, cell, ocba->incumbX[i]);
+//
+            evaluate(sFile, stoc, prob, cell, ocba->incumbX[i]);
+            printVectorInSparse(ocba->incumbX[i], prob[0]->num->cols, sFile);
         }
         naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
         
-        fprintf(sFile, "\n====================================================================================================================================\n");
-        fprintf(sFile, "\n----------------------------------------- Final solution --------------------------------------\n\n");
+
         fprintf(sFile, "\n====================================================================================================================================\n");
         fprintf(sFile, "\n----------------------------------------- Final solution --------------------------------------\n\n");
         /* Evaluate the compromise solution */
-        fprintf(sFile, "Incumbent solution, non-zero position: ");
+        fprintf(sFile, "OCBA solution, non-zero position: ");
         printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, sFile);
         //evaluate(sFile, stoc, prob, cell, ocba->incumbX[ocba->idx]);
         
@@ -172,9 +178,10 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         fprintf(sFile, "Total time to solve master         : %f\n", batch->time->masterAccumTime);
         fprintf(sFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);
         
-        fprintf(sFile, "Lower bound estimate               : %f\n", batch->Est);
-        std = LowerBoundVariance(batch);
-        fprintf(sFile, "Lower bound estimation std               : %f\n", std);
+        
+        LowerBoundVariance(batch, &lb_mean, &lb_std);
+        fprintf(sFile, "Lower bound estimate               : %f\n", lb_mean);
+        fprintf(sFile, "Lower bound estimation std               : %f\n", lb_std);
         
 //        fprintf(sFile, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
 //        fprintf(stdout, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
@@ -182,7 +189,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //        printVectorInSparse(batch->avgX, prob[0]->num->cols, sFile);
 //        evaluate(sFile, stoc, prob, cell, batch->avgX);
         
-        fprintf(iFile, "\n----------------------------------------- Compromise solution(1-indexed) --------------------------------------\n\n");
+        fprintf(iFile, "\n----------------------------------------- Final solution by OCBA method(1-indexed) --------------------------------------\n\n");
         printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, iFile);
         
         /*calculate the   Approximate  Probability  of  Correct  Selection(APCS),
@@ -197,7 +204,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         
         
         fprintf(sFile, "\n print for latex\n");
-        fprintf(sFile, "&%.2f &%.2f &%.2f%%  &[%.2f, %.2f], &[%.2f, %.2f] &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, batch->Est - 1.645*std, batch->Est + 1.645*std, ocba->mean[ocba->idx] - 1.645 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), ocba->mean[ocba->idx] + 1.645 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
+        fprintf(sFile, "&%.2f &%.2f &%.2f%%  &%.2f (\\pm%.2f), &%.2f (\\pm%.2f) &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, lb_mean, 1.96 * lb_std, ocba->mean[ocba->idx], 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
         
 
     }
@@ -609,7 +616,7 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
     mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);
     return 0;
 
-}//END evaluate()
+}//END eval_all()
 
 int best(vector t_s_mean, int nd){
     /*This function determines the best design based on current simulation results
@@ -637,3 +644,4 @@ int second_best(vector t_s_mean, int nd, int b){
     }
     return second_index;
 }
+

@@ -570,19 +570,16 @@ BOOL InConvexHull(batchSummary *batch, int col){
     return FALSE;
 }
 
-double LowerBoundVariance(batchSummary *batch){
+void LowerBoundVariance(batchSummary *batch, double *mean, double *std){
     int cnt;
-    double mean, temp, variance=0, stdev=0;
+    double temp, variance=0;
     
-    mean = batch->objLB[0] ;
+    *mean = batch->objLB[0] ;
     for(cnt = 1; cnt < batch->cnt; cnt++){
-        temp = mean;
-        mean = mean + (batch->objLB[cnt] - mean) / (double) (cnt + 1);
-        variance  = (1 - 1 / (double) cnt) * variance
-        + (cnt + 1) * (mean - temp) * (mean - temp);
-        stdev = sqrt(variance/ (double) cnt);
-      
+        temp = *mean;
+        *mean = *mean + (batch->objLB[cnt] - *mean) / (double) (cnt + 1);
+        variance  = cnt / (cnt + 1) * variance
+        + cnt * (*mean - temp) * (*mean - temp);
     }
-    
-    return stdev;
+    *std = sqrt(variance/ (double) cnt);
 }

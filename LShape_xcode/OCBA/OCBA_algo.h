@@ -237,6 +237,5 @@ int second_best(vector t_s_mean, int nd, int b);
 int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba);
 
 BOOL InConvexHull(batchSummary *batch, int col);
-double LowerBoundVariance(batchSummary *batch);
-
+void LowerBoundVariance(batchSummary *batch, double *mean, double *std);
 #endif /* BENDERS_H_ */
