@@ -45,7 +45,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "/Users/jjxu/Projects/XcodeProjects/LShape_xcode_update/LShape_xcode"
+      customWorkingDirectory = "/Users/jjxu/Projects/XcodeProjects/OCBA/OCBA/LShape_xcode"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -74,7 +74,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "1z_F45_MinF1_30_FO15"
+            argument = "1d_F45_MinF1_30_FO15"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -90,7 +90,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "./spOutput/model_z"
+            argument = "./spOutput/model_d"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

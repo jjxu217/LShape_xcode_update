@@ -517,23 +517,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B4A2AB51-732A-49F1-A047-070D1EDFE76B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LShape_xcode/benders/compromise.c"
-            timestampString = "589699458.4730819"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "321"
-            endingLineNumber = "321"
-            landmarkName = "solveCompromise(prob, batch)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "566532CB-2BF3-4D2F-94E3-455AA53BA1F5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -578,22 +561,6 @@
             startingLineNumber = "154"
             endingLineNumber = "154"
             landmarkName = "algo(orig, tim, stoc, probName)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "782BC49D-DF58-4947-98E1-7A72F1F7A9B8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LShape_xcode/benders/compromise.c"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "558"
-            endingLineNumber = "558"
-            landmarkName = "InConvexHull(batch, col)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -712,16 +679,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EDF0617C-1638-4D90-8BFE-615D42C229DC"
+            uuid = "B67697B6-E775-458D-8D40-50BA082E496D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/benders/benders.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "readConfig()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E44C95C6-62F6-43D8-A061-30D848482470"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LShape_xcode/OCBA/OCBA_algo.c"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "388"
-            endingLineNumber = "388"
-            landmarkName = "freeOCBA(ocba, numBatch)"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "algo(orig, tim, stoc, probName)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "39950E33-3F02-4C21-9CE7-236C63673C47"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LShape_xcode/OCBA/OCBA_algo.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "621"
+            endingLineNumber = "621"
+            landmarkName = "eval_all(soln, stoc, prob, cell, ocba)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

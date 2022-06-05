@@ -203,7 +203,7 @@ void freeOmegaType(omegaType *omega, BOOL partial);
 
 /* evaluate.c */
 int evaluate(FILE *soln, stocType *stoc, probType **prob, cellType *cell, vector Xvect);
-
+int evaluate_samples(FILE *soln, stocType *stoc, probType **prob, cellType *cell, vector Xvect);
 /* compromise.c */
 int buildCompromise(probType *prob, cellType *cell, batchSummary *batch);
 int solveCompromise(probType *prob, batchSummary *batch);

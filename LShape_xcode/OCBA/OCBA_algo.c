@@ -11,7 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "OCBA_algo.h"
-
+//#define DEBUG
 extern string outputDir;
 extern configType config;
 
@@ -20,86 +20,89 @@ dualsType *duals = NULL;
 #endif
 
 int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
-	probType **prob = NULL;
-	cellType *cell = NULL;
-	vector 	 meanSol;
+    probType **prob = NULL;
+    cellType *cell = NULL;
+    vector      meanSol;
     double   lb_mean=0, lb_std=0, ocba_time=0, naive_time=0, stdev=0, pr, temp;
     batchSummary *batch = NULL;
-	int 	 rep, m, n, out_idx=0;
-	FILE 	*sFile, *iFile = NULL;
+    int      rep, m, n, out_idx=0;
+    FILE     *sFile, *iFile = NULL, *fFile;
     char results_name[BLOCKSIZE];
     char incumb_name[BLOCKSIZE];
-	clock_t	tic, tic_time;
+    clock_t    tic, tic_time;
     
     BOOL distinct;
     double   inverse_appearance[config.NUM_REPS];
-    int Delta = 1000;
-    int     i, j=0;
+    int Delta = 500;
+    int     i, early_stop=0, bat=0;
+    int ocba_samples=0, naive_samples=0;
     ocbaSummary *ocba = NULL;
     
     
-	/* complete necessary initialization for the algorithm */
-	if ( setupAlgo(orig, stoc, tim, &prob, &cell, &batch, &meanSol) )
-		goto TERMINATE;
+    /* complete necessary initialization for the algorithm */
+    if ( setupAlgo(orig, stoc, tim, &prob, &cell, &batch, &meanSol) )
+        goto TERMINATE;
 
     if ( config.NUM_REPS > 1 )
         ocba  = newOcbaSummary(prob[0]->sp->mac, config.NUM_REPS);
         
-	printf("Starting Benders decomposition.\n");
-    sprintf(results_name, "results%d.txt", out_idx);
-	sFile = openFile(outputDir, results_name, "w");
+    printf("Starting Benders decomposition.\n");
+    sprintf(results_name, "rep_results%d.txt", out_idx);
+    sFile = openFile(outputDir, results_name, "w");
+    sprintf(results_name, "final_results%d.txt", out_idx);
+    fFile = openFile(outputDir, results_name, "w");
 //    if ( config.MASTER_TYPE == PROB_QP )
     sprintf(incumb_name, "incumb%d.txt", out_idx);
     iFile = openFile(outputDir, incumb_name, "w");
-	printDecomposeSummary(sFile, probName, tim, prob);
-	printDecomposeSummary(stdout, probName, tim, prob);
+    printDecomposeSummary(sFile, probName, tim, prob);
+    printDecomposeSummary(stdout, probName, tim, prob);
     fprintf(sFile, "\n Number of observations in each replications: %d", config.MAX_OBS);
 
-	for ( rep = 0; rep < config.NUM_REPS; rep++ ) {
-		fprintf(sFile, "\n====================================================================================================================================\n");
-		fprintf(sFile, "Replication-%d\n", rep+1);
-		fprintf(stdout, "\n====================================================================================================================================\n");
-		fprintf(stdout, "Replication-%d\n", rep+1);
+    for ( rep = 0; rep < config.NUM_REPS; rep++ ) {
+        fprintf(sFile, "\n====================================================================================================================================\n");
+        fprintf(sFile, "Replication-%d\n", rep+1);
+        fprintf(stdout, "\n====================================================================================================================================\n");
+        fprintf(stdout, "Replication-%d\n", rep+1);
 
-		/* setup the seed to be used in the current iteration */
-		config.RUN_SEED[0] = config.RUN_SEED[rep+1];
-		config.EVAL_SEED[0] = config.EVAL_SEED[rep+1];
+        /* setup the seed to be used in the current iteration */
+        config.RUN_SEED[0] = config.RUN_SEED[rep+1];
+        config.EVAL_SEED[0] = config.EVAL_SEED[rep+1];
 
-		if ( rep != 0 ) {
-			/* clean up the cell for the next replication */
-			if ( cleanCellType(cell, prob[0], meanSol) ) {
-				errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
-				goto TERMINATE;
-			}
-		}
+        if ( rep != 0 ) {
+            /* clean up the cell for the next replication */
+            if ( cleanCellType(cell, prob[0], meanSol) ) {
+                errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
+                goto TERMINATE;
+            }
+        }
 
-		/* Update omega structure */
-		if ( config.SAA ) {
-			setupSAA(stoc, &config.RUN_SEED[0], &cell->omega->vals, &cell->omega->probs, &cell->omega->cnt, config.TOLERANCE);
-			for ( m = 0; m < cell->omega->cnt; m++ )
-				for ( n = 1; n <= stoc->numOmega; n++ )
-					cell->omega->vals[m][n] -= stoc->mean[n-1];
-		}
+        /* Update omega structure */
+        if ( config.SAA ) {
+            setupSAA(stoc, &config.RUN_SEED[0], &cell->omega->vals, &cell->omega->probs, &cell->omega->cnt, config.TOLERANCE);
+            for ( m = 0; m < cell->omega->cnt; m++ )
+                for ( n = 1; n <= stoc->numOmega; n++ )
+                    cell->omega->vals[m][n] -= stoc->mean[n-1];
+        }
         
-		tic = clock();
-		/* Use two-stage algorithm to solve the problem */
-		if ( solveBendersCell(stoc, prob, cell) ) {
-			errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
-			goto TERMINATE;
-		}
-		cell->time->repTime = ((double) (clock() - tic))/CLOCKS_PER_SEC;
+        tic = clock();
+        /* Use two-stage algorithm to solve the problem */
+        if ( solveBendersCell(stoc, prob, cell) ) {
+            errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
+            goto TERMINATE;
+        }
+        cell->time->repTime = ((double) (clock() - tic))/CLOCKS_PER_SEC;
 
-		/* Write solution statistics for optimization process */
-		writeStatistic(sFile, iFile, prob, cell);
-		writeStatistic(stdout, NULL, prob, cell);
+        /* Write solution statistics for optimization process */
+        writeStatistic(sFile, iFile, prob, cell);
+        writeStatistic(stdout, NULL, prob, cell);
 
-		/* evaluating the optimal solution*/
-//		if (config.EVAL_FLAG == 1) {
-//			if ( config.MASTER_TYPE == PROB_QP )
-//				evaluate(sFile, stoc, prob, cell, cell->incumbX);
-//			else
-//				evaluate(sFile, stoc, prob, cell, cell->candidX);
-//		}
+        /* evaluating the optimal solution*/
+//        if (config.EVAL_FLAG == 1) {
+//            if ( config.MASTER_TYPE == PROB_QP )
+//                evaluate(sFile, stoc, prob, cell, cell->incumbX);
+//            else
+//                evaluate(sFile, stoc, prob, cell, cell->candidX);
+//        }
         /* check is the new solution is distict or not. */
         if ( config.MULTIPLE_REP ) {
             buildCompromise(prob[0], cell, batch);
@@ -123,7 +126,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
                 ocba->objLB[i] = (ocba->appearance[i] - 1.0) / ocba->appearance[i] * temp + cell->candidEst / ocba->appearance[i];
             }
         }
-	}//end all replciation run
+    }//end all replciation run
     
     if ( config.MULTIPLE_REP ) {
         
@@ -135,59 +138,99 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         for (i = 0; i < ocba->cnt; i++)
             inverse_appearance[i] = 1.0 / ocba->appearance[i];
         
-        /* Solve the ocba problem. */
-        
-        
-        ocba->idx = solveOCBA(ocba->objLB, inverse_appearance, ocba->cnt, ocba->n, Delta, ocba->an);
-        
         tic = clock();
-        eval_all(sFile, stoc, prob, cell, ocba);
-        tic_time = clock() - tic;
         
-        stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
-        while(3.92 * stdev > config.EVAL_ERROR * DBL_ABS(ocba->mean[ocba->idx]) || ocba->n[ocba->idx] < config.EVAL_MIN_ITER  ){
-            ocba->idx = solveOCBA(ocba->mean, ocba->var, ocba->cnt, ocba->n, Delta, ocba->an);
+        //if only one solution
+        if (ocba->cnt <= 1){
+            naive_samples += evaluate_samples(fFile, stoc, prob, cell, ocba->incumbX[0]);
+            ocba_samples = naive_samples;
+            naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
+            ocba_time = naive_time;
+            
+            ocba->idx = 0;
+            
+        }
+        else{
+            /*1. Naive SAA evaluate all solutions */
+            for (i = 0; i < ocba->cnt; i++){
+                naive_samples += evaluate_samples(fFile, stoc, prob, cell, ocba->incumbX[i]);
+                printVectorInSparse(ocba->incumbX[i], prob[0]->num->cols, fFile);
+            }
+            naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
+            
+            /* 2. Solve the ocba problem. */
+            ocba->idx = solveOCBA(ocba->objLB, inverse_appearance, ocba->cnt, ocba->n, Delta, ocba->an);
             
             tic = clock();
-            eval_all(sFile, stoc, prob, cell, ocba);
-            tic_time += clock() - tic;
+            early_stop = eval_all(fFile, stoc, prob, cell, ocba);
+            tic_time = clock() - tic;
+            
+            if (early_stop){
+                ocba_samples += early_stop;
+            }
+            else{
+                ocba_samples += Delta;
+            }
+#ifdef DEBUG
+            bat=0;
+            printf("candidate sol=%d", ocba->cnt);
+            
+            printf("\n %d batch, ocba->idx=%d;", bat, ocba->idx);
+            bat++;
+            for(i=0; i < ocba->cnt; i++){
+                printf("%d,", ocba->n[i]);
+            }
+#endif
+            
+            while(ocba->n[ocba->idx] < config.EVAL_MIN_ITER &&  early_stop == 0 ){
+               
+                ocba->idx = solveOCBA(ocba->mean, ocba->var, ocba->cnt, ocba->n, Delta, ocba->an);
+                
+                
+                tic = clock();
+                early_stop = eval_all(fFile, stoc, prob, cell, ocba);
+                
+#ifdef DEBUG
+                printf("\n %d batch, ocba->idx=%d;", bat, ocba->idx);
+                bat++;
+                for(i=0; i < ocba->cnt; i++){
+                    printf("%d,", ocba->n[i]);
+                }
+#endif
+                tic_time += clock() - tic;
+                
+                if (early_stop){
+                    ocba_samples += early_stop;
+                    break;
+                }
+                else{
+                    ocba_samples += Delta;
+                }
+            }
+            
+            ocba_time = ((double) tic_time) / CLOCKS_PER_SEC;
+            
         }
-        
-        ocba_time = ((double) tic_time) / CLOCKS_PER_SEC;
         batch->time->repTime += ocba_time;
-        
-        tic = clock();
-        for (i = 0; i < ocba->cnt; i++){
-//
-            evaluate(sFile, stoc, prob, cell, ocba->incumbX[i]);
-            printVectorInSparse(ocba->incumbX[i], prob[0]->num->cols, sFile);
-        }
-        naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
-        
 
-        fprintf(sFile, "\n====================================================================================================================================\n");
-        fprintf(sFile, "\n----------------------------------------- Final solution --------------------------------------\n\n");
+        fprintf(fFile, "\n----------------------------------------- Final solution --------------------------------------\n\n");
         /* Evaluate the compromise solution */
-        fprintf(sFile, "OCBA solution, non-zero position: ");
-        printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, sFile);
+        fprintf(fFile, "OCBA solution, non-zero position: ");
+        printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, fFile);
         //evaluate(sFile, stoc, prob, cell, ocba->incumbX[ocba->idx]);
         
         
-        fprintf(sFile, "Time to solve ocba problem   : %f\n", ocba_time);
-        fprintf(sFile, "Total time                         : %f\n", batch->time->repTime);
-        fprintf(sFile, "Total time to solve master         : %f\n", batch->time->masterAccumTime);
-        fprintf(sFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);
+        fprintf(fFile, "Time to solve ocba problem   : %f\n", ocba_time);
+        fprintf(fFile, "Time for saive SAA evaluation   : %f\n", naive_time);
+        fprintf(fFile, "Total time                         : %f\n", batch->time->repTime);
+        fprintf(fFile, "Total time to solve master         : %f\n", batch->time->masterAccumTime);
+        fprintf(fFile, "Total time to solve subproblems    : %f\n", batch->time->subprobAccumTime);
         
         
         LowerBoundVariance(batch, &lb_mean, &lb_std);
-        fprintf(sFile, "Lower bound estimate               : %f\n", lb_mean);
-        fprintf(sFile, "Lower bound estimation std               : %f\n", lb_std);
+        fprintf(fFile, "Lower bound estimate               : %f\n", lb_mean);
+        fprintf(fFile, "Lower bound estimation std               : %f\n", lb_std);
         
-//        fprintf(sFile, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
-//        fprintf(stdout, "\n------------------------------------------- Average solution ---------------------------------------\n\n");
-//        /* Evaluate the average solution */
-//        printVectorInSparse(batch->avgX, prob[0]->num->cols, sFile);
-//        evaluate(sFile, stoc, prob, cell, batch->avgX);
         
         fprintf(iFile, "\n----------------------------------------- Final solution by OCBA method(1-indexed) --------------------------------------\n\n");
         printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, iFile);
@@ -195,21 +238,23 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         /*calculate the   Approximate  Probability  of  Correct  Selection(APCS),
          see: https://math.stackexchange.com/questions/178334/the-probability-of-one-gaussian-larger-than-another */
         pr = 1;
+       printf("\n mean=%f, %f; var=%f, %f", ocba->mean[0], ocba->mean[1], ocba->var[0], ocba->var[1]);
         for (i = 0; i < ocba->cnt; i++){
             if (i != ocba->idx)
-                pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i] + ocba->var[ocba->idx])));
+                
+                pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i]/ocba->n[i] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
         }
-            
         printf("The Approximate  Probability  of  Correct  Selection(APCS) is %lf", pr);
         
+        stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
         
-        fprintf(sFile, "\n print for latex\n");
-        fprintf(sFile, "&%.2f &%.2f &%.2f%%  &%.2f (\\pm%.2f), &%.2f (\\pm%.2f) &%.2f", ocba_time, naive_time, 100.0*(naive_time - ocba_time)/naive_time, lb_mean, 1.96 * lb_std, ocba->mean[ocba->idx], 1.96 * sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]), pr);
+        fprintf(fFile, "\nocba_samples=&%d, naive_samples=&%d", ocba_samples, naive_samples);
+        fprintf(fFile, "\n print for latex\n");
+        fprintf(fFile, "%d      %.2f%%  [%.3f, %.3f]    [%.3f, %.3f]     %.2f", ocba_samples, 100.0*(naive_samples - ocba_samples)/naive_samples, lb_mean-1.96 * lb_std,lb_mean+1.96 * lb_std, ocba->mean[ocba->idx]-1.96 * stdev, ocba->mean[ocba->idx]+1.96 * stdev, pr);
         
-
     }
 
-	fclose(sFile); fclose(iFile);
+    fclose(sFile); fclose(iFile); fclose(fFile);
      
         
 //        /*outer loop condition*/
@@ -222,22 +267,22 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //        config.MAX_OBS = 2 * config.MAX_OBS;
 //        out_idx++;
 //    }
-	
+    
 
 
-	/* free up memory before leaving */
-	freeCellType(cell);
-	freeProbType(prob, 2);
-	mem_free(meanSol);
+    /* free up memory before leaving */
+    freeCellType(cell);
+    freeProbType(prob, 2);
+    mem_free(meanSol);
     freeOCBA(ocba, config.NUM_REPS);
-	return 0;
+    return 0;
 
-	TERMINATE:
-	if(cell) freeCellType(cell);
-	if(prob) freeProbType(prob, 2);
-	mem_free(meanSol);
+    TERMINATE:
+    if(cell) freeCellType(cell);
+    if(prob) freeProbType(prob, 2);
+    mem_free(meanSol);
     freeOCBA(ocba, config.NUM_REPS);
-	return 1;
+    return 1;
 }//END algo()
 
 int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
@@ -313,37 +358,37 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 
 BOOL optimal(cellType *cell) {
 
-	if ( cell->RepeatedTime > 0 || cell->k > config.MIN_ITER ) {
+    if ( cell->RepeatedTime > 0 || cell->k > config.MIN_ITER ) {
         if (config.MASTER_TYPE == PROB_QP || config.reg == 1){
             return cell->optFlag = ((cell->incumbEst - cell->candidEst) < config.EPSILON);
         }
         return TRUE;
-	}
+    }
 
-	return FALSE;
+    return FALSE;
 }//END optimal()
 
 void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 
-	fprintf(soln, "\n------------------------------------------------------------ Optimization ---------------------------------------------------------\n");
-	if ( config.MASTER_TYPE == PROB_QP )
-		fprintf(soln, "Algorithm                          : Regularized Benders Decomposition\n");
-	else
-		fprintf(soln, "Algorithm                          : Benders Decomposition\n");
-	fprintf(soln, "Number of iterations               : %d\n", cell->k);
-	fprintf(soln, "Lower bound estimate               : %f\n", cell->incumbEst);
-	if ( cell->k == config.MAX_ITER)
-		fprintf(soln, "Maximum itertions reached with gap.");
-	fprintf(soln, "Total time                         : %f\n", cell->time->repTime);
-	fprintf(soln, "Total time to solve master         : %f\n", cell->time->masterAccumTime);
-	fprintf(soln, "Total time to solve subproblems    : %f\n", cell->time->subprobAccumTime);
-	fprintf(soln, "Total time in verifying optimality : %f\n", cell->time->optTestAccumTime);
+    fprintf(soln, "\n------------------------------------------------------------ Optimization ---------------------------------------------------------\n");
+    if ( config.MASTER_TYPE == PROB_QP )
+        fprintf(soln, "Algorithm                          : Regularized Benders Decomposition\n");
+    else
+        fprintf(soln, "Algorithm                          : Benders Decomposition\n");
+    fprintf(soln, "Number of iterations               : %d\n", cell->k);
+    fprintf(soln, "Lower bound estimate               : %f\n", cell->incumbEst);
+    if ( cell->k == config.MAX_ITER)
+        fprintf(soln, "Maximum itertions reached with gap.");
+    fprintf(soln, "Total time                         : %f\n", cell->time->repTime);
+    fprintf(soln, "Total time to solve master         : %f\n", cell->time->masterAccumTime);
+    fprintf(soln, "Total time to solve subproblems    : %f\n", cell->time->subprobAccumTime);
+    fprintf(soln, "Total time in verifying optimality : %f\n", cell->time->optTestAccumTime);
 
     //print candidate for a moment here
-	if ( incumb != NULL ) {
+    if ( incumb != NULL ) {
         printVectorInSparse(cell->candidX, prob[0]->num->cols, incumb);
-		//printVector(cell->candidX, prob[0]->num->cols, incumb);
-	}
+        //printVector(cell->candidX, prob[0]->num->cols, incumb);
+    }
 
 }//END WriteStat
 
@@ -473,6 +518,12 @@ int solveOCBA(vector s_mean, vector s_var, int nd, intvec n, int add_budget, int
     an[b] += (t_budget - t1_budget); /* give the difference to design b */
     for(i = 0; i < nd; i++)
         an[i] -= n[i];
+    
+#ifdef DEBUG
+    for(i=0; i < nd; i++){
+        printf("\n design=%d, s_mean=%.2f, s_var=%.2f, n=%d", i, s_mean[i], s_var[i], n[i]);
+    }
+#endif
     return b;
 }
 
@@ -481,8 +532,8 @@ int solveOCBA(vector s_mean, vector s_var, int nd, intvec n, int add_budget, int
 int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba) {
     vector     observ, rhs, costTemp, cost;
     intvec    objxIdx;
-    double     obj, mean, variance, stdev, temp, pre_mean;
-    int        cnt, m, status, i;
+    double     obj, mean, variance, stdev, temp;
+    int        old_cnt, cnt, m, status, i;
 
     if ( !(observ = (vector) arr_alloc(stoc->numOmega + 1, double)) )
         errMsg("allocation", "evaluateOpt", "observ", 0);
@@ -503,19 +554,115 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
     }
     mem_free(costTemp);
     
+    //evaluate cretical solution
+    printf("\n Evaluate OCBA solution %d with obs %d.\n", ocba->idx, ocba->an[ocba->idx]);
 
-    for (i = 0; i < ocba->cnt; i++){
+    /* initialize parameters used for evaluations */
+    cnt = ocba->n[ocba->idx]; mean = ocba->mean[ocba->idx] - vXvSparse(ocba->incumbX[ocba->idx], prob[0]->dBar); variance = ocba->var[ocba->idx]; stdev = INFBOUND; old_cnt = ocba->n[ocba->idx];
+
+    /* change the right hand side with the solution */
+    chgRHSwSoln(prob[1]->bBar, prob[1]->Cbar, rhs, ocba->incumbX[ocba->idx]);
+
+    while (cnt < ocba->n[ocba->idx] + ocba->an[ocba->idx] ) {
+        /* use the stoc file to generate observations */
+        generateOmega(stoc, observ, config.TOLERANCE, &config.EVAL_SEED[0]);
+
+        for ( m = 0; m < stoc->numOmega; m++ )
+            observ[m] -= stoc->mean[m];
+
+        /* Change right-hand side with random observation */
+        if ( chgRHSwObserv(cell->subprob->lp, prob[1]->num, prob[1]->coord, observ-1, rhs, ocba->incumbX[ocba->idx]) ) {
+            errMsg("algorithm", "evaluate", "failed to change right-hand side with random observations",0);
+            return 1;
+        }
+
+        /* Change cost coefficients with random observations */
+        if ( prob[1]->num->rvdOmCnt > 0 ) {
+            if ( chgObjxwObserv(cell->subprob->lp, prob[1]->num, prob[1]->coord, cost, objxIdx, observ-1) ) {
+                errMsg("algorithm", "evaluate","failed to change cost coefficients with random observations", 0);
+                return 1;
+            }
+        }
+
+        if ( solveProblem(cell->subprob->lp, cell->subprob->name, cell->subprob->type, &status) ) {
+            if ( status == STAT_INFEASIBLE ) {
+                /* subproblem is infeasible */
+                printf("Warning:: Subproblem is infeasible: need to create feasibility cut.\n");
+                return 1;
+            }
+            else {
+                errMsg("algorithm", "evaluateOpt", "failed to solve subproblem in solver", 0);
+                return 1;
+            }
+        }
+
+        /* use subproblem objective and compute evaluation statistics */
+        obj = getObjective(cell->subprob->lp, PROB_LP);
+
+#if defined(ALGO_CHECK)
+        writeProblem(cell->subprob->lp, "evalSubprob.lp");
+        printf("Evaluation objective function = %lf.\n", obj);
+#endif
+
+
+        if ( cnt == 0 )
+            mean = obj;
+        else {
+            temp = mean;
+            mean = mean + (obj - mean) / (double) (cnt + 1.0);
+            variance  = cnt / (cnt + 1.0) * variance
+            + cnt * (mean - temp) * (mean - temp);
+            stdev = sqrt(variance/ (double) cnt);
+        }
+        cnt++;
+        
+        //early stop
+        if (cnt >= 1000 &&3.92 * stdev < config.EVAL_ERROR * DBL_ABS(mean)){
+            mean += vXvSparse(ocba->incumbX[ocba->idx], prob[0]->dBar);
+            ocba->n[ocba->idx] = cnt;
+            ocba->mean[ocba->idx] = mean;
+            ocba->var[ocba->idx] = variance;
+            ocba->an[ocba->idx] = 0;
+            
+            stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
+            printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[ocba->idx], 3.92 * stdev / ocba->mean[ocba->idx],  ocba->mean[ocba->idx] - 1.96 * stdev, ocba->mean[ocba->idx] + 1.96 * stdev);
+            mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);
+            return cnt - old_cnt;
+        }
+
+        /* Print the results every once in a while for long runs */
+        if (!(cnt % 100)) {
+            printf(".");
+            fflush(stdout);
+        }
+        if (!(cnt % 10000))
+            printf("\nObs:%d mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", cnt, mean, 3.92 * stdev / mean,  mean - 1.96 * stdev, mean + 1.96 * stdev);
+    }//END while loop
+    mean += vXvSparse(ocba->incumbX[ocba->idx], prob[0]->dBar);
+    ocba->n[ocba->idx] = cnt;
+    ocba->mean[ocba->idx] = mean;
+    ocba->var[ocba->idx] = variance;
     
+    stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
+    printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[ocba->idx], 3.92 * stdev / ocba->mean[ocba->idx],  ocba->mean[ocba->idx] - 1.96 * stdev, ocba->mean[ocba->idx] + 1.96 * stdev);
+    ocba->an[ocba->idx] = 0;
+       
+  //evaluate non-cretical solution
+    for (i = 0; i < ocba->cnt; i++){
+        
+        if (i == ocba->idx)
+            continue;
+            
         printf("\nStarting evaluate solution %d with obs %d.\n", i, ocba->an[i]);
 
         /* initialize parameters used for evaluations */
-        cnt = 0; mean = 0.0; variance = 0.0; pre_mean = 0; //stdev = INFBOUND;
+        cnt = ocba->n[i]; mean = ocba->mean[i] - vXvSparse(ocba->incumbX[i], prob[0]->dBar); variance = ocba->var[i]; stdev = INFBOUND; old_cnt = ocba->n[i];
 
 
         /* change the right hand side with the solution */
         chgRHSwSoln(prob[1]->bBar, prob[1]->Cbar, rhs, ocba->incumbX[i]);
 
-        while (cnt < ocba->an[i] ) {
+        while (cnt < ocba->n[i] + ocba->an[i] ) {
             /* use the stoc file to generate observations */
             generateOmega(stoc, observ, config.TOLERANCE, &config.EVAL_SEED[0]);
 
@@ -561,10 +708,10 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
                 mean = obj;
             else {
                 temp = mean;
-                mean = mean + (obj - mean) / (double) (cnt + 1);
-                variance  = cnt / (cnt + 1) * variance
+                mean = mean + (obj - mean) / (double) (cnt + 1.0);
+                variance  = cnt / (cnt + 1.0) * variance
                 + cnt * (mean - temp) * (mean - temp);
-                //stdev = sqrt(variance/ (double) cnt);
+                stdev = sqrt(variance/ (double) cnt);
             }
             cnt++;
 
@@ -580,37 +727,12 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
         }//END while loop
         mean += vXvSparse(ocba->incumbX[i], prob[0]->dBar);
         
-        /* New mean and variance
-         see: https://stats.stackexchange.com/questions/43159/how-to-calculate-pooled-variance-of-two-or-more-groups-given-known-group-varianc
-        \sigma^2_{1:m+n} = \frac{n(\sigma^2_{1:n} + \mu_{1:n}^2) + m(\sigma^2_{1+n:m+n} + \mu_{1+n:m+n}^2)}{m+n} - \mu^2_{1:m+n}.*/
-        
-        pre_mean = ocba->mean[i];
-        ocba->mean[i] = (ocba->n[i] * pre_mean + ocba->an[i] * mean) / (ocba->n[i] + ocba->an[i]);
-        
-        ocba->var[i] = (double) ocba->n[i] / (ocba->n[i] + ocba->an[i]) * (ocba->var[i] + pre_mean * pre_mean) + (double) ocba->an[i] / (ocba->n[i] + ocba->an[i]) * (variance + mean * mean) - ocba->mean[i] * ocba->mean[i];
-        
-        ocba->n[i] += ocba->an[i];
-        ocba->an[i] = 0;
+        ocba->n[i] = cnt;
+        ocba->mean[i] = mean;
+        ocba->var[i] = variance;
         
         stdev = sqrt(ocba->var[i] / ocba->n[i]);
         printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[i], 3.92 * stdev / ocba->mean[i],  ocba->mean[i] - 1.96 * stdev, ocba->mean[i] + 1.96 * stdev);
-        
-        
-
-//        printf("\n\nEvaluation complete. Final evaluation results :: \n");
-//        printf("Upper bound estimate               : %lf\n", mean);
-//        printf("Error in estimation                : %lf\n", 3.92 * stdev / mean);
-//        printf("Confidence interval at 95%%         : [%lf, %lf]\n", mean - 1.96 * stdev, mean + 1.96 * stdev);
-//        printf("Number of observations             : %d\n", cnt);
-//
-//        if ( soln != NULL ) {
-//            /* Write the evaluation results to the summary file */
-//            fprintf(soln, "------------------------------------------------------------- Evaluation ----------------------------------------------------------\n");
-//            fprintf(soln, "Upper bound estimate           : %lf\n", mean);
-//            fprintf(soln, "Error in estimation            : %lf\n", 3.92 * stdev / mean);
-//            fprintf(soln, "Confidence interval at 95%%     : [%lf, %lf]\n", mean - 1.96 * stdev, mean + 1.96 * stdev);
-//            fprintf(soln, "Number of observations         : %d\n", cnt);
-//        }
 
     }
     mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);

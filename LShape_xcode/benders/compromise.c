@@ -577,8 +577,8 @@ void LowerBoundVariance(batchSummary *batch, double *mean, double *std){
     *mean = batch->objLB[0] ;
     for(cnt = 1; cnt < batch->cnt; cnt++){
         temp = *mean;
-        *mean = *mean + (batch->objLB[cnt] - *mean) / (double) (cnt + 1);
-        variance  = cnt / (cnt + 1) * variance
+        *mean = *mean + (batch->objLB[cnt] - *mean) / (double) (cnt + 1.0);
+        variance  = cnt / (cnt + 1.0) * variance
         + cnt * (*mean - temp) * (*mean - temp);
     }
     *std = sqrt(variance/ (double) cnt);
