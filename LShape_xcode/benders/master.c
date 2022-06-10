@@ -45,22 +45,14 @@ int solveMaster(numType *num, sparseVector *dBar, cellType *cell) {
 		errMsg("algorithm", "solveMaster", "failed to obtain the primal solution for master", 0);
 		return 1;
 	}
-    for(i = 0; i <= num->cols; i++){
-        if (DBL_ABS(cell->candidX[i] - new_X[i]) > config.TOLERANCE){
-            sameIndicator = FALSE;
-            break;
-        }
-    }
-    if (sameIndicator){
+    
+  
+    if (equalVector(cell->candidX, new_X, num->cols, config.TOLERANCE))
         cell->RepeatedTime++;
-    }
     else{
         cell->RepeatedTime = 0;
-        for(i = 0; i <= num->cols; i++){
-            cell->candidX[i] = new_X[i];
-        }
+        copyVector(new_X, cell->candidX, num->cols, TRUE);
     }
-    
 
 	if ( cell->master->type == PROB_QP ) {
 		/* Get the dual solution too */

@@ -11,7 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "OCBA_algo.h"
-//#define DEBUG
+#define DEBUG
 extern string outputDir;
 extern configType config;
 
@@ -25,8 +25,8 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
     vector      meanSol;
     double   lb_mean=0, lb_std=0, ocba_time=0, naive_time=0, stdev=0, pr, temp;
     batchSummary *batch = NULL;
-    int      rep, m, n, out_idx=0;
-    FILE     *sFile, *iFile = NULL, *fFile;
+    int      rep, m, n, out_idx=0, idx;
+    FILE     *sFile, *iFile = NULL, *fFile, *ocbaFile;
     char results_name[BLOCKSIZE];
     char incumb_name[BLOCKSIZE];
     clock_t    tic, tic_time;
@@ -36,6 +36,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
     int Delta = 500;
     int     i, early_stop=0, bat=0;
     int ocba_samples=0, naive_samples=0;
+    int candidates_per_batch=2;
     ocbaSummary *ocba = NULL;
     
     
@@ -44,7 +45,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         goto TERMINATE;
 
     if ( config.NUM_REPS > 1 )
-        ocba  = newOcbaSummary(prob[0]->sp->mac, config.NUM_REPS);
+        ocba  = newOcbaSummary(prob[0]->num->cols, config.NUM_REPS*candidates_per_batch);
         
     printf("Starting Benders decomposition.\n");
     sprintf(results_name, "rep_results%d.txt", out_idx);
@@ -54,6 +55,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //    if ( config.MASTER_TYPE == PROB_QP )
     sprintf(incumb_name, "incumb%d.txt", out_idx);
     iFile = openFile(outputDir, incumb_name, "w");
+    ocbaFile = openFile(outputDir, "ocba_results.txt", "w");
     printDecomposeSummary(sFile, probName, tim, prob);
     printDecomposeSummary(stdout, probName, tim, prob);
     fprintf(sFile, "\n Number of observations in each replications: %d", config.MAX_OBS);
@@ -86,7 +88,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         
         tic = clock();
         /* Use two-stage algorithm to solve the problem */
-        if ( solveBendersCell(stoc, prob, cell) ) {
+        if ( solveBendersCell(stoc, prob, cell, ocba, rep, candidates_per_batch) ) {
             errMsg("algorithm", "benders", "failed to solve the cells using MASP algorithm", 0);
             goto TERMINATE;
         }
@@ -94,6 +96,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 
         /* Write solution statistics for optimization process */
         writeStatistic(sFile, iFile, prob, cell);
+        fclose(sFile);
         writeStatistic(stdout, NULL, prob, cell);
 
         /* evaluating the optimal solution*/
@@ -104,49 +107,53 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 //                evaluate(sFile, stoc, prob, cell, cell->candidX);
 //        }
         /* check is the new solution is distict or not. */
-        if ( config.MULTIPLE_REP ) {
+        if ( config.MULTIPLE_REP )
             buildCompromise(prob[0], cell, batch);
+    }//end all replciation run
+    
+    if ( config.MULTIPLE_REP ) {
+        print_ocba_results(ocbaFile, ocba, prob, candidates_per_batch);
+            
+        for (idx = 0; idx < candidates_per_batch*config.NUM_REPS; idx++){
+            if(ocba->objLB_list[idx] == -INF)
+                continue;
             
             distinct = TRUE;
             for(i = 0; i < ocba->cnt; i++ ){
-                if (equalVector(ocba->incumbX[i], cell->candidX, prob[0]->num->cols, config.TOLERANCE)){
+                if (equalVector(ocba->incumbX[i], ocba->incumbX_list[idx], prob[0]->num->cols, config.TOLERANCE)){
                     distinct = FALSE;
                     break;
                 }
             }
             if(distinct == TRUE){
-                ocba->objLB[ocba->cnt] = cell->candidEst;
-                ocba->incumbX[ocba->cnt] = duplicVector(cell->candidX, prob[0]->num->cols);
+                ocba->objLB[ocba->cnt] = ocba->objLB_list[idx];
+                ocba->incumbX[ocba->cnt] = duplicVector(ocba->incumbX_list[idx], prob[0]->num->cols);
+//                copyVector(ocba->incumbX_list[idx], ocba->incumbX[ocba->cnt], prob[0]->num->cols, TRUE);
                 ocba->appearance[ocba->cnt] = 1;
                 ocba->cnt++;
             }
             else{
                 ocba->appearance[i]++;
                 temp = ocba->objLB[i];
-                ocba->objLB[i] = (ocba->appearance[i] - 1.0) / ocba->appearance[i] * temp + cell->candidEst / ocba->appearance[i];
+                ocba->objLB[i] = (ocba->appearance[i] - 1.0) / ocba->appearance[i] * temp + ocba->objLB_list[idx] / ocba->appearance[i];
             }
         }
-    }//end all replciation run
-    
-    if ( config.MULTIPLE_REP ) {
         
-//        if ( solveCompromise(prob[0], batch)) {
-//            errMsg("algorithm", "algo", "failed to solve the compromise problem", 0);
-//            goto TERMINATE;
-//        }
         
-        for (i = 0; i < ocba->cnt; i++)
+        for (i = 0; i < ocba->cnt; i++){
             inverse_appearance[i] = 1.0 / ocba->appearance[i];
+            printf("inverse_appearance[%d]=%f\n", i, inverse_appearance[i]);
+        }
+        
         
         tic = clock();
         
         //if only one solution
-        if (ocba->cnt <= 1){
+        if (ocba->cnt == 1){
             naive_samples += evaluate_samples(fFile, stoc, prob, cell, ocba->incumbX[0]);
             ocba_samples = naive_samples;
             naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
             ocba_time = naive_time;
-            
             ocba->idx = 0;
             
         }
@@ -159,11 +166,20 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
             naive_time = ((double) (clock() - tic)) / CLOCKS_PER_SEC;
             
             /* 2. Solve the ocba problem. */
+            printf("\n ocba->cnt=%d", ocba->cnt);
             ocba->idx = solveOCBA(ocba->objLB, inverse_appearance, ocba->cnt, ocba->n, Delta, ocba->an);
+            for (i = 0; i < ocba->cnt; i++)
+                ocba->an[i] += 10;
             
             tic = clock();
-            early_stop = eval_all(fFile, stoc, prob, cell, ocba);
+            early_stop = eval_all(fFile, stoc, prob, cell, ocba, &pr);
             tic_time = clock() - tic;
+            
+//            pr = 1;
+//             for (i = 0; i < ocba->cnt; i++){
+//                 if (i != ocba->idx)
+//                     pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i]/ocba->n[i] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
+//             }
             
             if (early_stop){
                 ocba_samples += early_stop;
@@ -182,14 +198,18 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
             }
 #endif
             
-            while(ocba->n[ocba->idx] < config.EVAL_MIN_ITER &&  early_stop == 0 ){
+            while(early_stop == 0 ){
                
                 ocba->idx = solveOCBA(ocba->mean, ocba->var, ocba->cnt, ocba->n, Delta, ocba->an);
                 
                 
                 tic = clock();
-                early_stop = eval_all(fFile, stoc, prob, cell, ocba);
-                
+                early_stop = eval_all(fFile, stoc, prob, cell, ocba, &pr);
+//                pr = 1;
+//                for (i = 0; i < ocba->cnt; i++){
+//                    if (i != ocba->idx)
+//                        pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i]/ocba->n[i] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
+//                }
 #ifdef DEBUG
                 printf("\n %d batch, ocba->idx=%d;", bat, ocba->idx);
                 bat++;
@@ -206,6 +226,7 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
                 else{
                     ocba_samples += Delta;
                 }
+                
             }
             
             ocba_time = ((double) tic_time) / CLOCKS_PER_SEC;
@@ -234,27 +255,33 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         
         fprintf(iFile, "\n----------------------------------------- Final solution by OCBA method(1-indexed) --------------------------------------\n\n");
         printVectorInSparse(ocba->incumbX[ocba->idx], prob[0]->num->cols, iFile);
+        fclose(iFile);
         
         /*calculate the   Approximate  Probability  of  Correct  Selection(APCS),
          see: https://math.stackexchange.com/questions/178334/the-probability-of-one-gaussian-larger-than-another */
-        pr = 1;
-       printf("\n mean=%f, %f; var=%f, %f", ocba->mean[0], ocba->mean[1], ocba->var[0], ocba->var[1]);
-        for (i = 0; i < ocba->cnt; i++){
-            if (i != ocba->idx)
-                
-                pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i]/ocba->n[i] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
-        }
-        printf("The Approximate  Probability  of  Correct  Selection(APCS) is %lf", pr);
+//        pr = 1;
+//        for (i = 0; i < ocba->cnt; i++){
+//            if (i != ocba->idx)
+//
+//                pr -= 0.5 * erfc((ocba->mean[i] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[i]/ocba->n[i] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
+//        }
+//        printf("The Approximate  Probability  of  Correct  Selection(APCS) is %lf", pr);
         
         stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
         
-        fprintf(fFile, "\nocba_samples=&%d, naive_samples=&%d", ocba_samples, naive_samples);
+        fprintf(fFile, "\n ocba_samples=&%d, naive_samples=&%d", ocba_samples, naive_samples);
         fprintf(fFile, "\n print for latex\n");
-        fprintf(fFile, "%d      %.2f%%  [%.3f, %.3f]    [%.3f, %.3f]     %.2f", ocba_samples, 100.0*(naive_samples - ocba_samples)/naive_samples, lb_mean-1.96 * lb_std,lb_mean+1.96 * lb_std, ocba->mean[ocba->idx]-1.96 * stdev, ocba->mean[ocba->idx]+1.96 * stdev, pr);
+        fprintf(fFile, "%d      %.2f%%  [%.3f, %.3f]    [%.3f, %.3f]     %.4f", ocba_samples, 100.0*(naive_samples - ocba_samples)/naive_samples, lb_mean-1.96 * lb_std,lb_mean+1.96 * lb_std, ocba->mean[ocba->idx]-1.96 * stdev, ocba->mean[ocba->idx]+1.96 * stdev, pr);
+        printf("\n%d      %.2f%%  [%.3f, %.3f]    [%.3f, %.3f]     %.4f\n", ocba_samples, 100.0*(naive_samples - ocba_samples)/naive_samples, lb_mean-1.96 * lb_std,lb_mean+1.96 * lb_std, ocba->mean[ocba->idx]-1.96 * stdev, ocba->mean[ocba->idx]+1.96 * stdev, pr);
         
+        fprintf(ocbaFile, "\n\n solution    sample_size mean    stdev\n");
+        for (i = 0; i < ocba->cnt; i++){
+            printVectorInSparse(ocba->incumbX[i], prob[0]->num->cols, ocbaFile);
+            fprintf(ocbaFile, " %d  %f  %f\n\n", ocba->n[i], ocba->mean[i], sqrt(ocba->var[i] / ocba->n[i]));
+        }
     }
 
-    fclose(sFile); fclose(iFile); fclose(fFile);
+    fclose(fFile);fclose(ocbaFile);
      
         
 //        /*outer loop condition*/
@@ -271,23 +298,27 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
 
 
     /* free up memory before leaving */
+    freeOCBA(ocba, config.NUM_REPS*candidates_per_batch);
     freeCellType(cell);
     freeProbType(prob, 2);
-    mem_free(meanSol);
-    freeOCBA(ocba, config.NUM_REPS);
+//    mem_free(meanSol);
     return 0;
 
     TERMINATE:
     if(cell) freeCellType(cell);
     if(prob) freeProbType(prob, 2);
     mem_free(meanSol);
-    freeOCBA(ocba, config.NUM_REPS);
+    freeOCBA(ocba, config.NUM_REPS*candidates_per_batch);
     return 1;
 }//END algo()
 
-int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
+int solveBendersCell(stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba, int rep, int candidates_per_batch) {
     int     candidCut;
     clock_t    tic, mainTic;
+    int idx=0;
+//    int lowest_obj_index;
+//    double lowest_obj_val;
+//    BOOL added;
 
 #if defined(SAVE_DUALS)
     if ( duals == NULL ) {
@@ -317,6 +348,32 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
 //        if ( config.MASTER_TYPE == PROB_QP )
         if (optimal(cell))
             break;
+        
+//        added = TRUE;
+//        lowest_obj_index = rep*candidates_per_batch;
+//        lowest_obj_val = ocba->objLB_list[lowest_obj_index];
+//        for (idx = 0; idx < candidates_per_batch; idx++){
+//            if(equalVector(cell->candidX, ocba->incumbX_list[rep*candidates_per_batch + idx], prob[0]->num->cols, config.TOLERANCE)){
+//                added = FALSE;
+//                ocba->objLB_list[rep*candidates_per_batch + idx] = cell->incumbEst;
+//                break;
+//            }
+//            if (lowest_obj_val > ocba->objLB_list[rep*candidates_per_batch + idx]){
+//                lowest_obj_index = rep*candidates_per_batch + idx;
+//                lowest_obj_val = ocba->objLB_list[lowest_obj_index];
+//                if (lowest_obj_val == -INF) break;
+//            }
+//        }
+//        if(lowest_obj_val < cell->incumbEst && added){
+//            ocba->objLB_list[lowest_obj_index] = cell->incumbEst;
+//            copyVector(cell->candidX, ocba->incumbX_list[lowest_obj_index], prob[0]->num->cols, TRUE);
+////            ocba->incumbX_list[lowest_obj_index] = duplicVector(cell->candidX, prob[0]->num->cols);
+//        }
+        ocba->objLB_list[rep*candidates_per_batch+idx] = cell->incumbEst;
+        copyVector(cell->candidX, ocba->incumbX_list[rep*candidates_per_batch+idx], prob[0]->num->cols, TRUE);
+        idx++;
+        idx = idx % candidates_per_batch;
+        
 
         /******* 2. Solve the subproblem with candidate solution, form and update the candidate cut *******/
         if ( (candidCut = formOptCut(prob[1], cell, cell->candidX, FALSE)) < 0 ) {
@@ -345,6 +402,7 @@ int solveBendersCell(stocType *stoc, probType **prob, cellType *cell) {
             errMsg("algorithm", "solveCell", "failed to solve master problem", 0);
             return 1;
         }
+        
         cell->time->masterAccumTime += cell->time->masterIter; cell->time->subprobAccumTime += cell->time->subprobIter;
         cell->time->masterIter = cell->time->subprobIter = cell->time->optTestIter = 0.0;
         cell->time->iterTime = ((double) clock() - tic)/CLOCKS_PER_SEC; cell->time->iterAccumTime += cell->time->iterTime;
@@ -367,6 +425,23 @@ BOOL optimal(cellType *cell) {
 
     return FALSE;
 }//END optimal()
+
+void print_ocba_results(FILE *ocbaFile, ocbaSummary *ocba, probType **prob, int candidates_per_batch){
+    int rep, idx;
+    fprintf(ocbaFile, "rep  sol1    obj1    sol2    obj2    sol3    obj3    \n");
+    for ( rep = 0; rep < config.NUM_REPS; rep++){
+        fprintf(ocbaFile, "%d   ", rep);
+        for( idx = 0; idx < candidates_per_batch; idx++){
+            if(ocba->objLB_list[rep*candidates_per_batch + idx] == -INF)
+                fprintf(ocbaFile, "NaN  NaN ");
+            else{
+                printVectorInSparse(ocba->incumbX_list[rep*candidates_per_batch + idx], prob[0]->num->cols, ocbaFile);
+                fprintf(ocbaFile, " %f   ", ocba->objLB_list[rep*candidates_per_batch + idx]);
+            }
+        }
+        fprintf(ocbaFile, "\n");
+    }
+}
 
 void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 
@@ -392,7 +467,7 @@ void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell) {
 
 }//END WriteStat
 
-ocbaSummary *newOcbaSummary(int first_stage_cols, int numBatch) {
+ocbaSummary *newOcbaSummary(int first_stage_cols, int numCand) {
     ocbaSummary *ocba;
     int i;
     
@@ -401,37 +476,44 @@ ocbaSummary *newOcbaSummary(int first_stage_cols, int numBatch) {
     ocba->cnt = 0;
     ocba->idx = 0;
     
-    ocba->ck = (intvec) arr_alloc(numBatch, int);
-    ocba->objLB = (vector) arr_alloc(numBatch, double);
+    ocba->ck = (intvec) arr_alloc(numCand, int);
+    ocba->objLB = (vector) arr_alloc(numCand, double);
+    ocba->objLB_list = (vector) arr_alloc(numCand, double);
 
-    ocba->incumbX = (vector *) arr_alloc(numBatch, vector);
-    ocba->appearance = (intvec) arr_alloc(numBatch, int);
+    ocba->incumbX = (vector *) arr_alloc(numCand, vector);
+    ocba->incumbX_list = (vector *) arr_alloc(numCand, vector);
+    ocba->appearance = (intvec) arr_alloc(numCand, int);
     
-    ocba->mean = (vector) arr_alloc(numBatch, double);
-    ocba->var = (vector) arr_alloc(numBatch, double);
+    ocba->mean = (vector) arr_alloc(numCand, double);
+    ocba->var = (vector) arr_alloc(numCand, double);
     
-    for (i = 0; i < numBatch; i++){
-        ocba->incumbX[i] = arr_alloc(first_stage_cols + 1, double);
+    for (i = 0; i < numCand; i++){
+        ocba->incumbX[i] = (vector) arr_alloc(first_stage_cols + 1, double);
+        ocba->incumbX_list[i] = (vector) arr_alloc(first_stage_cols + 1, double);
+        ocba->objLB_list[i] = -INF;
     }
     
-    ocba->n = arr_alloc(numBatch, int);
-    ocba->an = arr_alloc(numBatch, int);
+    ocba->n = (intvec) arr_alloc(numCand, int);
+    ocba->an = (intvec) arr_alloc(numCand, int);
     return ocba;
 }
 
-void freeOCBA(ocbaSummary *ocba, int numBatch){
+void freeOCBA(ocbaSummary *ocba, int numCand){
     int i;
     
     if ( ocba ) {
         if (ocba->ck) mem_free(ocba->ck);
         if (ocba->objLB) mem_free(ocba->objLB);
+        if (ocba->objLB_list) mem_free(ocba->objLB_list);
         if (ocba->mean) mem_free(ocba->mean);
         if (ocba->var) mem_free(ocba->var);
         if (ocba->appearance) mem_free(ocba->appearance);
-        for (i = 0; i < numBatch; i++){
+        for (i = 0; i < numCand; i++){
             if (ocba->incumbX[i]) mem_free(ocba->incumbX[i]);
+            if (ocba->incumbX_list[i]) mem_free(ocba->incumbX_list[i]);
         }
         if (ocba->incumbX) mem_free(ocba->incumbX);
+        if (ocba->incumbX_list) mem_free(ocba->incumbX_list);
         if(ocba->n) mem_free(ocba->n);
         if(ocba->an) mem_free(ocba->an);
         mem_free(ocba);
@@ -529,11 +611,11 @@ int solveOCBA(vector s_mean, vector s_var, int nd, intvec n, int add_budget, int
 
 
 
-int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba) {
+int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba, double *pr) {
     vector     observ, rhs, costTemp, cost;
     intvec    objxIdx;
     double     obj, mean, variance, stdev, temp;
-    int        old_cnt, cnt, m, status, i;
+    int        old_cnt, cnt, m, status, i, idx;
 
     if ( !(observ = (vector) arr_alloc(stoc->numOmega + 1, double)) )
         errMsg("allocation", "evaluateOpt", "observ", 0);
@@ -617,17 +699,28 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
         cnt++;
         
         //early stop
-        if (cnt >= 1000 &&3.92 * stdev < config.EVAL_ERROR * DBL_ABS(mean)){
-            mean += vXvSparse(ocba->incumbX[ocba->idx], prob[0]->dBar);
-            ocba->n[ocba->idx] = cnt;
-            ocba->mean[ocba->idx] = mean;
-            ocba->var[ocba->idx] = variance;
-            ocba->an[ocba->idx] = 0;
+        if (cnt >= config.EVAL_MIN_ITER &&3.29 * stdev < config.EVAL_ERROR * DBL_ABS(mean)){
+            *pr = 1.0;
+            for (idx = 0; idx < ocba->cnt; idx++){
+                if (idx != ocba->idx)
+                    *pr -= 0.5 * erfc((ocba->mean[idx] - ocba->mean[ocba->idx]) / sqrt(2 * (ocba->var[idx]/ocba->n[idx] + ocba->var[ocba->idx]/ocba->n[ocba->idx])));
+            }
+            if (*pr > 0.7){
+                mean += vXvSparse(ocba->incumbX[ocba->idx], prob[0]->dBar);
+                ocba->n[ocba->idx] = cnt;
+                ocba->mean[ocba->idx] = mean;
+                ocba->var[ocba->idx] = variance;
+                ocba->an[ocba->idx] = 0;
+                
+                stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
+                printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[ocba->idx], 3.92 * stdev / ocba->mean[ocba->idx],  ocba->mean[ocba->idx] - 1.96 * stdev, ocba->mean[ocba->idx] + 1.96 * stdev);
+                mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);
+                return cnt - old_cnt;
+            }
+            else{
+                config.EVAL_MIN_ITER += 2000;
+            }
             
-            stdev = sqrt(ocba->var[ocba->idx] / ocba->n[ocba->idx]);
-            printf("\n mean:%lf   error: %lf \n 0.95 CI: [%lf , %lf]\n", ocba->mean[ocba->idx], 3.92 * stdev / ocba->mean[ocba->idx],  ocba->mean[ocba->idx] - 1.96 * stdev, ocba->mean[ocba->idx] + 1.96 * stdev);
-            mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);
-            return cnt - old_cnt;
         }
 
         /* Print the results every once in a while for long runs */
@@ -738,7 +831,7 @@ int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSu
     mem_free(observ); mem_free(rhs); mem_free(objxIdx); mem_free(cost);
     return 0;
 
-}//END eval_all()
+}//END de_all()
 
 int best(vector t_s_mean, int nd){
     /*This function determines the best design based on current simulation results

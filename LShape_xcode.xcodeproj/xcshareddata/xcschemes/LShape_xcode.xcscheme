@@ -74,8 +74,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "1d_F45_MinF1_30_FO15"
+            argument = "1z_F30_MinF1_20_FO10"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "1z_F60_MinF1_40_FO20"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "3z_F60_MinF1_40_FO20"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = " ./spInput/SUFL_CC20/"
@@ -90,7 +98,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "./spOutput/model_d"
+            argument = "./spOutput/model_z"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

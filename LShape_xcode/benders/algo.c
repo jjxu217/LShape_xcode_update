@@ -144,14 +144,14 @@ int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName) {
         /* Evaluate the average solution */
         printVectorInSparse(batch->avgX, prob[0]->num->cols, sFile);
         evaluate(sFile, stoc, prob, cell, batch->avgX);
-        
+        fclose(sFile);
         fprintf(iFile, "\n----------------------------------------- Compromise solution(1-indexed) --------------------------------------\n\n");
         printVectorInSparse(batch->compromiseX, prob[0]->num->cols, iFile);
         fprintf(iFile, "\n------------------------------------------- Average solution(1-indexed) ---------------------------------------\n\n");
         printVectorInSparse(batch->avgX, prob[0]->num->cols, iFile);
     }
 
-	fclose(sFile); fclose(iFile);
+	 fclose(iFile);
      
         
         /*outer loop condition*/

@@ -149,9 +149,12 @@ typedef struct {
     int         idx;                /*index of select solution**/
     intvec         ck;                    /* number of iterations for each replication */
     vector        objLB;                /* replication lower bound */
+    vector        objLB_list;             /*list of raw replication replication lower bound*/
    
     runTime        *time;                /* Run time structure */
     vector        *incumbX;             /*distinct replication solution*/
+    vector        *incumbX_list;             /*list of raw replication solutions*/
+    vector        *incumbX_rank;             /*rank of raw replication solutions*/
     intvec        appearance;           /*appearance time of the distinct sol*/
     
     vector      mean;       /*evaluation mean of different solutions*/
@@ -164,10 +167,11 @@ int parseCmdLine(int argc, char *argv[], string probName, string inputDir);
 void createOutputDir(string outputDir, string algoName, string probName);
 int readConfig();
 void freeConfig();
+void print_ocba_results(FILE *ocbaFile, ocbaSummary *ocba, probType **prob, int candidates_per_batch);
 
 /* algo.c */
 int algo (oneProblem *orig, timeType *tim, stocType *stoc, string probName);
-int solveBendersCell(stocType *stoc, probType **prob, cellType *cell);
+int solveBendersCell(stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba, int rep, int candidates_per_batch);
 BOOL optimal(cellType *cell);
 void writeStatistic(FILE *soln, FILE *incumb, probType **prob, cellType *cell);
 
@@ -235,7 +239,7 @@ void freeOCBA(ocbaSummary *ocba, int numBatch);
 int solveOCBA(vector s_mean,vector s_var,int nd, intvec n, int add_budget,intvec an);
 int best(vector t_s_mean, int nd);
 int second_best(vector t_s_mean, int nd, int b);
-int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba);
+int eval_all(FILE *soln, stocType *stoc, probType **prob, cellType *cell, ocbaSummary *ocba, double *pr);
 
 BOOL InConvexHull(batchSummary *batch, int col);
 void LowerBoundVariance(batchSummary *batch, double *mean, double *std);
